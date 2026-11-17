@@ -14,7 +14,8 @@ const assert=require('node:assert/strict'),T=require('three'),load=require('./he
  assert(point.y<0,'Awakened reactor descends below the water surface');
  const escorts=g.api.test.rushEnemies().filter(e=>e!==boss&&e.hp>0);
  assert(escorts.length>0&&escorts.some(e=>e.mesh.position.y<0),'Escort enemies follow the player underwater');
- g.api.test.set({x:point.x,y:point.y-1.65,z:point.z+8,weapon:0,cool:0});g.step(.016);
+ for(const escort of escorts)escort.hp=0; // Isolate the large moving boss from minion interception.
+ g.api.test.set({x:point.x,y:point.y-1.65,z:point.z+26,weapon:0,cool:0});g.step(.016);
  const liveCore=core.getWorldPosition(new T.Vector3());g.api.test.aim(liveCore.x,liveCore.y,liveCore.z);
  const before=boss.hp;g.api.test.shoot();assert(boss.hp<before,'Awakened moving body/core can be hit with normal gunfire');
  g.api.test.rushStart('leviathan');g.step(.016);assert.equal(g.api.snapshot().forcedUnderwater,false,'Replaying the encounter resets the forced depth');assert.equal(g.api.test.rushBoss().bossVisual.inspect().form,'normal','Replay restores the normal supplied model');assert(visual.inspect().disposed,'Replacement disposes previous model instance');g.api.test.setInput({jump:false,fire:false,firePressed:false,dive:false,keys:{}});g.api.test.set({x:23.2,z:-17.4,y:-1,vy:0,swimming:false});g.step(.016);let swimY=g.api.snapshot().position.y;assert.equal(g.api.snapshot().swimming,true,'Falling below the sea surface enters swimming mode');g.api.test.setInput({jump:true});g.step(.5);assert(g.api.snapshot().position.y>swimY+.4,'Holding jump swims toward the surface');const surfaceY=g.api.snapshot().position.y;g.api.test.setInput({jump:false,keys:{KeyC:true}});g.step(.45);assert(g.api.snapshot().position.y<surfaceY-.4,'Holding C dives deeper');assert(g.api.snapshot().swimming,'Diving stays under the waterline');
