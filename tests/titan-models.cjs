@@ -38,7 +38,14 @@ const api=create({scene,V,P,targets,anchors,hooks,player,arms,thirdSwords:[],old
   assert.equal(V.napeOpen,!types[type].armor);assert.equal(V.armorL,types[type].armor);assert(targets.length>10);assert.equal(new Set(anchors).size,anchors.length,'No stale or duplicate anchors');
   const count=targets.length;api.update(.016);api.reset();assert.equal(targets.length,count);assert.equal(api.inspect().equipment,true);
   assert(V.weak.parent!==V.root,'Weakpoint follows a real head group');assert(V.weak.userData.baseScale,'Weakpoint pulse preserves imported parent scale');
-  if(type==='jaw')assert.deepEqual(api.inspect().clips.sort(),['bite','idle','roar','run']);
+  if(type==='jaw'){
+    assert.deepEqual(api.inspect().clips.sort(),['bite','idle','roar','run']);
+    const head=V.root.getObjectByName('head'),rig=V.root.getObjectByName('rig-body');
+    assert(head&&rig,'Imported Jaw head and body rig are present');
+    assert.strictEqual(head.parent,rig,'Jaw head retains its original animated parent; reparenting creates a floating head');
+    assert.strictEqual(V.weak.parent,head,'Nape weakpoint continues to follow the real Jaw head');
+    assert.equal(V.root.getObjectByName('raid-impact-upper-body'),undefined,'Jaw animated rig must not be split by impact pivots');
+   }
   // Anchors on the moving target follow its local point through translation.
   const body=targets.find(t=>t.userData.titanPart==='body');const point=new THREE.Vector3(0,0,0);hooks[0]={state:'locked',followObject:body,followPoint:point,anchor:new THREE.Vector3()};api.update(.016);scene.updateMatrixWorld(true);assert(hooks[0].anchor.distanceTo(body.localToWorld(point.clone()))<1e-5);hooks[0]={state:'idle'};
   console.log('PASS model',type,api.inspect().meshCount,'hit meshes','height',size.y.toFixed(2));

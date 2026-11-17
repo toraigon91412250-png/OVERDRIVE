@@ -77,7 +77,10 @@ export function create(ctx){
  // Let impact bend the upper body around its waist while feet stay planted.
  // These additive pivots leave all imported joint and animation tracks intact.
  const body=model.getObjectByName(type==='attack'?'Body_001':type==='armored'?'Torso':type==='jaw'?'rig-body':type==='warhammer'?'Torso_Rig':'ColossalTitan_GameMesh');
- if(body&&type!=='warhammer'){
+ // Keep Jaw's imported head and limbs under rig-body. Its GLB animation tracks
+ // use original parent-local translations, so attaching them to an impact
+ // pivot displaces the head every time the animator updates.
+ if(body&&type!=='warhammer'&&type!=='jaw'){
   model.updateWorldMatrix(true,true);box.setFromObject(model);const bodyBounds=box.clone(),waistPoint=box.getCenter(new THREE.Vector3());waistPoint.y=box.min.y+(box.max.y-box.min.y)*(type==='jaw'?.46:.48);
   const upper=new THREE.Group();upper.name='raid-impact-upper-body';upper.position.copy(body.worldToLocal(waistPoint.clone()));const children=[...body.children];body.add(upper);
   for(const child of children){
@@ -205,7 +208,7 @@ export function create(ctx){
  function clearPunchRig(){const rig=current?.reactionRig;if(!rig)return;rig.upper.rotation.set(0,0,0);rig.upper.position.copy(rig.base);rig.head?.rotation.set(0,0,0);}
  function applyPunchReaction(react){
   const rig=current?.reactionRig;
-  if(!rig){if(current?.warhammer){const pulse=Math.exp(-react.age*9)*react.strength;V.root.rotation.x=react.z*.065*pulse;V.root.rotation.z=-react.x*.065*pulse;}return;}
+  if(!rig){if(current?.warhammer||current?.type==='jaw'){const pulse=Math.exp(-react.age*9)*react.strength;V.root.rotation.x=react.z*.065*pulse;V.root.rotation.z=-react.x*.065*pulse;}return;}
   const age=react.age,release=THREE.MathUtils.smoothstep(age,.055,react.duration),bodyPulse=(.68+.32*THREE.MathUtils.smoothstep(age,0,.055))*(1-release),headPulse=Math.exp(-age*8)*(1-release),strength=react.strength;
   rig.upper.rotation.set(react.z*.25*bodyPulse*strength,react.twist*.18*bodyPulse*strength,-react.x*.22*bodyPulse*strength);
   rig.upper.position.copy(rig.base);rig.upper.position.x+=react.x*rig.unitHeight*.008*bodyPulse*strength;rig.upper.position.z+=react.z*rig.unitHeight*.008*bodyPulse*strength;
