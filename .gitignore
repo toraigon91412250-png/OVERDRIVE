@@ -1,0 +1,8 @@
+node_modules/
+playwright-report/
+
+# Large standalone build products are supplied by the deployment archive.
+/dist/OVERDRIVE.html
+/dist/game.bundle.js
+
+/dist/OVERDRIVE_ALL_SOURCE.zip

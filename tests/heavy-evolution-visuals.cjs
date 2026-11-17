@@ -1,0 +1,30 @@
+const assert=require('node:assert/strict'),vm=require('node:vm'),T=require('three'),{buildSync}=require('esbuild');
+const moduleRef={exports:{}};
+const code=buildSync({entryPoints:['src/heavy-evolution-visuals.js'],bundle:true,external:['three'],format:'cjs',write:false}).outputFiles[0].text;
+vm.runInNewContext(code,{require:id=>id==='three'?T:require(id),module:moduleRef,exports:moduleRef.exports});
+const scene=new T.Scene(),parents={1:new T.Group(),2:new T.Group()},muzzles={1:new T.Object3D(),2:new T.Object3D()};
+scene.add(parents[1],parents[2]);muzzles[1].position.set(0,.055,-.744);muzzles[2].position.set(0,.025,-.88);parents[1].add(muzzles[1]);parents[2].add(muzzles[2]);
+const baseline={1:muzzles[1].position.clone(),2:muzzles[2].position.clone()};
+const api=moduleRef.exports.createHeavyEvolutionVisuals({scene,parents,muzzles});
+assert.equal(api.forms.size,10,'both weapons have core and four route/tier kits');
+let maxMeshes=0,maxTriangles=0;
+for(const index of [1,2])for(const [tier,path] of [[1,null],[2,index===1?'vortex':'prism'],[3,index===1?'vortex':'prism'],[2,index===1?'burst':'siege'],[3,index===1?'burst':'siege']]){
+ const build={tier,path};assert(api.configure(index,build));assert.equal(api.configure(index,build),false,'idempotent configure');
+ const stats=api.stats().models[index];assert.equal(stats.tier,tier);assert.equal(stats.path,path);assert(stats.meshes<=25,'active conversion kit stays below mobile draw budget');assert(stats.triangles<45000);
+ maxMeshes=Math.max(maxMeshes,stats.meshes);maxTriangles=Math.max(maxTriangles,stats.triangles);
+ const visible=[...api.forms.values()].filter(f=>f.index===index&&f.g.visible);assert.equal(visible.length,1);
+ const bounds=new T.Box3().setFromObject(visible[0].g);assert(bounds.min.toArray().every(Number.isFinite)&&bounds.max.toArray().every(Number.isFinite));assert(bounds.max.x-bounds.min.x<.65,'keep lateral view clear');assert(bounds.max.y-bounds.min.y<.6,'keep upper sightline clear');
+ assert(muzzles[index].position.z<bounds.min.z+.04,'socket remains at hardware tip');
+ api.update(.016,{weapon:index,time:2,playing:true});
+ api.discharge(index,new T.Vector3(0,1,0),new T.Vector3(0,1,-18),{build});
+}
+const beforeGeometries=new Set(),beforeMaterials=new Set();scene.traverse(o=>{if(o.isMesh){beforeGeometries.add(o.geometry);beforeMaterials.add(o.material);}});
+for(let i=0;i<100;i++)api.discharge(i%2?1:2,new T.Vector3(),new T.Vector3(0,0,-25),{build:{tier:3,path:i%2?'vortex':'siege'},low:i%3===0,reduced:i%4===0});
+assert(api.stats().active<=api.stats().capacity);assert.equal(api.stats().drawObjects,3);
+const paused=api.diagnostics().map(x=>x.life);api.update(2,{playing:false});assert.deepEqual(api.diagnostics().map(x=>x.life),paused,'pause freezes effect lifetime');
+api.update(.08,{playing:true,weapon:1,time:3,reduced:true});assert(api.diagnostics().every(x=>x.matrix.every(Number.isFinite)));
+api.discharge(1,new T.Vector3(),new T.Vector3(),{build:{tier:3,path:'burst'}});api.discharge(2,new T.Vector3(),new T.Vector3(0,20,0),{build:{tier:3,path:'prism'}});assert(api.diagnostics().every(x=>x.matrix.every(Number.isFinite)),'degenerate/vertical shots remain finite');
+const afterGeometries=new Set(),afterMaterials=new Set();scene.traverse(o=>{if(o.isMesh){afterGeometries.add(o.geometry);afterMaterials.add(o.material);}});assert.deepEqual(afterGeometries,beforeGeometries,'shots reuse all geometry');assert.deepEqual(afterMaterials,beforeMaterials,'shots reuse all materials');
+api.update(1,{playing:true,weapon:2,time:4});assert.equal(api.stats().active,0,'all shot effects expire');
+api.reset();for(const index of [1,2]){assert.equal(api.stats().models[index].tier,0);assert(muzzles[index].position.equals(baseline[index]));}assert.equal(api.stats().shots,0);
+console.log(`HEAVY VISUALS: 10 conversion kits, first-person bounds/socket alignment, ${maxMeshes} meshes / ${Math.ceil(maxTriangles)} triangles max, fixed shot pools, pause/expiry/reset and reduced motion passed`);

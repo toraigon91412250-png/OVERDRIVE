@@ -1,0 +1,186 @@
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;overscroll-behavior:none;background:#07111d;color:#e5f5ff;font-family:Arial,'Noto Sans',sans-serif;touch-action:none}button,select,input{font:inherit}button{cursor:pointer;color:inherit;background:#14283a;border:1px solid #527082;padding:12px 22px;touch-action:none}button:hover{background:#254254;border-color:#67ffe0}button:focus-visible{outline:2px solid #8affdd}button:disabled{opacity:.4}canvas{width:100%;height:100%;display:block}#titan-frame{position:fixed;inset:0;width:100vw;height:100vh;border:0;z-index:50;background:#08111c}#titan-frame[hidden]{display:none}#titan-back{position:fixed;top:max(12px,env(safe-area-inset-top));left:max(12px,env(safe-area-inset-left));z-index:60;padding:9px 13px;border:1px solid #88bdc6aa;border-radius:3px;background:#081723dc;color:#e8f7f8;font-size:12px;backdrop-filter:blur(6px)}#titan-back[hidden]{display:none} [hidden]{display:none!important}.overlay{position:absolute;inset:0;z-index:10;background:linear-gradient(90deg,rgba(4,12,22,.98),rgba(4,12,22,.85) 45%,rgba(4,12,22,.2));overflow:auto;padding:clamp(20px,5vw,70px);padding-top:max(25px,env(safe-area-inset-top));touch-action:pan-y}.menuhead,.menubottom{display:flex;justify-content:space-between;font-size:10px;letter-spacing:3px;color:#8cabbc}.menuhead{margin-bottom:5vh}main{max-width:740px}.eyebrow{color:#81ffe0;font-size:11px;letter-spacing:4px}h1{font-size:clamp(50px,10vw,126px);font-style:italic;font-weight:900;letter-spacing:-.07em;margin:12px 0;line-height:.95}h1 span{color:#8bffda}.line{width:60px;height:4px;background:#87ffdc;margin:25px 0}h2{font-size:clamp(20px,3vw,30px);letter-spacing:.04em}p{color:#a6bdca;line-height:1.9;font-size:14px}.primary{display:block;background:#8affda;color:#061c23;border:0;font-weight:bold;letter-spacing:2px;min-width:240px;text-align:left;padding:20px 28px}.primary:hover{background:#d3ffee}.primary span{float:right}.options{display:flex;flex-wrap:wrap;gap:14px;margin:22px 0;font-size:11px;align-items:center;max-width:600px}.options label{display:flex;gap:7px;align-items:center}select{background:#122532;color:#cadce6;border:1px solid #3c5864;padding:7px;max-width:240px}input[type=range]{width:90px}.how{border-left:1px solid #54717c;padding-left:18px;margin-top:24px}.how b{font-size:11px;letter-spacing:2px}.how p,.how span,#record{font-size:11px;color:#7f9ba9}.menubottom{margin-top:35px}header{position:absolute;top:max(20px,env(safe-area-inset-top));left:25px;right:25px;display:flex;align-items:center;gap:25px}.brand{font-size:26px;font-style:italic;font-weight:bold}.brand span{color:#80ffd6}.brand small{font-size:10px;letter-spacing:2px}#wave{margin-left:auto;font-size:12px;letter-spacing:2px}#pause{padding:8px 15px}footer{position:absolute;bottom:max(32px,env(safe-area-inset-bottom));left:35px;right:35px;display:flex;gap:35px;align-items:end;pointer-events:none}footer small{display:block;color:#a4bbcd;font-size:10px;letter-spacing:2px}footer strong{font-size:44px;line-height:1.3}.vitals{width:160px}.bar{height:5px;background:#294450;overflow:hidden}.bar i{display:block;height:100%;background:#8affda;transition:width .1s}.drive{width:230px;margin-bottom:6px}.drive .bar{height:8px;margin:12px 0}.drive span,.weapon span{display:block;font-size:10px;letter-spacing:2px;color:#8affda}.weapon{margin-left:auto;text-align:right}#cross{position:absolute;left:50%;top:50%;width:20px;height:20px;transform:translate(-50%,-50%);}#cross i,#cross b{position:absolute;background:#d4ffef}#cross i{width:16px;height:2px;left:2px;top:9px}#cross b{width:2px;height:16px;left:9px;top:2px}#hit{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:42px;color:#ffdb78;opacity:0}#notice{position:absolute;top:23%;left:10%;right:10%;text-align:center;font-size:18px;font-weight:bold;letter-spacing:3px;text-shadow:0 2px 8px #000;pointer-events:none}#enemycount{position:absolute;top:90px;right:28px;font-size:11px;color:#c8dde7}#boss{position:absolute;top:90px;left:30%;width:40%;text-align:center}#boss small{font-size:10px;letter-spacing:2px}#boss .bar{margin-top:8px}#boss i{background:#ff796b}#vignette,#hurt{position:absolute;inset:0;pointer-events:none}#vignette{box-shadow:inset 0 0 110px #0006}#hurt{background:radial-gradient(ellipse,transparent 35%,#ff254e99);opacity:0}#controlsHint{position:absolute;bottom:10px;left:0;width:100%;text-align:center;font-size:10px;color:#94aebb}#panel{background:#06111be8;display:flex;align-items:center;justify-content:center}#panel section{max-width:1000px;width:100%}#choices{display:flex;gap:15px;margin:26px 0}#choices button{flex:1;text-align:left;min-height:200px;padding:25px;background:linear-gradient(145deg,#1a3443,#0b1a28)}#choices small{color:#8affda;letter-spacing:2px}#choices h3{font-size:21px}#choices p{font-size:12px}#home{margin-top:15px}#rotate{display:none}#touch{display:none}body.mobile #touch{display:block}body.mobile #controlsHint{display:none}body.mobile footer{bottom:20px;left:20px;right:20px;gap:20px}body.mobile footer strong{font-size:27px}body.mobile .vitals{width:105px}body.mobile .drive{width:150px}body.mobile header{top:max(10px,env(safe-area-inset-top));left:20px;right:20px}body.mobile .brand small{display:none}body.mobile #enemycount{top:60px}body.mobile #boss{top:60px}#lookzone{position:absolute;left:35%;right:0;top:60px;bottom:85px}#stick{position:absolute;bottom:100px;left:35px;width:112px;height:112px;border:1px solid #aac7d255;border-radius:50%;background:#11253844}#stick div{position:absolute;width:45px;height:45px;left:33px;top:33px;border:1px solid #a3e6d9aa;border-radius:50%;background:#8affda22}#touch button{position:absolute;border-radius:50%;padding:0;font-size:10px;font-weight:bold;background:#0e253b88;border:1px solid #b2d4db88;user-select:none;-webkit-user-select:none}#fire{right:27px;bottom:133px;width:86px;height:86px;color:#96ffdb}#jump{right:130px;bottom:190px;width:56px;height:56px}#dash{right:130px;bottom:118px;width:56px;height:56px}#slide{right:207px;bottom:120px;width:52px;height:52px}#swap{right:32px;bottom:242px;width:48px;height:48px}#reload{right:92px;bottom:252px;width:38px;height:38px}@media(max-height:600px){.overlay{padding:20px 35px}.menuhead{margin-bottom:18px}h1{font-size:64px}.line{margin:14px 0}h2{margin:12px 0}main>p{margin:8px 0}.how{margin-top:12px}.how p{margin:6px 0}.menubottom{margin-top:18px}.primary{padding:14px 24px}.options{margin:12px 0}.how span{font-size:10px}#choices button{min-height:150px;padding:16px}}@media(orientation:portrait) and (pointer:coarse){#rotate{display:block;position:absolute;bottom:5px;width:100%;text-align:center;font-size:10px;color:#b3cad4;pointer-events:none;z-index:20}#choices{flex-direction:column;gap:8px}#choices button{min-height:100px;padding:14px}#choices h3{margin:8px 0}#choices p{margin:0}.menubottom{letter-spacing:1px}.brand small{display:none}body.mobile .drive{width:110px}}
+
+#radar{position:absolute;top:95px;left:28px;width:220px;height:220px;border:1px solid #668b9555;border-radius:50%;background:#06152288;pointer-events:none}body.mobile #radar{top:55px;left:20px;width:130px;height:130px}
+@media(orientation:portrait) and (pointer:coarse){#slide{left:50px;right:auto;bottom:230px}}
+
+#experience{position:absolute;top:72px;left:170px;width:180px;font-size:10px;color:#95cfff;letter-spacing:1px}#experience .bar{margin-top:8px}#xpbar{background:#62b5ff;width:0}#choices{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}#choices button{min-width:0;border-top:3px solid #68b9ff;transition:background .2s,transform .2s}#choices button:hover{transform:translateY(-4px);background:#234558}.selecthint{font-size:9px;color:#71caff;letter-spacing:1px}body.mobile #experience{top:65px;left:100px;width:140px}#panel section{max-width:1120px}#choices h3{font-size:19px}@media(max-width:650px){#choices{grid-template-columns:repeat(2,minmax(0,1fr))}#choices button{padding:14px;min-height:150px}}@media(max-height:500px){#panel{align-items:flex-start}#choices{margin:12px 0}#choices h3{font-size:16px}#choices button{padding:13px}#choices p{line-height:1.6}}
+
+#target{position:absolute;top:57%;left:50%;transform:translateX(-50%);width:200px;text-align:center;font-size:9px;letter-spacing:1px;color:#ffd6c3;pointer-events:none;text-shadow:0 1px 3px #000}#target .bar{margin:7px 28px;height:3px}#targethp{background:#ff987c}
+
+.controlsetup{margin:20px 0;max-width:650px}.controlsetup fieldset{border:0;padding:0;margin:0 0 15px}.controlsetup legend{font-size:12px;color:#a8c4d4;margin-bottom:10px}.devicechoice label{display:inline-flex;align-items:center;padding:10px 20px;background:#152e3d;border:1px solid #416170;margin-right:10px;cursor:pointer}.controlsetup input{accent-color:#8affda}devicechoice label:has(input:checked){border-color:#8affda;background:#183f49}.controlsetup .controlnote{font-size:11px;line-height:1.8;margin:10px 0}.controlsetup input:focus-visible{outline:2px solid #fff;outline-offset:4px}@media(max-width:480px){.devicechoice label{padding:10px 15px}}
+
+.difficulty{display:flex;gap:12px;align-items:center;margin:12px 0;color:#b9ced8;font-size:13px}.difficulty select{min-width:205px;padding:10px;border-color:#69b8d0}.difficulty select:focus-visible{outline:2px solid #8affda}
+#killstreak{position:absolute;top:61%;left:50%;transform:translateX(-50%);padding:10px 18px;border:1px solid #ffd477;background:#152432cc;color:#ffe394;font-size:16px;font-weight:bold;letter-spacing:3px;text-shadow:0 0 10px #ff9f35;pointer-events:none;animation:impact .18s ease-out}@keyframes impact{from{transform:translateX(-50%) scale(1.5)}to{transform:translateX(-50%) scale(1)}}
+
+.weapon #weaponname{font-size:12.5px}.weapon #ammo{font-size:55px}body.mobile .weapon #ammo{font-size:33.75px}
+#tutorial{position:absolute;z-index:12;inset:0;display:grid;place-items:center;padding:24px;background:linear-gradient(180deg,#05111acc,#07152188);pointer-events:none}.tutorial-card{width:min(900px,94vw);padding:clamp(24px,5vw,56px);border:2px solid #8affda;background:linear-gradient(145deg,#102a39f5,#071521f5);box-shadow:0 0 55px #35e7d244;text-align:center;pointer-events:auto}.tutorial-card small{font-size:clamp(18px,3vw,26px);font-weight:800;letter-spacing:2px;color:#8affda}.tutorial-card h2{font-size:clamp(38px,7vw,76px);line-height:1.1;margin:20px 0}.tutorial-card p{font-size:clamp(24px,4.4vw,44px);line-height:1.35;color:#f0fbff;font-weight:700;margin:20px auto 34px;max-width:760px}.tutorial-card button{font-size:clamp(18px,2.5vw,25px);padding:16px 26px;border-color:#92b9c4;background:#193342}.easy-mode .vitals strong{font-size:55px}.mobile.easy-mode .vitals strong{font-size:34px}
+html,body{max-width:100vw}
+#tutorial{transition:top .45s cubic-bezier(.2,.8,.2,1),left .45s cubic-bezier(.2,.8,.2,1),padding .45s,background-color .45s;background-color:rgba(5,15,23,.78);background-image:none}#tutorial.compact{inset:auto auto auto clamp(16px,2vw,28px);top:327px;width:min(320px,calc(100vw - 32px));padding:0;background-color:transparent;display:block}.tutorial-card{transition:transform .45s cubic-bezier(.2,.8,.2,1),padding .45s,box-shadow .45s,background .45s,border-color .45s}.tutorial-card h2,.tutorial-card p,.tutorial-card small,.tutorial-card button{transition:font-size .45s,margin .45s,padding .45s}.tutorial-card p{transition:font-size .45s,margin .45s,padding .45s,line-height .45s}.tutorial-card button{transition:font-size .45s,margin .45s,padding .45s}.tutorial-card small{transition:font-size .45s,margin .45s,padding .45s;letter-spacing:1px}#tutorial.compact .tutorial-card{width:100%;padding:13px 15px;border-width:1px;border-radius:12px;text-align:left;box-shadow:0 5px 24px #0009;transform:scale(.98);transform-origin:top left}#tutorial.compact .tutorial-card small{font-size:11px}#tutorial.compact .tutorial-card h2{font-size:20px;margin:4px 0 2px}#tutorial.compact .tutorial-card p{font-size:15px;line-height:1.3;margin:0 0 8px}#tutorial.compact .tutorial-card button{font-size:12px;padding:6px 9px}body.mobile #tutorial.compact{left:20px;top:195px;width:min(330px,calc(100vw - 40px))}
+
+/* Mobile combat HUD: keep the horizon clear; controls live at the screen edges. */
+body.mobile #touch{--pad-cyan:#65f4e1;--pad-amber:#ffbf63;--edge:max(12px,env(safe-area-inset-right));--base:max(18px,env(safe-area-inset-bottom));--fire-width:clamp(132px,18vw,156px);--fire-height:54px;--action-size:44px;--action-step:49px;--reload-height:44px;--rail-bottom:calc(var(--base) + var(--fire-height) + 4px + var(--reload-height) + 8px);position:absolute;inset:0;pointer-events:none;z-index:4}
+body.mobile #lookzone{left:27%;right:0;top:60px;bottom:80px;pointer-events:auto;touch-action:none}
+body.mobile #stick{left:max(18px,env(safe-area-inset-left));bottom:clamp(78px,20vh,110px);width:clamp(100px,16vw,124px);height:clamp(100px,16vw,124px);border:1px solid #72d9e788;border-radius:0;clip-path:polygon(18% 0,82% 0,100% 18%,100% 82%,82% 100%,18% 100%,0 82%,0 18%);background:linear-gradient(145deg,#102d3d55,#07172322);pointer-events:auto;touch-action:none}
+body.mobile #stick:before{content:"";position:absolute;inset:8px;border:1px solid #67cbd244;clip-path:inherit;pointer-events:none}
+body.mobile #stick div{left:50%;top:50%;width:42px;height:42px;transform:translate(-50%,-50%);border:1px solid #8affefaa;background:radial-gradient(circle,#6ef6e344,#1c647633);clip-path:polygon(25% 0,75% 0,100% 25%,100% 75%,75% 100%,25% 100%,0 75%,0 25%)}
+body.mobile #touch :where(button){left:auto;right:var(--edge);top:auto;bottom:auto;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px;width:var(--action-size);height:var(--action-size);padding:3px;border:1px solid #6fe9ea99;border-radius:0;clip-path:polygon(12% 0,88% 0,100% 12%,100% 88%,88% 100%,12% 100%,0 88%,0 12%);background:linear-gradient(145deg,#17374955,#07152233);color:#c4fff4;font-size:8px;font-weight:800;letter-spacing:.4px;line-height:1;user-select:none;-webkit-user-select:none;touch-action:none;pointer-events:auto;box-shadow:none;transform:none}
+body.mobile #touch :where(button):before{content:"";position:absolute;inset:3px;clip-path:inherit;border:1px solid #9cf8e222;pointer-events:none}
+body.mobile #touch :where(button):after{content:"";position:absolute;top:2px;left:15%;width:24%;height:2px;background:var(--pad-amber);pointer-events:none}
+body.mobile #touch :where(button) .control-glyph{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+body.mobile #touch :where(button):active{background:#215567aa;color:#fff;border-color:#fff4c0;transform:scale(.97)}
+body.mobile #fire{bottom:var(--base);width:var(--fire-width);height:var(--fire-height);flex-direction:row;gap:9px;border:2px solid #8affdacc;background:linear-gradient(110deg,#164b5366,#09233344);color:#d4fff6;font-size:12px;letter-spacing:.7px;clip-path:polygon(6% 0,94% 0,100% 18%,100% 82%,94% 100%,6% 100%,0 82%,0 18%)}
+body.mobile #fire .control-glyph{width:25px;height:25px;stroke-width:1.7}
+body.mobile #jump{bottom:calc(var(--base) + var(--fire-height) + 4px);height:var(--reload-height)}
+body.mobile #dash{bottom:var(--rail-bottom)}
+body.mobile #slide{bottom:calc(var(--rail-bottom) + var(--action-step))}
+body.mobile #swap{bottom:calc(var(--rail-bottom) + var(--action-step)*2)}
+body.mobile #reload{right:calc(var(--edge) + var(--action-size) + 4px);bottom:calc(var(--base) + var(--fire-height) + 4px);width:calc(var(--fire-width) - var(--action-size) - 4px);height:var(--reload-height);flex-direction:row;gap:5px;font-size:11px;letter-spacing:.4px;color:#ffd08a;border-color:#e4b599;clip-path:polygon(6% 0,94% 0,100% 18%,100% 82%,94% 100%,6% 100%,0 82%,0 18%)}
+body.mobile #reload .control-glyph{width:18px;height:18px}
+body.mobile footer{bottom:max(12px,env(safe-area-inset-bottom));left:max(12px,env(safe-area-inset-left));right:max(12px,env(safe-area-inset-right));gap:12px;align-items:end}
+body.mobile .vitals{width:clamp(84px,14vw,112px)}
+body.mobile .drive{width:clamp(110px,20vw,160px)}
+body.mobile .weapon{position:absolute;right:calc(clamp(132px,18vw,156px) + 12px);bottom:0;display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:8px;row-gap:2px;align-items:center;width:156px;max-width:156px;line-height:1}
+body.mobile .weapon #weaponname{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;font-size:12px;font-weight:700;letter-spacing:.02em;color:#d4fff6;white-space:nowrap;text-align:right}
+body.mobile .weapon #ammo{display:block;font-size:32px;line-height:1.05;font-variant-numeric:tabular-nums}
+body.mobile .weapon #reloadstatus{grid-column:1 / -1;font-size:8px;letter-spacing:1px;line-height:1.3}
+body.mobile #experience{top:max(62px,calc(env(safe-area-inset-top) + 48px));left:clamp(100px,20vw,180px);width:clamp(110px,19vw,165px)}
+body.mobile #enemycount{top:max(57px,calc(env(safe-area-inset-top) + 43px));right:calc(max(12px,env(safe-area-inset-right)) + 54px);font-size:9px}
+body.mobile #boss{top:max(88px,calc(env(safe-area-inset-top) + 74px));left:32%;width:36%}
+body.mobile #controlsHint{display:none}
+@media (orientation:portrait){
+ body.mobile #stick{bottom:clamp(90px,12vh,112px);left:max(12px,env(safe-area-inset-left));width:104px;height:104px}
+ body.mobile #lookzone{left:24%}
+ body.mobile #experience{left:100px;width:110px}
+ body.mobile .weapon{right:66px;bottom:132px}
+}
+/* Short landscape screens keep the three movement actions vertical; utility buttons dock beside FIRE. */
+@media (orientation:landscape) and (max-height:360px){
+ body.mobile #swap{right:calc(var(--edge) + var(--fire-width) + 8px)}
+ body.mobile #swap{bottom:var(--base)}
+ body.mobile .weapon{right:calc(clamp(132px,18vw,156px) + 68px);bottom:68px}
+ body.mobile .drive{width:90px}
+ body.mobile #radar{width:96px;height:96px}
+ body.mobile #stick{width:90px;height:90px;bottom:72px}
+}
+
+@media (orientation:portrait) and (max-width:360px){body.mobile .weapon{bottom:230px}}
+
+/* PHANTOM LANCE scope: a clear central lens keeps targets visible while the perimeter darkens. */
+#sniper-scope{position:absolute;inset:0;z-index:2;display:grid;place-items:center;pointer-events:none}
+#sniper-scope:before{content:"";position:absolute;inset:0;background:radial-gradient(circle,transparent 0 39vmin,rgba(2,9,16,.76) 40vmin 100%)}
+.scope-lens{position:relative;z-index:1;width:min(80vh,82vw);aspect-ratio:1;border:2px solid #8eefff;border-radius:50%;background:radial-gradient(circle,transparent 0 52%,#07203318 74%,#04121c35);box-shadow:inset 0 0 30px #4eeaff24,0 0 28px #5cecff66;overflow:hidden}
+.scope-lens:before,.scope-lens:after{content:"";position:absolute;inset:7%;border:1px solid #8fefff40;border-radius:50%}
+.scope-lens:after{inset:14%;border-color:#8fefff24}
+.scope-lens i,.scope-lens b{position:absolute;z-index:1;display:block;left:8%;top:50%;width:84%;height:1px;background:linear-gradient(90deg,transparent,#8eefff88 18%,#d5ffff 49%,#8eefff88 82%,transparent);transform:translateY(-50%)}
+.scope-lens b{left:50%;top:8%;width:1px;height:84%;background:linear-gradient(180deg,transparent,#8eefff88 18%,#d5ffff 49%,#8eefff88 82%,transparent);transform:translateX(-50%)}
+.scope-lens em{position:absolute;z-index:2;left:50%;top:50%;width:12px;height:12px;border:1px solid #d6ffff;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 8px #7ceeff}
+.scope-lens span,.scope-lens small{position:absolute;z-index:3;left:50%;top:11%;transform:translateX(-50%);font:700 13px/1 monospace;letter-spacing:2px;color:#d6fbff;text-shadow:0 0 8px #38dfff}
+.scope-lens small{top:auto;bottom:11%;font-size:9px;letter-spacing:2px;color:#91dce8}
+header,footer,#radar,#experience,#enemycount,#boss,#notice,#target,#hit,#hurt,#vignette{z-index:3}
+body.sniper-aim .weapon #weaponname{color:#9df5ff}
+body.sniper-aim .weapon #ammo{color:#d7fcff;text-shadow:0 0 12px #3bdfff77}
+
+/* ASTRA uses the existing HUD slots; the firing lane stays free of new overlays. */
+body.phase-active .weapon #weaponname{color:#c8c4ff}
+body.phase-active #cross i,body.phase-active #cross b{background:#c5dcff}
+body.phase-active #drivebar{background:#b2a4ff}
+body.mobile.phase-active #reload{color:#d5caff;border-color:#ac99ed}
+body.mobile.phase-active #reload:after{background:#b9a7ff}
+
+/* Limit release: a single impact wash, an expanding halo, then a warm afterimage. */
+.ultimate{position:absolute;inset:0;z-index:8;pointer-events:none;overflow:hidden;--flash:0;--heat:0;--iris:0;--title:0;contain:layout paint}
+.ult-wash{position:absolute;inset:0;background:#fff5dd;opacity:var(--flash)}
+.ult-halo{position:absolute;inset:-30%;background:radial-gradient(ellipse,transparent 26%,#ff9c3855 45%,#fb481733 60%,#1d030600 74%);opacity:var(--heat);transform:scale(calc(.4 + var(--iris)*1.4))}
+.ult-fracture{position:absolute;inset:0;box-shadow:inset 0 0 16vw #f8552933;background:radial-gradient(ellipse at 50% 54%,transparent 32%,#40081366);opacity:var(--heat)}
+.ult-letterbox{position:absolute;left:0;right:0;height:8%;background:#10080be6;transform:scaleY(var(--title));transform-origin:top}.ult-letterbox.top{top:0}.ult-letterbox.bottom{bottom:0;transform-origin:bottom}
+.ult-caption{position:absolute;left:5%;right:5%;top:39%;text-align:center;opacity:var(--title);transform:translateY(calc((1 - var(--title))*12px));color:#fff6d5;text-shadow:0 2px 24px #d33d1b,0 2px 4px #190b11}
+.ult-caption span{display:block;font-size:clamp(9px,1.2vw,13px);letter-spacing:.4em;color:#ffcf99}.ult-caption strong{display:block;font-size:clamp(38px,10vw,130px);font-weight:900;font-style:italic;line-height:1.18;letter-spacing:.055em}.ult-caption small{font-size:clamp(9px,1.3vw,14px);letter-spacing:.32em;color:#ffe3b3}
+.ultimate.charging .ult-caption{top:61%}.ultimate.charging .ult-caption strong{font-size:clamp(22px,4vw,44px)}.ultimate.charging .ult-letterbox{height:3%}
+body.mobile .ult-caption{top:36%}body.mobile .ult-caption strong{font-size:clamp(32px,9vw,90px)}body.mobile .ult-caption span,body.mobile .ult-caption small{letter-spacing:.16em}body.mobile .ultimate.charging .ult-caption{top:58%}body.mobile .ultimate.charging .ult-caption strong{font-size:26px}
+@media(prefers-reduced-motion:reduce){.ult-halo{transform:none}.ult-fracture{box-shadow:none}}
+
+/* SEEKER: three restrained target brackets; no new input overlay. */
+#seeker-hud{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.seeker-lock{position:absolute;left:0;top:0;width:38px;height:38px;border:1px solid #78e9e080;border-radius:8px;background:linear-gradient(#8bffed,#8bffed) left top/9px 2px no-repeat,linear-gradient(#8bffed,#8bffed) right bottom/9px 2px no-repeat;opacity:calc(.35 + var(--progress)*.65);box-shadow:0 0 0 1px #071b2480}
+.seeker-lock.ready{border-color:#ffc97b;border-radius:2px;background:linear-gradient(#ffca7d,#ffca7d) left top/10px 2px no-repeat,linear-gradient(#ffca7d,#ffca7d) right bottom/10px 2px no-repeat}
+#seeker-status{position:absolute;top:calc(50% + 34px);left:50%;transform:translateX(-50%);font-size:10px;font-weight:bold;letter-spacing:1.5px;color:#b1ece3;text-shadow:0 1px 4px #001017;background:#061a2180;padding:4px 8px;white-space:nowrap}
+body.mobile #seeker-status{font-size:9px;top:calc(50% + 25px)}
+body.mobile .seeker-lock{width:31px;height:31px}
+
+/* Easy weapon practice: large introduction, then a nonblocking reference card. */
+.tutorial-actions{display:flex;justify-content:center;flex-wrap:wrap;gap:8px}
+#tutorial.weapon-practice .tutorial-card{max-height:calc(100dvh - 24px);overflow-y:auto;touch-action:pan-y;padding:clamp(18px,3vw,32px)}
+#tutorial.weapon-practice .tutorial-card small{font-size:clamp(13px,1.8vw,19px)}
+#tutorial.weapon-practice .tutorial-card h2{font-size:clamp(30px,5vw,58px);margin:12px 0;overflow-wrap:anywhere}
+#tutorial.weapon-practice .tutorial-card p{font-size:clamp(20px,2.6vw,30px);line-height:1.4;margin:10px 0}
+#tutorial.weapon-practice #tutorial-controls{font-size:clamp(18px,2.2vw,26px);color:#a8eaff}
+#tutorial.weapon-practice #tutorial-goal{font-size:clamp(16px,1.9vw,22px);color:#b8cfd8}
+#tutorial.weapon-practice #tutorial-feedback{display:block;margin:10px 0;color:#ffda9a;letter-spacing:0;line-height:1.4;font-size:14px}
+#tutorial.weapon-practice .tutorial-actions button{min-height:44px;padding:10px 16px;font-size:18px}
+#tutorial.weapon-practice #tutorial-skip{background:#8affda;color:#08242d;font-weight:bold}
+#tutorial.weapon-practice #tutorial-finish{background:#102733;color:#b7cdd6}
+#tutorial.weapon-practice.compact{width:min(370px,calc(100vw - 32px))}
+#tutorial.weapon-practice.compact .tutorial-card{padding:12px 14px;max-height:calc(100dvh - 340px);text-align:left}
+#tutorial.weapon-practice.compact .tutorial-card small{font-size:11px}
+#tutorial.weapon-practice.compact .tutorial-card h2{font-size:22px;margin:5px 0}
+#tutorial.weapon-practice.compact .tutorial-card p{font-size:16px;line-height:1.35;margin:6px 0}
+#tutorial.weapon-practice.compact #tutorial-controls{font-size:15px}
+#tutorial.weapon-practice.compact #tutorial-goal{display:none}
+#tutorial.weapon-practice.compact #tutorial-feedback{font-size:12px;margin:7px 0}
+#tutorial.weapon-practice.compact .tutorial-actions{justify-content:flex-start}
+#tutorial.weapon-practice.compact .tutorial-actions button{font-size:14px;padding:7px 10px}
+body.weapon-practice #experience{display:none}
+body.weapon-practice #swap:disabled{opacity:.3}
+body.mobile #tutorial.weapon-practice.compact{left:max(158px,calc(env(safe-area-inset-left) + 144px));top:max(54px,calc(env(safe-area-inset-top) + 44px));width:min(470px,calc(100vw - 232px))}
+body.mobile #tutorial.weapon-practice.compact .tutorial-card{display:grid;grid-template-columns:minmax(0,1fr) 92px;column-gap:10px;padding:6px 10px;max-height:calc(50dvh - 62px);transform:none;box-shadow:0 3px 12px #0008}
+body.mobile #tutorial.weapon-practice.compact .tutorial-card>*{grid-column:1}
+body.mobile #tutorial.weapon-practice.compact .tutorial-card small{font-size:10px;line-height:1.2}
+body.mobile #tutorial.weapon-practice.compact .tutorial-card h2{font-size:18px;line-height:1.15;margin:2px 0}
+body.mobile #tutorial.weapon-practice.compact .tutorial-card p{font-size:14px;line-height:1.2;margin:1px 0}
+body.mobile #tutorial.weapon-practice.compact #tutorial-controls{font-size:13px}
+body.mobile #tutorial.weapon-practice.compact #tutorial-feedback{font-size:11px;line-height:1.2;margin:1px 0}
+body.mobile #tutorial.weapon-practice.compact .tutorial-actions{grid-column:2;grid-row:1 / 6;flex-direction:column;justify-content:center;align-self:start;gap:6px}
+body.mobile #tutorial.weapon-practice.compact .tutorial-actions button{font-size:12px;line-height:1.2;padding:6px;min-height:44px;width:92px}
+body.mobile.weapon-practice #enemycount{display:none}
+@media(orientation:portrait){
+ body.mobile #tutorial.weapon-practice.compact{left:max(12px,env(safe-area-inset-left));top:195px;width:calc(100vw - 24px)}
+ body.mobile #tutorial.weapon-practice.compact .tutorial-card{max-height:calc(50dvh - 210px)}
+}
+
+#rebuild{position:absolute;z-index:8;bottom:9%;left:50%;transform:translateX(-50%);text-align:center;pointer-events:none;width:min(600px,90vw);text-shadow:0 2px 12px #000}#rebuild small{display:block;font-size:12px;letter-spacing:3px;color:#d8f5ff}#rebuild strong{display:block;font-size:clamp(25px,4vw,42px);letter-spacing:.12em;margin:12px 0}#rebuild p{margin:6px;color:#effaff}#rebuild>div{height:3px;background:#ffffff33;margin:15px auto;width:70%}#rebuild i{display:block;height:100%;background:#d7fff2}body.mobile #rebuild{bottom:15%}
+
+body.reconstructing #touch,body.reconstructing footer,body.reconstructing #cross,body.reconstructing #target,body.reconstructing #radar,body.reconstructing #experience,body.reconstructing #enemycount,body.reconstructing #controlsHint,body.reconstructing #notice,body.reconstructing #hit,body.reconstructing #hurt,body.reconstructing #boss{display:none!important}
+
+/* Weapon evolution: the battlefield stays clear; feedback sits with the gun HUD. */
+#pulse-hud{--evo:#83f5ed;display:block;margin:6px 0 7px;color:var(--evo);font-size:10px;letter-spacing:1px}#pulse-hud[data-path=lance]{--evo:#ffcb91}#pulse-form{font-size:10px;font-weight:700}#pulse-hud>div{height:3px;background:#b7e7f522;margin:5px 0}#pulse-meter{display:block;height:100%;width:0;background:var(--evo);transition:width .12s}#pulse-hud #pulse-rule{font-size:9px;letter-spacing:.02em;color:#c6e1e8}#pulse-hud.ready #pulse-form{color:#fff0d5;text-shadow:0 0 9px #ffba73}#pulse-progress{display:flex;align-items:center;justify-content:space-between;gap:20px;border:1px solid #72d5de55;border-left:3px solid #7cf5e0;padding:13px 18px;background:linear-gradient(100deg,#113338aa,#111c2b88)}#pulse-progress>div small{display:block;color:#8affde;letter-spacing:2px;font-size:9px;margin-bottom:5px}#pulse-progress strong{font-size:15px}#pulse-progress ol{list-style:none;display:flex;gap:18px;margin:0;padding:0}#pulse-progress li{color:#78949d;font-size:11px;white-space:nowrap}#pulse-progress li b{display:inline-grid;place-items:center;width:24px;height:24px;border:1px solid #52727c;margin-right:6px;font-size:10px}#pulse-progress li.done{color:#a5ffe7}#pulse-progress li.done b{background:#8affda;color:#112332;border-color:#8affda}#choices .pulse-card{--evo:#81f8da;position:relative;border-color:#619d9855;border-top:3px solid var(--evo);background:linear-gradient(145deg,#133b42,#0c1c2b 70%);box-shadow:inset 0 0 28px #4ce4dd08}#choices .pulse-card[data-path=arc]{--evo:#a0b8ff;background:linear-gradient(145deg,#243952,#101c2d 70%)}#choices .pulse-card[data-path=lance]{--evo:#ffd198;background:linear-gradient(145deg,#3c3532,#131d2a 70%)}#choices .pulse-card small{color:var(--evo);font-size:10px;letter-spacing:1px}#choices .pulse-card:hover,#choices .pulse-card:focus-visible{border-color:var(--evo);background:#203e4b}.evolution-art{display:block;width:100%;height:56px;margin:13px 0 0;stroke:var(--evo);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;fill:none;filter:drop-shadow(0 0 4px #7ffff022)}#choices .pulse-card h3{margin:13px 0 10px;font-size:19px}#choices .pulse-card p{color:#c2d7e1;line-height:1.7}.evolution-stats{display:block;font-size:9px;line-height:1.5;color:var(--evo);font-weight:bold;letter-spacing:.4px;margin:12px 0}#choices .pulse-card .selecthint{color:var(--evo)}body.mobile #pulse-hud{grid-column:1 / -1;margin:2px 0;max-width:190px;justify-self:end}body.mobile #pulse-form{font-size:8px}body.mobile #pulse-hud #pulse-rule{font-size:7px}body.mobile #pulse-hud>div{margin:3px 0;height:2px}body.mobile #pulse-progress{padding:8px 12px;gap:8px}body.mobile #pulse-progress strong{font-size:12px}body.mobile #pulse-progress ol{gap:8px}body.mobile #pulse-progress li{font-size:9px}
+@media(max-height:550px){#panel h2{margin:8px 0}#paneltext{margin:6px 0;font-size:12px}#pulse-progress{padding:8px 12px}#choices .pulse-card{padding:13px}#choices .pulse-card h3{font-size:16px;margin:8px 0}#choices .pulse-card p{font-size:11px;margin:7px 0}.evolution-art{height:34px;margin-top:8px}.evolution-stats{margin:7px 0}#pulse-progress ol{gap:9px}}
+@media(max-width:650px){#pulse-progress{align-items:flex-start;flex-direction:column;gap:8px}#pulse-progress ol{gap:12px}#pulse-progress li{font-size:10px}.evolution-art{height:36px}#choices .pulse-card h3{font-size:16px}}
+@media(prefers-reduced-motion:reduce){#pulse-meter{transition:none}.evolution-art{filter:none}}
+
+#rebuild-skip{position:absolute;z-index:9;top:max(72px,calc(env(safe-area-inset-top) + 58px));right:max(24px,env(safe-area-inset-right));padding:10px 14px;min-height:40px;background:#0b1b2780;border:1px solid #88aabb44;color:#a9bdc9;font-size:12px;letter-spacing:.06em;border-radius:3px}#rebuild-skip:hover,#rebuild-skip:focus-visible{color:#ecfff8;border-color:#82d9c5;background:#16313dcc}
+
+/* Weapon progression stays in the reward panel, away from combat sightlines. */
+
+/* Augment cards: weapon identity, activation condition and benefit stay legible at a glance. */
+#choices .augment-card{--aug:#80f1dc;position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:7px;text-align:left;min-height:210px;padding:19px 18px;background:linear-gradient(148deg,#122a39 0%,#0a1723 68%,#101d2b 100%);border:1px solid #49708066;border-top:3px solid var(--aug);border-radius:5px;box-shadow:inset 0 0 28px #5ef6d808,0 12px 30px #0003;transition:transform .18s,border-color .18s,box-shadow .18s,background .18s}
+#choices .augment-card[data-kind=weapon]{--aug:#ffc77e;background:linear-gradient(148deg,#33291f 0%,#111b27 70%)}
+#choices .augment-card[data-card=chain],#choices .augment-card[data-card=parry],#choices .augment-card[data-card=airjump]{--aug:#90dcff}
+#choices .augment-card[data-card=secondwind],#choices .augment-card[data-card=overecho]{--aug:#c1a7ff}
+#choices .augment-card:hover,#choices .augment-card:focus-visible{transform:translateY(-4px);border-color:var(--aug);box-shadow:inset 0 0 34px color-mix(in srgb,var(--aug) 10%,transparent),0 16px 34px #0006}
+#choices .augment-card>small{font-size:9px;letter-spacing:1.5px;color:var(--aug);font-weight:800}
+.augment-target{display:inline-block;padding:4px 8px;border:1px solid color-mix(in srgb,var(--aug) 45%,transparent);border-radius:2px;color:#d8e8ed;font-size:10px;letter-spacing:.04em;background:#06111d99}
+#choices .augment-card h3{font-size:clamp(17px,1.5vw,21px);margin:3px 0 1px;color:#f1fbff;line-height:1.25}
+#choices .augment-card p{margin:0;color:#a9c0cb;font-size:11px;line-height:1.55}
+#choices .augment-card p.augment-trigger{color:var(--aug);font-weight:700;font-size:10px}
+#choices .augment-card .selecthint{margin-top:auto;padding-top:7px;color:var(--aug);font-size:9px;letter-spacing:1px;font-weight:800}
+#choices .augment-card[data-card=secondwind]::after,#choices .augment-card[data-card=overecho]::after{content:"◆";position:absolute;right:14px;top:13px;color:var(--aug);font-size:12px;text-shadow:0 0 12px var(--aug)}
+body.point-blank-ready #cross{transform:translate(-50%,-50%) scale(.72)!important;filter:drop-shadow(0 0 5px #ffc77e)}
+body.point-blank-ready #cross i,body.point-blank-ready #cross b{background:#ffd28b}
+@media(max-width:650px){#choices .augment-card{min-height:150px;padding:12px;gap:5px}#choices .augment-card h3{font-size:15px}#choices .augment-card p{font-size:10px;line-height:1.4}.augment-target{font-size:9px;padding:3px 6px}#choices .augment-card>small{font-size:8px}}
+@media(max-height:550px){#choices .augment-card{min-height:145px;padding:12px;gap:4px}#choices .augment-card h3{font-size:16px;margin:1px 0}#choices .augment-card p{font-size:10px;line-height:1.35}}
+@media(prefers-reduced-motion:reduce){#choices .augment-card{transition:none}#choices .augment-card:hover{transform:none}}
+/* Boss rush counters stay contained on narrow touch layouts. */
+body.mobile #wave{font-size:10px;max-width:52vw;letter-spacing:.6px;white-space:normal;text-align:right;line-height:1.5}
+#boss small{display:block;line-height:1.5;overflow-wrap:anywhere}
+
+body.underwater #vignette{background:linear-gradient(180deg,#16738b22,#061e35aa);box-shadow:inset 0 0 160px #057ca577}

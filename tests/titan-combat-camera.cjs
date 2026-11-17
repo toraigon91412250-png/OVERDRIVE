@@ -1,0 +1,36 @@
+// Pure camera calculations with real Three.js vectors; no renderer needed.
+const assert=require('node:assert/strict'),vm=require('node:vm'),e=require('esbuild'),THREE=require('three');
+const built=e.buildSync({entryPoints:['src/titan/combat-camera.js'],bundle:true,format:'cjs',platform:'node',write:false});
+const m={exports:{}};vm.runInThisContext('(function(module,exports,require){'+built.outputFiles[0].text+'})')(m,m.exports,require);
+const {createTitanCamera,chooseTitanOpponent}=m.exports;
+const player=new THREE.Vector3(0,12.8,0),target={position:new THREE.Vector3(0,0,-8),height:15};
+const camera=createTitanCamera();
+const distant=camera.update({position:player,yaw:0}),farBack=distant.position.z,farFov=distant.fov;
+camera.reset();const close=camera.update({position:player,yaw:0,target});
+assert(close.position.z>farBack&&close.position.x>4.5,'Close combat pulls back and opens the shoulder view');
+assert(close.fov>farFov&&close.fov<=76,'Close combat widens the field of view within a comfortable bound');
+assert(close.lookAt.z<0,'The camera looks toward the manually aimed fight');
+assert.deepEqual(player.toArray(),[0,12.8,0],'Framing never moves the player');
+const normalHeight=close.lookAt.y;
+camera.reset();const colossal=camera.update({position:player,yaw:0,target:{...target,height:60}});
+assert(colossal.lookAt.y<14&&Math.abs(colossal.lookAt.y-normalHeight)<2,'A colossal target does not drag the camera into the sky');
+const front={alive:true,position:[0,0,-8],height:15},side={alive:true,position:new THREE.Vector3(8,0,-2)},behind={alive:true,position:[0,0,2]},dead={alive:false,position:[0,0,-1]};
+assert.equal(chooseTitanOpponent({position:player,yaw:0,enemies:[behind,dead,side,front]}),front,'Only a visible forward opponent is selected');
+assert.equal(chooseTitanOpponent({position:player,yaw:0,enemies:[front],canReach:()=>false}),null,'Walls prevent opponent selection');
+assert.equal(chooseTitanOpponent({position:player,yaw:0,enemies:[front],maxDistance:5}),null,'Distant opponents cannot take over the close-combat framing');
+assert.equal(chooseTitanOpponent({position:player,yaw:Math.PI,enemies:[front,behind]}),behind,'Turning manually changes the eligible opponent');
+camera.reset();camera.update({position:player,yaw:0});
+let turned=camera.update({position:player,yaw:Math.PI,dt:1/60});
+assert(turned.position.z>0,'A manual turn begins with smooth camera movement');
+for(let i=0;i<120;i++)turned=camera.update({position:player,yaw:Math.PI,dt:1/60});
+assert(turned.position.z<-16&&turned.lookAt.z>3,'The camera fully follows a manual turn without keeping an old target');
+// An idempotent wall clip keeps the camera on the player's side of the wall.
+const clip=(from,to)=>{const delta=to.clone().sub(from),length=delta.length();return length>4?from.clone().addScaledVector(delta,4/length):to;};
+const clipped=camera.update({position:player,yaw:0,dt:1/60,occlude:clip});
+assert(clipped.position.distanceTo(player.clone().add(new THREE.Vector3(0,-2,0)))<=4.00001,'Occlusion is respected after interpolation');
+const newPlayer=new THREE.Vector3(100,12.8,100);
+const warped=camera.update({position:newPlayer,yaw:0,dt:1/60,occlude:clip});
+assert(warped.position.distanceTo(newPlayer)<7&&warped.position.x>95,'Warping does not interpolate through the old street');
+camera.reset();const reset=camera.update({position:player,yaw:0,dt:0});
+assert(reset.position.distanceTo(player)<25&&reset.position.z>16,'Reset initializes immediately even with zero elapsed time');
+console.log('PASS titan camera close framing, colossal cap, forward/occlusion selection, manual turn, wall clip, warp and reset');

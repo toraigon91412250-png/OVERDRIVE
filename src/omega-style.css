@@ -1,0 +1,173 @@
+/* Ω is scoped to its own difficulty. The compact left card leaves the target lane clear. */
+body.omega-mode,body.omega-preview{--omega-orange:#ffad68;--omega-ivory:#fff0db;--omega-steel:#a3b1b7;--omega-ink:#171b21}
+body.omega-preview #menu .eyebrow,body.omega-preview #menu h1 span,body.omega-preview #menu .how b{color:var(--omega-orange)}
+body.omega-preview #menu .line{background:var(--omega-orange)}
+body.omega-preview #menu .primary{background:var(--omega-orange);color:#20170e}
+body.omega-preview #menu .primary:hover{background:#ffdfb3}
+body.omega-preview #difficulty-summary{color:#ffd4ac}
+body.omega-preview #menu .difficulty select{border-color:#c88650;color:#ffdfbd}
+body.omega-mode .brand span{color:var(--omega-orange)}
+body.omega-mode #swap{display:none!important}
+body.omega-mode footer .bar i{background:var(--omega-orange)}
+body.omega-mode #pulse-hud,body.omega-mode #pulse-progress{display:none!important}
+#omega-hud{position:absolute;left:28px;top:326px;z-index:4;width:220px;padding:11px 13px 9px;border:1px solid #edab6259;border-left:3px solid var(--omega-orange);background:linear-gradient(120deg,#1b2026e8,#131a20c9);box-shadow:inset 0 0 22px #ffb27108,0 5px 16px #0002;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));color:var(--omega-ivory);pointer-events:none}
+.omega-hud-line{display:flex;align-items:center;gap:7px;min-height:23px}
+.omega-emblem{font-size:28px;font-weight:800;line-height:1;color:var(--omega-orange)}
+.omega-protocol{font-size:7px;letter-spacing:2.1px;line-height:1.6;color:#edd5b9}
+.omega-protocol>span{display:block;font-size:6px;letter-spacing:1.5px;color:#9aabad}
+#omega-details{pointer-events:auto;margin-left:auto;padding:5px 0 5px 5px;border:0;background:transparent;color:#d6b28c;font-size:7px;letter-spacing:1px;touch-action:none}
+#omega-details:hover{color:#fff0db;background:transparent}
+#omega-details:focus-visible{outline:1px solid var(--omega-orange);outline-offset:3px}
+.omega-core-line{display:flex;align-items:center;gap:8px;margin-top:9px;min-width:0}
+.omega-weapon-mark{flex:0 0 37px;width:37px;height:28px;fill:none;stroke:var(--omega-orange);stroke-width:1.2;stroke-linejoin:round}
+#omega-core{font-size:13px;letter-spacing:.9px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+#omega-trait{font-size:8px;color:#ffc38d;font-variant-numeric:tabular-nums;white-space:nowrap;margin-left:auto}
+.omega-build-info{margin:8px 0 0;padding-top:7px;border-top:1px solid #c4a57b26;display:grid;gap:5px;font-size:8px;line-height:1.4;letter-spacing:.45px;color:#bec8c8}
+#omega-parts{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#omega-info{color:#ffcd9f}
+#omega-help{display:none;margin-top:9px;padding-top:8px;border-top:1px solid #bca18233;color:#e1e5e2;font-size:10px;line-height:1.6;letter-spacing:.01em;overflow-wrap:anywhere}
+#omega-help.expanded{display:block}
+.omega-hud-bottom{display:flex;gap:7px;align-items:center;margin-top:9px;color:#8e999d;font-size:5px;letter-spacing:1px;white-space:nowrap}
+.omega-hud-bottom i{display:block;width:8px;height:2px;background:#d0925d}
+.omega-hud-bottom i:last-child{margin-left:auto;width:22px;background:#78898b}
+body.reconstructing #omega-hud{display:none!important}
+body.omega-mode #choices:has(.omega-card){grid-template-columns:repeat(3,minmax(0,1fr))}
+#choices .omega-card{display:flex;flex-direction:column;align-items:flex-start;gap:9px;position:relative;min-height:210px;padding:23px;text-align:left;border:1px solid color-mix(in srgb,var(--gun-accent,var(--omega-orange)) 40%,transparent);border-top:3px solid var(--gun-accent,var(--omega-orange));border-radius:1px;background:linear-gradient(145deg,#2e2724,#151c23 76%);box-shadow:inset 0 0 30px #ffd19b06,0 10px 26px #0003;transition:transform .16s,border-color .16s,background .16s}
+#choices .omega-card small{font-size:8px;letter-spacing:2px;color:var(--gun-accent,#ffc18c)}
+#choices .omega-card svg{display:block;width:100%;height:48px;fill:none;stroke:var(--gun-accent,#ffb77a);stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round}
+#choices .omega-card h3{font-size:21px;line-height:1.15;color:#fff0db;margin:2px 0}
+#choices .omega-card p{font-size:12px;line-height:1.65;color:#c9c6bd;margin:0}
+#choices .omega-card .selecthint{margin-top:auto;padding-top:10px;color:var(--gun-accent,#ffc18c);font-size:8px;letter-spacing:1.5px}
+#choices .omega-card:hover,#choices .omega-card:focus-visible{border-color:var(--gun-accent,#ffe0b7);background:linear-gradient(145deg,#47352a,#1c232b 76%);transform:translateY(-3px)}
+@media(max-height:660px) and (min-width:900px){#omega-hud{top:316px;padding:7px 11px;width:220px}.omega-hud-bottom{display:none}.omega-core-line{margin-top:4px}.omega-build-info{margin-top:5px}}
+body.mobile #omega-hud{left:max(20px,env(safe-area-inset-left));top:max(192px,calc(env(safe-area-inset-top) + 178px));width:130px;min-height:27px;padding:5px 6px;border-left-width:2px;clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px));overflow:visible}
+body.mobile .omega-hud-line{min-height:0;height:0;position:relative}
+body.mobile .omega-emblem,body.mobile .omega-protocol,body.mobile .omega-weapon-mark,body.mobile .omega-build-info,body.mobile .omega-hud-bottom{display:none}
+body.mobile #omega-details{position:absolute;inset:-5px -6px auto;height:27px;padding:0;border:0;font-size:0;background:transparent;width:calc(100% + 12px);z-index:1}
+body.mobile #omega-details:after{content:"+";position:absolute;right:3px;top:7px;font-size:9px;color:#d69f6d}
+body.mobile #omega-details[aria-expanded=true]:after{content:"−"}
+body.mobile .omega-core-line{margin:0;gap:4px;min-height:16px;padding-right:8px}
+body.mobile #omega-core{font-size:9px;letter-spacing:.4px}
+body.mobile #omega-trait{font-size:7px;letter-spacing:0}
+body.mobile #omega-help{position:absolute;left:calc(100% + 8px);top:-1px;width:min(230px,calc(100vw - 180px));margin:0;padding:9px 10px;border:1px solid #c29c6970;border-left:2px solid var(--omega-orange);background:#141d25ed;color:#ede2d2;font-size:10px;line-height:1.5;box-shadow:0 7px 16px #0003}
+@media(max-height:550px){body.mobile #omega-hud{width:96px;top:max(157px,calc(env(safe-area-inset-top) + 143px))}body.mobile #omega-core{font-size:8px}body.mobile #omega-help{width:min(230px,calc(100vw - 150px))}}
+@media(orientation:portrait){body.mobile #omega-hud{width:130px;top:max(192px,calc(env(safe-area-inset-top) + 178px))}body.mobile #omega-core{font-size:9px}body.mobile #omega-help{left:0;top:34px;width:calc(100vw - 40px)}body.omega-mode #choices:has(.omega-card){grid-template-columns:1fr}}
+@media(orientation:landscape) and (max-height:360px){body.mobile #omega-hud{left:max(126px,calc(env(safe-area-inset-left) + 106px));top:max(96px,calc(env(safe-area-inset-top) + 82px));width:120px}body.mobile #omega-help{left:0;top:34px;width:min(230px,calc(100vw - 150px))}}
+@media(max-height:550px){#choices .omega-card{min-height:160px;padding:13px;gap:5px}#choices .omega-card svg{height:31px}#choices .omega-card h3{font-size:17px}#choices .omega-card p{font-size:10px;line-height:1.4}#choices .omega-card .selecthint{padding-top:5px}}
+@media(orientation:portrait){#choices .omega-card{min-height:130px;padding:14px;gap:5px}#choices .omega-card svg{position:absolute;right:14px;top:13px;width:48px;height:36px}#choices .omega-card h3{font-size:18px;padding-right:52px}#choices .omega-card p{font-size:11px;line-height:1.5}}
+@media(prefers-reduced-motion:reduce){#choices .omega-card{transition:none}#choices .omega-card:hover{transform:none}}
+
+#choices .omega-weapon-card h3{font-size:18px}#choices .omega-weapon-card p b{color:var(--gun-accent,var(--omega-orange));font-weight:700}
+
+/* Rift Raid puts the active contract first and keeps the aim lane open. */
+body.omega-mode,body.omega-preview{--raid-cyan:#8dffe1}
+#omega-hud{width:250px;clip-path:none;background:linear-gradient(120deg,#12222bef,#101920d9)}
+.omega-protocol{font-size:8px;letter-spacing:2.4px}
+.raid-contract{margin-top:10px;padding-top:8px;border-top:1px solid #a9d5d828}
+.raid-contract-label{display:flex;align-items:center;gap:4px;font-size:6px;letter-spacing:1.4px;color:#9cb5b9}
+.raid-contract-label>strong{margin-left:auto;color:var(--omega-orange);font-size:19px;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:0}
+.raid-contract-label>small{font-size:6px;letter-spacing:.8px;align-self:flex-end;margin-bottom:2px}
+#raid-title{font-size:18px;letter-spacing:.06em;line-height:1.25;color:#effff8;margin:7px 0 5px;font-weight:800}
+#raid-instruction{font-size:10px;line-height:1.55;color:#bdd5d4;margin:0;min-height:16px;overflow-wrap:anywhere}
+.raid-task-line{display:flex;align-items:center;margin-top:9px;gap:8px}
+#raid-progress{font-size:12px;line-height:1.1;font-weight:800;color:var(--raid-cyan);font-variant-numeric:tabular-nums;white-space:nowrap}
+.raid-task-caption{font-size:5px;letter-spacing:1.15px;color:#7b979e;margin-left:auto}
+.raid-meter-track{height:3px;background:#2b414a;margin-top:5px;overflow:hidden}
+#raid-meter{display:block;height:100%;width:0;background:var(--raid-cyan);box-shadow:0 0 8px #8dffe16b;transition:width .12s linear}
+.raid-run-stats{display:flex;justify-content:space-between;gap:12px;margin-top:8px;color:#95adb3;font-size:8px;letter-spacing:.5px}
+.raid-run-stats b{margin-left:5px;color:#ffe0b6;font-size:10px;font-variant-numeric:tabular-nums;letter-spacing:.3px}
+#raid-misses{color:#f5ac91}
+.raid-contract.urgent #raid-time{color:#ff836c;text-shadow:0 0 12px #ff644333}
+.raid-contract.urgent .raid-meter-track{background:#5a3034}
+.raid-contract.urgent .raid-contract-label>span{color:#ffa48c}
+.raid-contract.complete #raid-title,.raid-contract.complete #raid-progress{color:#a4ffe5}
+.raid-contract.complete .raid-contract-label>span{color:#a4ffe5}
+.raid-contract.complete #raid-meter{background:#b2ffea;box-shadow:0 0 12px #8dffe177}
+.omega-core-line{display:none;margin-top:10px;padding-top:8px;border-top:1px solid #b3d1d126;gap:7px}
+.omega-weapon-mark{flex-basis:29px;width:29px;height:22px}
+#omega-core{font-size:11px;letter-spacing:.5px}
+#omega-trait{font-size:7px}
+.omega-build-info{display:none;margin-top:5px;padding:0;border:0;gap:3px;font-size:7px;line-height:1.3;letter-spacing:.35px;color:#9db4ba}
+#omega-help{position:absolute;left:calc(100% + 10px);top:0;width:220px;margin:0;padding:10px 12px;border:1px solid #bca18255;background:#10222bf2;font-size:10px;line-height:1.5}
+#raid-reroll{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:8px 5px;margin-top:9px;pointer-events:auto;border:1px solid #d0ad775f;background:linear-gradient(110deg,#c08e4328,#10263055);color:#ffdbab;font-size:9px;letter-spacing:.4px;touch-action:none}
+#raid-reroll>svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+#raid-reroll kbd{display:inline-block;font:inherit;font-size:8px;padding:2px 4px;margin-left:4px;border:1px solid #d0ad7747;background:#070e1399}
+#raid-reroll:hover{background:#82603344;border-color:#ffd494}
+#raid-reroll:disabled{opacity:.3;cursor:default}
+.omega-hud-bottom{font-size:5px;letter-spacing:.65px;color:#708b92}
+body.omega-mode #notice{top:25%;font-size:13px;letter-spacing:1px;text-shadow:0 2px 8px #000}
+#raid-marker{position:absolute;z-index:3;left:50%;top:45%;transform:translate(-50%,-50%);display:flex;align-items:center;flex-direction:column;gap:1px;pointer-events:none;text-align:center;filter:drop-shadow(0 2px 4px #00141c);color:#a3ffe8}
+#raid-marker>svg{width:35px;height:42px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:square}
+#raid-marker .raid-marker-bracket{stroke:#ffcc8c;stroke-width:1.3}
+#raid-marker-label{font-size:10px;font-weight:800;letter-spacing:.8px;padding:3px 6px 2px;background:#061821c7;border-top:1px solid #9bf9dc70;white-space:nowrap;color:#edfff7}
+#raid-marker-distance{font-size:9px;font-variant-numeric:tabular-nums;color:#ffdab2;background:#061821a6;padding:1px 5px}
+#raid-marker.offscreen>svg,#raid-marker.edge>svg{transform:scale(.8)}
+body.reconstructing #raid-marker{display:none!important}
+@media(max-height:660px) and (min-width:900px){#omega-hud{left:260px;top:95px;width:244px;padding:8px 11px}.raid-contract{margin-top:5px;padding-top:5px}.omega-core-line{margin-top:7px;padding-top:6px}#raid-title{font-size:16px}}
+body.mobile #omega-hud{left:max(158px,calc(env(safe-area-inset-left) + 146px));top:max(82px,calc(env(safe-area-inset-top) + 68px));width:clamp(170px,25vw,220px);padding:6px 9px 7px;border-left-width:2px;clip-path:none;background:linear-gradient(100deg,#10232bdc,#10232b77);box-shadow:none}
+body.mobile .omega-hud-line{min-height:12px;height:auto;position:static;gap:5px}
+body.mobile .omega-emblem{display:block;font-size:14px}
+body.mobile .omega-protocol{display:block;font-size:6px;letter-spacing:1.4px}
+body.mobile .omega-protocol>span{display:none}
+body.mobile #omega-details{position:static;inset:auto;padding:2px 0;font-size:6px;width:auto;height:auto;min-width:36px;min-height:20px;margin-left:auto}
+body.mobile #omega-details:after{display:none}
+body.mobile .raid-contract{margin-top:3px;padding-top:3px}
+body.mobile .raid-contract-label{font-size:5px;letter-spacing:1px}
+body.mobile .raid-contract-label>strong{font-size:15px}
+body.mobile .raid-contract-label>small{font-size:5px}
+body.mobile #raid-title{font-size:13px;margin:4px 0 3px;letter-spacing:.04em}
+body.mobile #raid-instruction{font-size:9px;line-height:1.35;min-height:0}
+body.mobile .raid-task-line{margin-top:5px}
+body.mobile #raid-progress{font-size:10px}
+body.mobile .raid-task-caption{font-size:4px;letter-spacing:.7px}
+body.mobile .raid-meter-track{height:2px;margin-top:4px}
+body.mobile .raid-run-stats{margin-top:4px;font-size:7px}
+body.mobile .raid-run-stats b{font-size:9px}
+body.mobile .omega-core-line{display:none}
+body.mobile .omega-build-info,body.mobile .omega-hud-bottom{display:none}
+body.mobile #omega-help{left:0;top:calc(100% + 6px);width:100%;margin:0;padding:8px 9px;font-size:9px;line-height:1.4}
+body.mobile #raid-reroll{position:fixed;left:max(154px,calc(env(safe-area-inset-left) + 142px));bottom:max(94px,calc(env(safe-area-inset-bottom) + 80px));width:100px;min-height:40px;margin:0;padding:5px;border-color:#d0ad7782;background:#142b34a8;font-size:8px;gap:4px;clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px)}
+body.mobile #raid-reroll>svg{width:15px;height:15px;flex:0 0 15px}
+body.mobile #raid-reroll kbd{display:none}
+body.mobile #raid-marker>svg{width:28px;height:34px}
+body.mobile #raid-marker-label{font-size:8px;letter-spacing:.4px;padding:2px 5px}
+body.mobile #raid-marker-distance{font-size:8px}
+body.mobile.omega-mode #notice{top:28%;font-size:10px;letter-spacing:.4px}
+@media(orientation:portrait){body.mobile #omega-hud{left:max(16px,env(safe-area-inset-left));top:max(198px,calc(env(safe-area-inset-top) + 184px));width:calc(100vw - 32px);max-width:360px;padding:7px 10px}body.mobile #raid-title{font-size:16px;margin:5px 0 4px}body.mobile #raid-instruction{font-size:10px}body.mobile .raid-task-caption{font-size:5px}body.mobile #omega-help{width:100%}body.mobile #raid-reroll{bottom:max(114px,calc(env(safe-area-inset-bottom) + 100px));left:130px;width:110px}}
+@media(orientation:landscape) and (max-height:420px){body.mobile #omega-hud{left:max(126px,calc(env(safe-area-inset-left) + 114px));top:max(73px,calc(env(safe-area-inset-top) + 59px));width:180px;padding:4px 7px}body.mobile .omega-hud-line{display:none}body.mobile .raid-contract{margin:0;padding:0;border:0}body.mobile #raid-title{font-size:12px;margin:3px 0 2px}body.mobile .raid-contract-label{font-size:4px}body.mobile #raid-instruction{font-size:8px}body.mobile .raid-task-caption{display:none}body.mobile #raid-reroll{left:max(124px,calc(env(safe-area-inset-left) + 112px));bottom:max(68px,calc(env(safe-area-inset-bottom) + 54px));width:92px;min-height:36px}body.mobile #omega-help{font-size:8px;padding:5px 7px}}
+@media(prefers-reduced-motion:reduce){#raid-meter{transition:none}}
+
+/* FRACTURE's catcher is a compact action dock, separate from the gun/fire rail. */
+body.fracture-mode #kinetic-hud{position:absolute;z-index:5;left:50%;bottom:max(42px,calc(env(safe-area-inset-bottom) + 30px));width:210px;transform:translateX(-50%);padding:7px 9px 8px;border:1px solid #87e9d44d;border-top:2px solid #8affe0;background:linear-gradient(120deg,#102731dc,#091a24b3);box-shadow:inset 0 0 18px #67ffd207;pointer-events:none;color:#b9f9ec}
+body.fracture-mode .kinetic-heading{display:flex;align-items:center;gap:7px;line-height:1.2;font-size:6px;letter-spacing:1.2px;color:#9ebfc0}
+body.fracture-mode #kinetic-status{margin-left:auto;letter-spacing:.6px;color:#8df9df;font-size:6px}
+body.fracture-mode #kinetic-count{font-size:10px;letter-spacing:.7px;color:#ecfff8;font-variant-numeric:tabular-nums;white-space:nowrap}
+body.fracture-mode #kinetic-cells{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px;margin:6px 0}
+body.fracture-mode #kinetic-cells>span{height:4px;background:#22424b;border:1px solid #65b8ad42;transform:skewX(-18deg);transition:background .08s,box-shadow .08s}
+body.fracture-mode #kinetic-cells>span.filled{background:#97ffe2;border-color:#b3ffe9;box-shadow:0 0 7px #84ffe350}
+body.fracture-mode #kinetic-hud.full{border-color:#ffd49e;border-top-color:#ffe2b6}
+body.fracture-mode #kinetic-hud.full #kinetic-cells>span.filled{background:#ffdfa6;border-color:#fff2d3;box-shadow:0 0 9px #ffd58366}
+body.fracture-mode #kinetic-hud.catching{border-top-color:#dcfff5;background:linear-gradient(120deg,#1b4c53ed,#0d2e37c9)}
+body.fracture-mode #kinetic-action{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:33px;padding:5px 9px;border:1px solid #83eed69e;background:linear-gradient(110deg,#275c654f,#10333b77);color:#d6fff2;font-size:10px;font-weight:800;letter-spacing:.5px;line-height:1.1;pointer-events:auto;touch-action:none;user-select:none;-webkit-user-select:none}
+body.fracture-mode #kinetic-action>svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round;flex:0 0 21px}
+body.fracture-mode #kinetic-action:hover{border-color:#caffee;background:#337c804d}
+body.fracture-mode #kinetic-action:active{background:#4c8e8a66}
+body.fracture-mode #kinetic-action:disabled{opacity:.45;cursor:default}
+body.fracture-mode #kinetic-hud.full #kinetic-action{border-color:#ffd19a;color:#ffe8bd;background:linear-gradient(110deg,#7f5c324d,#3b332166)}
+body.fracture-mode .omega-protocol>#rift-mode-name{font:inherit;letter-spacing:inherit;color:inherit}
+body.reconstructing #kinetic-hud{display:none!important}
+body.mobile.fracture-mode #kinetic-hud{position:fixed;left:max(230px,calc(env(safe-area-inset-left) + 218px));bottom:max(68px,calc(env(safe-area-inset-bottom) + 54px));width:104px;transform:none;padding:5px 6px 6px;background:linear-gradient(120deg,#13333de0,#0a202ac4);border-left-width:2px;box-shadow:none}
+body.mobile.fracture-mode .kinetic-heading{gap:3px;font-size:5px;letter-spacing:.6px}
+body.mobile.fracture-mode .kinetic-heading>span:first-child{display:none}
+body.mobile.fracture-mode #kinetic-status{margin-left:0;font-size:6px;letter-spacing:.5px}
+body.mobile.fracture-mode #kinetic-count{margin-left:auto;font-size:9px}
+body.mobile.fracture-mode #kinetic-cells{margin:4px 0 5px;gap:3px}
+body.mobile.fracture-mode #kinetic-cells>span{height:3px}
+body.mobile.fracture-mode #kinetic-action{min-height:42px;padding:5px 3px;gap:3px;font-size:9px;letter-spacing:.2px;clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px)}
+body.mobile.fracture-mode #kinetic-action>svg{width:17px;height:17px;flex-basis:17px}
+@media(orientation:portrait){body.mobile.fracture-mode #kinetic-hud{left:max(14px,env(safe-area-inset-left));bottom:max(222px,calc(env(safe-area-inset-bottom) + 208px));width:104px}}
+@media(orientation:portrait) and (max-height:740px){body.mobile.fracture-mode #omega-hud{top:max(172px,calc(env(safe-area-inset-top) + 158px));padding:5px 8px}body.mobile.fracture-mode #raid-title{font-size:13px;margin:3px 0}body.mobile.fracture-mode #raid-instruction{font-size:8px;line-height:1.3}body.mobile.fracture-mode .raid-task-line{margin-top:4px}body.mobile.fracture-mode .raid-contract-label{font-size:4px}body.mobile.fracture-mode #kinetic-hud{bottom:220px}}
+@media(orientation:landscape) and (max-height:360px){body.mobile.fracture-mode #kinetic-hud{left:max(226px,calc(env(safe-area-inset-left) + 214px));bottom:max(68px,calc(env(safe-area-inset-bottom) + 54px));width:96px;padding:4px 5px}body.mobile.fracture-mode #kinetic-action{min-height:36px;font-size:8px}}
+@media(prefers-reduced-motion:reduce){body.fracture-mode #kinetic-cells>span{transition:none}}
+/* The mode-name hook preserves the original title's inline size in both raids. */
+.omega-protocol>#rift-mode-name{display:inline;font:inherit;letter-spacing:inherit;color:inherit}

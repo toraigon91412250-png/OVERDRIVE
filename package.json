@@ -1,0 +1,41 @@
+{
+  "name": "overdrive",
+  "version": "1.0.0",
+  "description": "OVERDRIVE — offline kinetic roguelite FPS",
+  "main": "index.js",
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "playwright test",
+    "serve": "python3 -m http.server 8080 --directory dist",
+    "test:phase": "node tests/phase.cjs",
+    "test:augments": "node tests/augment-cards.cjs",
+    "test:phantom-lance": "node tests/phantom-lance.cjs",
+    "test:explosion": "node tests/explosion.cjs && node tests/explosion-audio.cjs",
+    "test:enemy-visuals": "node tests/enemy-visuals.cjs",
+    "test:seeker": "node tests/seeker.cjs",
+    "test:training": "node tests/weapon-training.cjs",
+    "test:weapon-parity": "node tests/normal-weapon-compatibility.cjs && node tests/easy-weapon-rules.cjs",
+    "test:world": "node tests/world-rebuild.cjs && node tests/stage-layouts.cjs",
+    "test:pulse": "node tests/pulse-evolution.cjs && node tests/pulse-effects.cjs",
+    "test:arsenal": "node tests/arsenal-builds.cjs && node tests/arsenal-combat.cjs && node tests/heavy-evolution-visuals.cjs && node tests/special-evolution-visuals.cjs && node tests/arsenal-integration.cjs",
+    "test:boss-rush": "node tests/boss-models.cjs && node tests/boss-arenas.cjs && node tests/enemy-hit-shapes.cjs && node tests/boss-model-integration.cjs && node tests/boss-rush.cjs",
+    "test:wave-shift": "node tests/wave-shift.cjs",
+    "test:omega": "node tests/omega-weapon.cjs && node tests/omega-raid.cjs && node tests/omega-integration.cjs",
+    "test:fracture": "node tests/fracture-intents.cjs && node tests/fracture-encounters.cjs && node tests/fracture-pressure-integration.cjs && node tests/kinetic-arm.cjs && node tests/world-fracture.cjs && node tests/kinetic-integration.cjs",
+    "test:x": "node tests/x-director.cjs && node tests/x-integration.cjs && node tests/x-chronarch.cjs && node tests/x-chronarch-integration.cjs",
+    "test:titan-models": "node tests/titan-models.cjs",
+    "test:titan": "node tests/titan-shiganshina.cjs && node tests/titan-warhammer.cjs && node tests/titan-district-integration.cjs && node tests/titan-navigation.cjs && node tests/titan-locomotion.cjs && node tests/titan-duel.cjs && node tests/titan-enemy-duel.cjs && node tests/titan-combat-camera.cjs && node tests/titan-combat-rules.cjs && node tests/titan-combat-integration.cjs && node tests/titan-punch.cjs && node tests/titan-combat-assist.cjs && node tests/titan-blade-motion.cjs && node tests/titan-encounters.cjs && node tests/titan-collision.cjs && node tests/titan-world.cjs && node tests/titan-battlefield-support.cjs && node tests/titan-battlefield-integration.cjs && node tests/titan-preferences.cjs && node tests/titan-models.cjs && node tests/titan-roster.cjs && node tests/odm-runtime.cjs && node tests/odm-armor.cjs && node tests/odm-flight.cjs && node tests/odm-pc-tuning.cjs",
+    "test:standalone": "node tests/standalone-package.cjs",
+    "test:leviathan": "node tests/leviathan-swim-regression.cjs && node tests/leviathan-integration.cjs",
+    "source:zip": "python3 scripts/package-source.py"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@playwright/test": "^1.51.1",
+    "esbuild": "^0.25.0",
+    "three": "^0.170.0"
+  }
+}

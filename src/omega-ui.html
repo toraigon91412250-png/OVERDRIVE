@@ -1,0 +1,23 @@
+<section id="omega-hud" hidden aria-label="Ωの作戦と武器">
+  <div class="omega-hud-line"><span id="rift-emblem" class="omega-emblem" aria-hidden="true">Ω</span><span id="omega-protocol" class="omega-protocol"><span id="rift-mode-name">RIFT RAID</span><span id="omega-state">REALITY CONNECTED</span></span><button id="omega-details" type="button" aria-label="現在の武器の詳細" aria-expanded="false">DETAILS</button></div>
+  <div id="raid-mission" class="raid-contract">
+    <div class="raid-contract-label"><span>ACTIVE CONTRACT</span><strong id="raid-time">20.0</strong><small>SEC</small></div>
+    <h3 id="raid-title">作戦を受信中</h3>
+    <p id="raid-instruction">マーカーへ進み、世界のコアを奪え。</p>
+    <div class="raid-task-line"><span id="raid-progress">0 / 3</span><span class="raid-task-caption">CONTRACT PROGRESS</span></div>
+    <div class="raid-meter-track"><i id="raid-meter" style="width:0%"></i></div>
+    <div class="raid-run-stats"><span>コア <b id="raid-cores">0 / 5</b></span><span>失敗 <b id="raid-misses">0 / 4</b></span></div>
+  </div>
+  <div class="omega-core-line"><svg class="omega-weapon-mark" viewBox="0 0 48 36" aria-hidden="true"><path d="M3 12h12l4-5h14l5 5h7v12h-7l-5 5H19l-4-5H3z"/><path d="M14 12v12m5-17v22m14-22v22M3 18h42"/><path d="m21 12 5 6-5 6m8-12 5 6-5 6"/></svg><strong id="omega-core">ASSEMBLING</strong><span id="omega-trait">I / 0</span></div>
+  <div class="omega-build-info"><span id="omega-parts">CURRENT WEAPON</span><span id="omega-info">MAGAZINE / RELOAD</span></div>
+  <div id="omega-help">20秒ごとに作戦と武器が変わる。コアを5つ奪って中枢を破壊せよ。</div>
+  <button id="raid-reroll" type="button" aria-label="武器を引き直す。各作戦1回"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9a8 8 0 0 1 13-3l3 3M20 3v6h-6M20 15a8 8 0 0 1-13 3l-3-3M4 21v-6h6"/></svg><span>武器を引き直す <kbd>Q</kbd></span></button>
+  <div class="omega-hud-bottom" aria-hidden="true"><i></i><span>5 CORES / BREAK THE WORLD HEART</span><i></i></div>
+</section>
+<div id="raid-marker" hidden aria-hidden="true"><svg viewBox="0 0 40 48"><path class="raid-marker-bracket" d="M6 16V9l7-7h14l7 7v7M6 23v7l7 7h14l7-7v-7"/><path class="raid-marker-point" d="m14 39 6 7 6-7M20 12v15M13 19.5h14"/></svg><span id="raid-marker-label">OBJECTIVE</span><span id="raid-marker-distance">0 m</span></div>
+
+<section id="kinetic-hud" hidden aria-label="敵弾の捕捉と撃ち返し">
+  <div class="kinetic-heading"><span>KINETIC ARM</span><span id="kinetic-status">READY</span><strong id="kinetic-count">0 / 6</strong></div>
+  <div id="kinetic-cells" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+  <button id="kinetic-action" type="button" aria-label="敵弾を捕捉する。蓄積時は撃ち返す"><svg viewBox="0 0 28 28" aria-hidden="true"><path d="M4 7v6m0 2v6m20-14v6m0 2v6M4 7h5M4 21h5M24 7h-5m5 14h-5M8 14h12m-7-5 5 5-5 5"/></svg><span>F / 捕捉</span></button>
+</section>

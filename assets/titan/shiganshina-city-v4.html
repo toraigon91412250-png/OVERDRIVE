@@ -1,0 +1,1062 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+<meta name="theme-color" content="#101d27" />
+<title>WALL MARIA | SHIGANSHINA - Monumental District · V4</title>
+<style>
+:root{font-family:Inter,"Hiragino Kaku Gothic ProN","Noto Sans JP",system-ui,sans-serif;color:#f8f4e9;--amber:#dabd85;--edge:#d1c0a353}
+*{box-sizing:border-box}body{margin:0;background:#08121a;overflow:hidden;overscroll-behavior:none;touch-action:none}canvas#view{display:block;width:100vw;height:100dvh;touch-action:none}
+#vignette{pointer-events:none;position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,14,19,.45),transparent 21%,transparent 76%,rgba(6,14,17,.48));z-index:2}
+#top{position:absolute;left:clamp(15px,3.5vw,54px);top:clamp(18px,3vw,36px);z-index:6;pointer-events:none;text-shadow:0 2px 15px #14232990}#eyebrow{display:flex;align-items:center;gap:9px;font-size:10px;letter-spacing:.32em;color:#eacb94;font-weight:800}#eyebrow:before{content:'';display:block;width:24px;height:1px;background:#f2c885}#title{margin:7px 0 5px;font-family:Georgia,"Yu Mincho",serif;font-size:clamp(32px,5vw,66px);line-height:1.03;letter-spacing:.04em;font-weight:700}#sub{letter-spacing:.23em;font-size:10px;color:#e0d5c4;opacity:.91}
+#menu{position:absolute;z-index:10;top:clamp(16px,3vw,32px);right:clamp(12px,3vw,40px);display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end;max-width:min(61vw,680px)}button{font-family:inherit;color:inherit;cursor:pointer}button:focus-visible{outline:2px solid #f9d68f;outline-offset:2px}.pbtn{min-height:40px;border:1px solid #ffffff29;background:#101d27b8;backdrop-filter:blur(16px);border-radius:6px;padding:0 13px;letter-spacing:.06em;font-weight:700;font-size:11px;transition:background .18s,border-color .18s}.pbtn.active{color:#181a17;background:#dec79f;border-color:#e0c994}.pbtn:hover{border-color:#e4c487a9;background:#31434c}.pbtn.active:hover{background:#f0d7ab}
+#bottom{position:absolute;z-index:8;bottom:clamp(17px,4vh,34px);left:clamp(14px,3.5vw,54px);right:clamp(14px,3.5vw,54px);display:flex;align-items:end;justify-content:space-between;gap:18px;pointer-events:none}#bottom>*{pointer-events:auto}#panel{width:290px;max-width:65vw;padding:16px 18px;background:#0d1b23c2;border:1px solid #e6d0a438;backdrop-filter:blur(14px);border-radius:6px;box-shadow:0 15px 45px #08141c33}#panelLabel{color:#d9c196;letter-spacing:.21em;font-size:10px;font-weight:800}#destination{font-family:Georgia,"Yu Mincho",serif;font-size:22px;letter-spacing:.045em;margin:5px 0 8px}#help{color:#d8dedd;font-size:11px;line-height:1.8;letter-spacing:.025em}#keys{margin-top:8px;font-size:10px;letter-spacing:.09em;color:#d0b990;border-top:1px solid #fff2;padding-top:9px}
+#destinations{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:7px;max-width:500px}.jump{padding:11px 13px;background:#182730bc;border:1px solid #dfc69b55;backdrop-filter:blur(12px);border-radius:5px;font-size:11px;letter-spacing:.05em;font-weight:700}.jump:hover{background:#bca47e;color:#101a20}#info{position:absolute;right:22px;bottom:132px;color:#eff2e9c5;font-size:10px;letter-spacing:.08em;text-shadow:0 2px 5px #000a;pointer-events:none;z-index:7;text-align:right}
+#mini{position:absolute;right:30px;top:92px;width:154px;height:154px;z-index:5;border:1px solid #e3cfb663;border-radius:50%;background:#162935a8;box-shadow:0 4px 40px #0005;pointer-events:none}#miniText{position:absolute;right:70px;top:251px;z-index:5;font-size:9px;letter-spacing:.32em;text-shadow:0 1px 10px #000}
+#loading{position:absolute;inset:0;z-index:30;display:flex;flex-direction:column;justify-content:center;align-items:center;background:radial-gradient(ellipse at center,#263a43,#07141d);color:#e8d7b5;transition:opacity .6s;pointer-events:none}#loading h2{font-family:Georgia,serif;letter-spacing:.18em;font-weight:400;font-size:25px}#loading span{font-size:10px;letter-spacing:.3em;color:#bfa989}
+#joystick{display:none;position:absolute;bottom:22px;left:24px;width:112px;height:112px;border:1px solid #e3cfa97d;border-radius:50%;background:#101b246e;z-index:9;touch-action:none}#stick{position:absolute;left:34px;top:34px;width:44px;height:44px;border-radius:50%;border:1px solid #f4dbb9b4;background:#e6d1a04b;box-shadow:0 0 12px #0003}#vertical{display:none;position:absolute;right:25px;bottom:95px;z-index:9;flex-direction:column;gap:8px}#vertical button{width:50px;height:49px;background:#14232ac2;border:1px solid #e6cfac73;border-radius:6px;font-size:21px}#mobileHint{display:none;position:absolute;bottom:146px;right:18px;z-index:7;font-size:10px;color:#e7d5b6a8;text-align:right;pointer-events:none}
+#err{position:absolute;z-index:90;left:5vw;right:5vw;top:43vh;padding:18px;background:#1d2d36;color:white;border:1px solid #d3b787;border-radius:8px;text-align:center;display:none;line-height:1.8;font-size:13px}
+@media (max-width:800px){#top{top:17px;left:17px}#title{font-size:35px}#sub{font-size:8px}#menu{top:96px;left:12px;right:12px;max-width:none;justify-content:center;gap:5px}.pbtn{padding:0 10px;min-height:35px;font-size:10px}#mini,#miniText{display:none}#bottom{bottom:13px;left:12px;right:12px}#panel{max-width:58vw;width:220px;padding:12px}#destination{font-size:17px}#help{font-size:10px}#keys{display:none}#destinations{max-width:37vw;gap:5px}.jump{font-size:10px;padding:8px 9px}#info{display:none}#joystick{display:block}#vertical{display:flex}#mobileHint{display:block}body.moving #bottom{bottom:146px}body.moving #panel{padding:8px 10px}body.moving #destination{margin:0;font-size:14px}body.moving #help{display:none}body.moving #destinations{gap:4px}body.moving .jump{padding:7px}body.moving #joystick{display:block}}
+@media (max-width:480px){#title{font-size:31px}#eyebrow{font-size:9px}#sub{max-width:80vw;letter-spacing:.13em}#bottom{align-items:end}#panel{max-width:56vw}#destinations{max-width:42vw}#menu{top:98px}}
+</style>
+</head>
+<body>
+<canvas id="view"></canvas><div id="vignette"></div>
+<div id="top"><div id="eyebrow">WALL MARIA · OUTER DISTRICT</div><h1 id="title">SHIGANSHINA</h1><div id="sub">城壁都市 · MONUMENTAL ARCHITECTURE · V4</div></div>
+<div id="menu"><button class="pbtn active" data-mode="orbit">俯瞰</button><button class="pbtn" data-mode="walk">散策</button><button class="pbtn" data-mode="fly">自由飛行</button><button class="pbtn" id="time">夕景にする</button><button class="pbtn" id="quality">軽量化</button></div>
+<canvas id="mini" width="308" height="308"></canvas><div id="miniText">DISTRICT MAP</div>
+<div id="bottom"><div id="panel"><div id="panelLabel">EXPLORE THE DISTRICT</div><div id="destination">城壁都市を見渡す</div><div id="help">巨大城壁、兵団施設、教会、倉庫街まで含めて探索。</div><div id="keys">ドラッグ：視点操作　ホイール：拡大縮小</div></div><div id="destinations"><button class="jump" data-spot="gate">巨大な門</button><button class="jump" data-spot="square">中央広場</button><button class="jump" data-spot="wall">城壁の上</button><button class="jump" data-spot="roof">赤屋根の街</button><button class="jump" data-spot="barracks">兵団兵舎</button><button class="jump" data-spot="command">司令棟</button><button class="jump" data-spot="warehouse">倉庫街</button></div></div>
+<div id="info">PROCEDURAL CITY · INSTANCED GEOMETRY<br><span id="count">LOADING...</span></div>
+<div id="joystick"><div id="stick"></div></div><div id="vertical"><button id="up">↑</button><button id="down">↓</button></div><div id="mobileHint">右側をドラッグして視点を操作</div>
+<div id="loading"><h2>WALL MARIA</h2><span>BUILDING THE DISTRICT</span></div><div id="err"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.1/three.min.js"></script>
+<script>
+// Wall Maria is registered before the scene is initialized.
+/*
+ * WALL MARIA • Low-poly modular model for THREE.js (r147+)
+ * No asset downloads, no textures required beyond procedural CanvasTexture.
+ * API: const wall = WallMaria.create(THREE, {bayCount: 14, bayWidth: 26, quality: 'standard'});
+ * scene.add(wall.group); wall.setGateOpen(true); wall.update(delta);
+ * wall.getColliders() gives AABB obstacles (meters) for game collision.
+ */
+(function (root) {
+  'use strict';
+  const cache = new WeakMap();
+
+  function seeded(seed) { let n = seed >>> 0; return () => ((n = (1664525 * n + 1013904223) >>> 0) / 4294967296); }
+  function stoneTexture(THREE) {
+    const canvas = document.createElement('canvas');
+    canvas.width = 512; canvas.height = 512;
+    const c = canvas.getContext('2d');
+    const r = seeded(5041);
+    c.fillStyle = '#aab0ac'; c.fillRect(0, 0, 512, 512);
+    for (let i = 0; i < 1150; i++) {
+      const k = Math.floor(130 + r() * 65);
+      c.fillStyle = `rgba(${k},${k+3},${k},${0.025 + r() * .055})`;
+      c.fillRect(r()*512, r()*512, 4+r()*65, 2+r()*55);
+    }
+    const rows = 20, rh = 512 / rows;
+    for (let row = 0; row < rows; row++) {
+      const y = row*rh, offset = row % 2 ? 27 : 0;
+      c.strokeStyle = 'rgba(54,62,61,.32)'; c.lineWidth = 2;
+      c.beginPath(); c.moveTo(0, y); c.lineTo(512, y); c.stroke();
+      for(let x = -offset; x < 515; x += 51.2){
+        const jitter = (r()-.5)*5;
+        c.beginPath(); c.moveTo(x+jitter, y); c.lineTo(x+jitter+r()*2, y+rh); c.stroke();
+        c.fillStyle = `rgba(221,223,213,${.035+r()*.085})`;
+        c.fillRect(x+3, y+3, 36+r()*9, rh-6);
+      }
+    }
+    for(let i=0;i<40;i++){
+      const x=r()*512, y=r()*512; const gr=c.createRadialGradient(x,y,1,x,y,10+r()*47);
+      gr.addColorStop(0, 'rgba(63,77,67,.11)'); gr.addColorStop(1,'rgba(63,77,67,0)');
+      c.fillStyle=gr;c.fillRect(x-65,y-65,130,130);
+    }
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+    tex.colorSpace = THREE.SRGBColorSpace || undefined;
+    if('encoding' in tex) tex.encoding = THREE.sRGBEncoding;
+    tex.anisotropy = 2;
+    return tex;
+  }
+
+  function mat(THREE, color, extra={}) {
+    return new THREE.MeshLambertMaterial({ color, ...extra });
+  }
+  function cube(THREE, parent, w,h,d, x,y,z, material){
+    const m = new THREE.Mesh(new THREE.BoxGeometry(w,h,d), material);
+    m.position.set(x,y,z); parent.add(m); return m;
+  }
+  function beam(THREE,parent,a,b,thickness,material){
+    const start = new THREE.Vector3(...a), end = new THREE.Vector3(...b);
+    const dir = end.clone().sub(start);
+    const mesh = new THREE.Mesh(new THREE.BoxGeometry(thickness,dir.length(),thickness),material);
+    mesh.position.copy(start.add(end).multiplyScalar(.5));
+    mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),dir.normalize());
+    parent.add(mesh); return mesh;
+  }
+  function instanced(THREE, parent, geometry, material, placements) {
+    if (!placements.length) return null;
+    const mesh = new THREE.InstancedMesh(geometry, material, placements.length);
+    const dummy = new THREE.Object3D();
+    for (let i=0; i<placements.length; i++) {
+      const p=placements[i];
+      dummy.position.set(p[0],p[1],p[2]);
+      dummy.rotation.set(0,p[3]||0,0);
+      dummy.scale.set(p[4]||1,p[5]||1,p[6]||1);
+      dummy.updateMatrix(); mesh.setMatrixAt(i,dummy.matrix);
+    }
+    mesh.instanceMatrix.needsUpdate = true;
+    mesh.frustumCulled = false;
+    parent.add(mesh); return mesh;
+  }
+  function buttressGeometry(THREE) {
+    const pts = [
+      [-3.0,0,0], [3.0,0,0], [-1.8,48.6,0], [1.8,48.6,0],
+      [-3.15,0,3.55], [3.15,0,3.55], [-2.0,48.6,2.0], [2.0,48.6,2.0]
+    ];
+    const indices=[0,1,3, 0,3,2, 5,4,6, 5,6,7, 4,0,2,4,2,6, 1,5,7,1,7,3, 2,3,7,2,7,6, 4,5,1,4,1,0];
+    const pos=[], col=[];
+    for (let i=0;i<indices.length;i++){
+      const idx=indices[i];pos.push(...pts[idx]);
+      const light = idx >=4 ? .84 : 1.0;
+      col.push(light,light*.998,light*.98);
+    }
+    const g=new THREE.BufferGeometry();
+    g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
+    g.setAttribute('color',new THREE.Float32BufferAttribute(col,3));
+    g.computeVertexNormals(); return g;
+  }
+  function createGateDoor(THREE, parent, left, materials) {
+    const leafW = 6.0, shape = new THREE.Shape();
+    if(left){
+      shape.moveTo(0,.25); shape.lineTo(leafW,.25); shape.lineTo(leafW,16.45);
+      shape.quadraticCurveTo(2.7,16.35,0,12.15); shape.lineTo(0,.25);
+    } else {
+      shape.moveTo(-leafW,.25); shape.lineTo(0,.25); shape.lineTo(0,12.15);
+      shape.quadraticCurveTo(-2.7,16.35,-leafW,16.45);
+      shape.lineTo(-leafW,.25);
+    }
+    const pivot = new THREE.Group();
+    pivot.position.set(left?-6:6,0,7.9);
+    parent.add(pivot);
+    const geo = new THREE.ExtrudeGeometry(shape, {depth:.75, bevelEnabled:false, curveSegments:8});
+    geo.translate(0,0,-.38);
+    const wood = new THREE.Mesh(geo, materials.wood); pivot.add(wood);
+    // Wooden slats, bands and studs remain cheap and move with the two leaves.
+    const s = left ? 1 : -1;
+    for(let j=0;j<5;j++) {
+      const x = s*(.62 + j*1.14);
+      cube(THREE,pivot,.075,11.7,.08,x,6.2,.43,materials.woodDark);
+    }
+    for(const y of [2.6,7.5,11.2]){
+      cube(THREE,pivot,5.93,.42,.2,s*3.0,y,.50,materials.iron);
+      for(let i=0;i<5;i++) cube(THREE,pivot,.22,.22,.13,s*(.65+i*1.13),y,.64,materials.ironBright);
+    }
+    beam(THREE,pivot,[s*.75,1.7,.55],[s*5.3,10.7,.55],.23,materials.iron);
+    cube(THREE,pivot,.75,1.3,.35,s*.55,7.3,.69,materials.ironBright);
+    return pivot;
+  }
+  function makeLabel(THREE, group) {
+    const can=document.createElement('canvas'); can.width=512; can.height=128;
+    const ctx=can.getContext('2d');
+    ctx.fillStyle='#293431';ctx.fillRect(0,0,512,128);
+    ctx.fillStyle='#d6c4a0';ctx.fillRect(14,12,484,3);ctx.fillRect(14,113,484,3);
+    ctx.font='bold 53px Georgia, serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('WALL  MARIA',256,70);
+    const tx=new THREE.CanvasTexture(can);
+    tx.colorSpace=THREE.SRGBColorSpace||undefined;
+    if('encoding' in tx) tx.encoding=THREE.sRGBEncoding;
+    const plaque = new THREE.Mesh(new THREE.PlaneGeometry(15.5,3.85),new THREE.MeshBasicMaterial({map:tx,side:THREE.DoubleSide}));
+    plaque.position.set(0,37.7,8.35);group.add(plaque);
+    const plaqueBack=plaque.clone();plaqueBack.rotation.y=Math.PI;plaqueBack.position.z=-8.35;group.add(plaqueBack);
+  }
+
+  function create(THREE, options={}) {
+    if(!THREE || !THREE.Group) throw new Error('Pass the THREE namespace into WallMaria.create(THREE).');
+    const bayCount=Math.max(3,Math.min(40,Math.floor(options.bayCount ?? 14)));
+    const bayWidth=Math.max(16,Math.min(38,options.bayWidth ?? 26));
+    const detail=options.quality !== 'lite';
+    const hasGate=options.gate !== false;
+    const halfGate=14, wallHeight=50, thickness=14;
+    const halfLength=halfGate+bayWidth*bayCount;
+    const group = new THREE.Group();group.name='WallMaria_LowPoly';
+    const tex=stoneTexture(THREE);
+    const wallMat = mat(THREE,0xd6d9d3,{map:tex});
+    const baseMat=mat(THREE,0x98a19c);
+    const pillarMat=mat(THREE,0xc3c7bd,{vertexColors:true,side:THREE.DoubleSide});
+    const ash=mat(THREE,0x9da8a1);
+    const ledge=mat(THREE,0xb4bcb4);
+    const ledgeDark=mat(THREE,0x7b8883);
+    const stoneAccent=mat(THREE,0xe0ddcf);
+    const wood=mat(THREE,0x5b3e30), woodDark=mat(THREE,0x443127);
+    const iron=mat(THREE,0x2f373a), ironBright=mat(THREE,0x8e9691);
+    const materials={wood,woodDark,iron,ironBright};
+    const bodyGeo=new THREE.BoxGeometry(bayWidth+.05,48.6,thickness);
+    const bodyCenters=[];
+    const buttressPositions=[], feetPositions=[], capPositions=[], topMarkPositions=[], merlonPositions=[];
+    for(const side of [-1,1]){
+      for(let i=0;i<bayCount;i++){
+        const x=side*(halfGate+bayWidth*(i+.5));
+        bodyCenters.push([x,24.3,0]);
+      }
+      for(let i=0;i<=bayCount;i++){
+        const x=side*(halfGate+bayWidth*i);
+        // Two buttresses on outer and inner face. Front face projects toward z+.
+        buttressPositions.push([x,0,7],[x,0,-7,Math.PI]);
+        feetPositions.push([x,.82,0]);
+        capPositions.push([x,49.0,0]);
+        topMarkPositions.push([x,51.35,0]);
+      }
+      cube(THREE,group,bayCount*bayWidth,2.0,16,side*(halfGate+bayCount*bayWidth/2),49.5,0,ledge);
+      cube(THREE,group,bayCount*bayWidth,.7,17,side*(halfGate+bayCount*bayWidth/2),47.9,0,ledgeDark);
+      for(let i=0;i<bayCount*3;i++){
+        const x=side*(halfGate+(i+.5)*bayWidth/3);
+        for(const z of [-7.4,7.4]) merlonPositions.push([x,51.55,z]);
+      }
+    }
+    instanced(THREE,group,bodyGeo,wallMat,bodyCenters);
+    instanced(THREE,group,buttressGeometry(THREE),pillarMat,buttressPositions);
+    instanced(THREE,group,new THREE.BoxGeometry(6.9,1.65,21),baseMat,feetPositions);
+    instanced(THREE,group,new THREE.BoxGeometry(5.15,2.45,18.5),ash,capPositions);
+    instanced(THREE,group,new THREE.BoxGeometry(5.8,1.02,19.4),stoneAccent,topMarkPositions);
+    instanced(THREE,group,new THREE.BoxGeometry(4.4,2.0,1.55),ash,merlonPositions);
+    // Low-detail mortar ribs suggest huge individual wall panels.
+    if(detail){
+      const rib=[];
+      for(const side of [-1,1])for(let i=0;i<bayCount;i++){
+        const x=side*(halfGate+bayWidth*(i+.5));
+        for(const z of [-7.045,7.045]) {
+          for(const y of [13,26,39]) rib.push([x,y,z]);
+        }
+      }
+      instanced(THREE,group,new THREE.BoxGeometry(bayWidth-.8,.15,.065),ledgeDark,rib);
+    }
+    const gateDetails=new THREE.Group();group.add(gateDetails);
+    // Gate is a *real hole*: main wall sections don't extend into the passage.
+    const arch=new THREE.Shape();
+    arch.moveTo(-halfGate,0);arch.lineTo(halfGate,0);arch.lineTo(halfGate,21);
+    arch.lineTo(-halfGate,21);arch.lineTo(-halfGate,0);
+    const hole=new THREE.Path();
+    hole.moveTo(-6.05,-.5);hole.lineTo(6.05,-.5);hole.lineTo(6.05,12.15);
+    hole.quadraticCurveTo(0,20.8,-6.05,12.15);hole.lineTo(-6.05,-.5);
+    arch.holes.push(hole);
+    const gateArch=new THREE.Mesh(new THREE.ExtrudeGeometry(arch,{depth:thickness,bevelEnabled:false,curveSegments:12}),baseMat);
+    gateArch.position.z=-thickness/2;gateDetails.add(gateArch);
+    cube(THREE,gateDetails,28,26.6,14,0,34.3,0,wallMat);
+    cube(THREE,gateDetails,31,2,18,0,48.5,0,ledge);
+    cube(THREE,gateDetails,31.8,.75,19,0,47.2,0,ledgeDark);
+    for(const x of [-12.8,12.8]){
+      cube(THREE,gateDetails,6.8,51.3,17.4,x,25.65,0,baseMat);
+      cube(THREE,gateDetails,8.2,2.2,20.2,x,51.2,0,stoneAccent);
+      cube(THREE,gateDetails,8.6,.48,20.5,x,49.7,0,ledgeDark);
+      cube(THREE,gateDetails,9.5,2.0,22,x,.95,0,ash);
+    }
+    // Ashlar arch outline in front and at the back of the passage.
+    for(const z of [-7.45,7.45]){
+      for(const x of [-6.65,6.65])cube(THREE,gateDetails,1.1,12.4,.64,x,6.2,z,stoneAccent);
+      const c = new THREE.QuadraticBezierCurve3(
+        new THREE.Vector3(-6.6,12.25,z),new THREE.Vector3(0,21.45,z),new THREE.Vector3(6.6,12.25,z));
+      const arc = new THREE.Mesh(new THREE.TubeGeometry(c,20,.60,5,false),stoneAccent);
+      gateDetails.add(arc);
+      cube(THREE,gateDetails,16.4,1.1,.78,0,20.85,z,ash);
+    }
+    // Repeating vertical portal insets add scale without heavy topology.
+    if(detail){
+      for(const z of [-8.8,8.8])for(const x of [-10.8,10.8]){
+        cube(THREE,gateDetails,.45,31.0,.30,x,29.4,z,ledgeDark);
+      }
+      for(let j=0;j<5;j++) for(const z of [-9.05,9.05]){
+        cube(THREE,gateDetails,22,.25,.19,0,25+j*4.5,z,ledge);
+      }
+    }
+    const left=createGateDoor(THREE,gateDetails,true,materials);
+    const right=createGateDoor(THREE,gateDetails,false,materials);
+    let gateTarget=0, gateCurrent=0;
+    // Gate doors pivot on hinges so the central passage genuinely opens.
+    const leafTravel=1.42;
+    function setGateOpen(open){gateTarget=open ? 1 : 0;}
+    function update(dt){
+      const step = Math.min(1, Math.max(0,dt)*1.65);
+      gateCurrent += (gateTarget-gateCurrent)*step;
+      if(Math.abs(gateTarget-gateCurrent)<.0005)gateCurrent=gateTarget;
+      left.rotation.y = gateCurrent * leafTravel;
+      right.rotation.y = -gateCurrent * leafTravel;
+    }
+    function getColliders(){
+      if(!hasGate)return [{minX:-halfLength,maxX:halfLength,minY:0,maxY:53,minZ:-7,maxZ:7,name:'continuous-wall'}];
+      const blocks=[
+        {minX:-halfLength,maxX:-6.05,minY:0,maxY:51,minZ:-7.0,maxZ:7.0,name:'west-wall'},
+        {minX:6.05,maxX:halfLength,minY:0,maxY:51,minZ:-7.0,maxZ:7.0,name:'east-wall'},
+      ];
+      if(gateCurrent<.88) blocks.push({minX:-5.9,maxX:5.9,minY:0,maxY:17,minZ:7.1,maxZ:9.0,name:'gate-doors'});
+      return blocks;
+    }
+    // Wall-walk detail, limited to the gatehouse to avoid repeated geometry.
+    for(const x of [-8,-4,0,4,8]) for(const z of [-8.7,8.7]){
+      cube(THREE,gateDetails,2.4,2.1,1.7,x,51.05,z,ash);
+    }
+    makeLabel(THREE,gateDetails);
+    if(!hasGate){
+      gateDetails.visible=false;
+      cube(THREE,group,28.05,48.6,14,0,24.3,0,wallMat);
+      cube(THREE,group,28.15,2,16,0,49.5,0,ledge);
+      cube(THREE,group,28.15,.7,17,0,47.9,0,ledgeDark);
+      for(const x of [-10.6,-5.3,0,5.3,10.6])
+        for(const z of [-7.4,7.4])cube(THREE,group,4.4,2,1.55,x,51.55,z,ash);
+    }
+    return {
+      group, width:halfLength*2, height:53, bayCount, bayWidth,
+      setGateOpen, toggleGate:()=>setGateOpen(gateTarget<.5),
+      isGateOpen:()=>gateTarget>.5, update, getColliders,
+      dispose(){
+        const geometries=new Set(), materials=new Set(), textures=new Set();
+        group.traverse(obj=>{
+          if(obj.geometry)geometries.add(obj.geometry);
+          if(obj.material)(Array.isArray(obj.material)?obj.material:[obj.material]).forEach(m=>materials.add(m));
+        });
+        materials.forEach(m=>{if(m.map)textures.add(m.map);m.dispose();});
+        textures.forEach(t=>t.dispose());geometries.forEach(g=>g.dispose());
+      }
+    };
+  }
+  root.WallMaria={create,version:'1.0.0'};
+})(typeof window!=='undefined' ? window : globalThis);
+
+
+// Load Three.js after installing WallMaria so startup cannot outrun registration.
+(function(){
+  const boot=()=>{
+    if(!window.WallMaria||typeof window.WallMaria.create!=='function'){
+      const e=document.getElementById('err');
+      e.style.display='block';
+      e.textContent='城壁モジュールの初期化に失敗しました。';
+      document.getElementById('loading').style.display='none';
+      return;
+    }
+    start();
+  };
+  if(window.THREE){boot();return;}
+  const script=document.createElement('script');
+  script.src='https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.min.js';
+  script.onload=boot;
+  script.onerror=()=>{const e=document.getElementById('err');e.style.display='block';e.textContent='Three.jsの読み込みに失敗しました。インターネット接続を確認して再読み込みしてください。';document.getElementById('loading').style.display='none';};
+  document.head.appendChild(script);
+})();
+
+function start(){
+'use strict';
+try{
+const T=THREE, TAU=Math.PI*2, canvas=document.getElementById('view');
+let renderer;
+try{renderer=new T.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance',alpha:false});}catch(e){throw new Error('WebGLを起動できません: '+e.message)}
+renderer.setPixelRatio(Math.min(devicePixelRatio||1,innerWidth<800?1.15:1.6));renderer.setSize(innerWidth,innerHeight);
+renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.29;
+const scene=new T.Scene();scene.background=new T.Color(0xa7c7d5);scene.fog=new T.FogExp2(0xa7c7d5,.00070);
+const camera=new T.PerspectiveCamera(65,innerWidth/innerHeight,.1,4300);camera.rotation.order='YXZ';
+const hemi=new T.HemisphereLight(0xe8f5ff,0x748061,2.1);scene.add(hemi);
+const sun=new T.DirectionalLight(0xffe6b2,3.0);sun.position.set(-200,310,130);scene.add(sun);
+const ambient=new T.AmbientLight(0xcbd6d8,.25);scene.add(ambient);
+const city=new T.Group();city.name='SHIGANSHINA_CITY';scene.add(city);window.shiganshinaCity=city;
+const rand=(()=>{let s=638297;return()=>((s=(Math.imul(s,1664525)+1013904223)>>>0)/4294967296)})();
+const r=(a,b)=>a+(b-a)*rand();const pick=a=>a[Math.floor(rand()*a.length)];const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+const palettes={
+ ground:0x8a8573,grass:0x82956d, grass2:0x6d855f, pavement:0x978d7b,road:0xa29785,roadDark:0x7a766c,cobble:0xb1a28d,
+ stone0:0xb2b2a4,stone1:0xc2beb0,stone2:0x999d98,stone3:0x868d8c,stone4:0xd0cab6,stoneShadow:0x666f6d,
+ plaster0:0xd6c6a6,plaster1:0xd8d1bc,plaster2:0xbec5b8,plaster3:0xc6b39b,plaster4:0xbbb6a4,plaster5:0xd8c6b1,
+ slateRoof:0x384d57,slateLight:0x687b80,copperRoof:0x546f72,copperTrim:0x819a91,formalWall:0xc6c6b8,formalWhite:0xe1d7bd,formalDark:0x7d8381,brick:0x986c60,plazaStone:0xaaa394,flagBlue:0x2c566e,roof0:0x9c4d3d,roof1:0xa95e45,roof2:0x75453a,roof3:0xbc7450,roof4:0x8c5545,roof5:0x734841,
+ beam:0x574a3d,beam2:0x78604b,beam3:0x514b43,window:0x293943,glass:0x64838b,door:0x423e33,wood:0x74634c,
+ stall0:0xd5a66f,stall1:0x667c74,water:0x669a9c,waterEdge:0x84b6b9,foliage0:0x557253,foliage1:0x688059,foliage2:0x47644e,trunk:0x6b5844,cloud:0xf4ecdf,metal:0xa39576,market:0xb4a08a
+};
+const mat={};for(const [k,v] of Object.entries(palettes))mat[k]=new T.MeshLambertMaterial({color:v,flatShading:true,side:T.FrontSide});
+mat.water=new T.MeshPhongMaterial({color:0x69a7b2,shininess:88,transparent:true,opacity:.89});mat.cloud=new T.MeshLambertMaterial({color:0xf9f4e9,transparent:true,opacity:.66,depthWrite:false});
+const boxGeo=new T.BoxGeometry(1,1,1),coneGeo=new T.ConeGeometry(1,.999,5),hipGeo=new T.ConeGeometry(Math.SQRT1_2,1,4),triGeo=new T.BufferGeometry();hipGeo.rotateY(Math.PI/4);triGeo.setAttribute('position',new T.Float32BufferAttribute([-.5,0,0,.5,0,0,0,1,0],3));triGeo.setIndex([0,1,2]);triGeo.computeVertexNormals();
+const triMats={};for(const [k,v] of Object.entries(palettes))triMats[k]=new T.MeshLambertMaterial({color:v,side:T.DoubleSide,flatShading:true});
+const queues=new Map();let batches=0,instances=0,homes=0;
+function add(type,x,y,z,w,h,d,rotY=0,rotZ=0,tri=false){const id=(tri===true?'t':tri==='cone'?'c':tri==='hip'?'h':'b')+type;let q=queues.get(id);if(!q){q={type,tri,items:[]};queues.set(id,q)}q.items.push([x,y,z,w,h,d,rotY,rotZ]);}
+const qY=new T.Quaternion(),qZ=new T.Quaternion(),qR=new T.Quaternion(),m4=new T.Matrix4();
+function flush(){for(const q of queues.values()){
+ const mesh=new T.InstancedMesh(q.tri===true?triGeo:q.tri==='cone'?coneGeo:q.tri==='hip'?hipGeo:boxGeo,q.tri===true?triMats[q.type]:mat[q.type],q.items.length);mesh.frustumCulled=false;mesh.name=q.type.toUpperCase()+'_'+q.items.length;
+ q.items.forEach((a,i)=>{qY.setFromAxisAngle(new T.Vector3(0,1,0),a[6]);qZ.setFromAxisAngle(new T.Vector3(0,0,1),a[7]);qR.multiplyQuaternions(qY,qZ);m4.compose(new T.Vector3(a[0],a[1],a[2]),qR,new T.Vector3(a[3],a[4],a[5]));mesh.setMatrixAt(i,m4);});mesh.instanceMatrix.needsUpdate=true;mesh.userData.category=q.type;city.add(mesh);batches++;instances+=q.items.length;
+ } queues.clear();}
+function plainMesh(geo,key,x,y,z,ry=0){const mesh=new T.Mesh(geo,mat[key]);mesh.position.set(x,y,z);mesh.rotation.y=ry;city.add(mesh);return mesh}
+// The historical town is preserved in style, but its footprint is 2.6 times wider AND deeper.
+// Buildings keep their human-scale dimensions. The expanded quarters contain additional houses.
+const CITY_SCALE=2.6;
+const WALL=77, R=205*CITY_SCALE, C=-48*CITY_SCALE, BACK=-164*CITY_SCALE;
+const FRONT=C+R, GATE_Z=FRONT-2*CITY_SCALE;
+function insideTown(x,z,margin=0){
+ if(z<BACK+margin || z>FRONT-margin || Math.abs(x)>R-margin)return false;
+ if(z>C && x*x+(z-C)*(z-C)>(R-margin)*(R-margin))return false;
+ return true;
+}
+// Roads become a connected, street-sized grid instead of enlarging ordinary buildings.
+const verticalStreets=[-420,-320,-220,-110,0,110,220,320,420];
+const horizontalStreets=[-365,-270,-175,-80,15,110,205,300];
+const CANAL_X=R-69,CANAL_START=BACK+28,CANAL_END=C+83;
+const secondMarkets=[{x:-259,z:117,size:51},{x:247,z:-267,size:53}];
+add('grass',0,-.85,0,4400,1.5,4400);
+add('ground',0,-.05,(BACK+C)/2,2*R-.5,.38,C-BACK);
+const townShape=new T.Shape();townShape.moveTo(-R,C);townShape.lineTo(-R,BACK);townShape.lineTo(R,BACK);townShape.lineTo(R,C);
+for(let i=0;i<=150;i++){const a=i/150*Math.PI;townShape.lineTo(R*Math.cos(a),C+R*Math.sin(a));}townShape.closePath();
+// Explicit XZ polygon. Two-sided since the triangulation may select either winding.
+const outline=townShape.extractPoints(12).shape;const flatVertices=[],faces=[];
+for(const v of outline)flatVertices.push(v.x,.055,v.y);
+for(let j=1;j<outline.length-1;j++)faces.push(0,j,j+1);
+const floorGeo=new T.BufferGeometry();floorGeo.setAttribute('position',new T.Float32BufferAttribute(flatVertices,3));floorGeo.setIndex(faces);floorGeo.computeVertexNormals();
+const cityGround=new T.Mesh(floorGeo,new T.MeshLambertMaterial({color:0x948a78,side:T.DoubleSide}));city.add(cityGround);
+function road(x,z,w,d){add('road',x,.12,z,w,.16,d);add('roadDark',x-w/2,.18,z,.38,.2,d);add('roadDark',x+w/2,.18,z,.38,.2,d);}
+road(0,(FRONT+BACK)/2,29,FRONT-BACK+16);
+for(const xx of verticalStreets){if(xx===0)continue;
+ const stop=C+Math.sqrt(Math.max(0,(R-19)**2-xx**2));
+ const start=BACK+16;if(stop<=start)continue;
+ road(xx,(start+stop)/2,11,stop-start);
+}
+for(const zz of horizontalStreets){
+ const half=zz>C?Math.sqrt(Math.max(0,(R-21)**2-(zz-C)**2)):R-21;
+ if(half<18)continue;
+ road(0,zz,half*2,11);
+}
+// Central courtyard and two new neighborhood markets.
+add('cobble',0,.23,-45*CITY_SCALE,81,.24,81);
+add('stone1',0,.28,-45*CITY_SCALE,73,.17,73);
+add('road',0,.31,-45*CITY_SCALE,68,.09,68);
+for(const market of secondMarkets){
+ add('cobble',market.x,.26,market.z,market.size*1.9,.22,market.size*1.9);
+ add('stone1',market.x,.29,market.z,market.size*1.65,.12,market.size*1.65);
+ add('road',market.x,.34,market.z,market.size*1.53,.08,market.size*1.53);
+}
+for(let i=0;i<750;i++){
+ const x=r(-R,R),z=r(BACK,FRONT);if(!insideTown(x,z,16))continue;
+ if(Math.abs(x)<16||horizontalStreets.some(p=>Math.abs(z-p)<8))continue;
+ add(pick(['cobble','pavement','roadDark','road']),x,.17,z,r(1.2,3.1),.08,r(.8,1.8),r(-.08,.08));
+}
+
+// Wall Maria 2.0: fit each module exactly between two perimeter coordinates.
+// The supplied model is used unaltered in style; the non-gate variant has solid infill.
+const colliders=[];
+const wallSystems=[];
+const wallTemplates=new Map();
+const wallSegments=[];
+function wallTemplate(bays,isGate){
+ const key=bays+':' + (isGate?'gate':'solid');
+ if(!wallTemplates.has(key))wallTemplates.set(key,window.WallMaria.create(T,{bayCount:bays,bayWidth:26,quality:'standard',gate:isGate}));
+ return wallTemplates.get(key);
+}
+function collisionFromLocalInterval(ax,az,bx,bz,fromX,toX,baseWidth,pad=9){
+ const dx=bx-ax,dz=bz-az,len=Math.hypot(dx,dz),ux=dx/len,uz=dz/len;
+ const center=(fromX+toX)/2,half=(toX-fromX)/2;
+ const x=(ax+bx)/2 + center*ux,z=(az+bz)/2+center*uz;
+ // Conservative world-axis aligned rectangle for walking collision.
+ colliders.push({x,z,w:Math.abs(ux)*half*2+Math.abs(uz)*pad*2,d:Math.abs(uz)*half*2+Math.abs(ux)*pad*2,name:'WallMaria'});
+}
+function wallBetween(ax,az,bx,bz,bays=3,isGate=false){
+ const template=wallTemplate(bays,isGate);
+ const dx=bx-ax,dz=bz-az,len=Math.hypot(dx,dz);
+ const section=template.group.clone(true);
+ section.position.set((ax+bx)/2,0,(az+bz)/2);
+ section.rotation.y=-Math.atan2(dz,dx); // THREE: +Y rotation maps local +X toward world -Z
+ section.scale.set(len/template.width,1.45,1.08); // matched length; imposing 77m silhouette
+ section.name=isGate?'WallMaria_MainGate':'WallMaria_SolidSection';
+ city.add(section);
+ wallSystems.push({group:section,gate:isGate,length:len,bays});
+ wallSegments.push({ax,az,bx,bz,gate:isGate});
+ if(isGate){
+   const gateHalf=6.1*len/template.width;
+   collisionFromLocalInterval(ax,az,bx,bz,-len/2,-gateHalf,len);
+   collisionFromLocalInterval(ax,az,bx,bz,gateHalf,len/2,len);
+   collisionFromLocalInterval(ax,az,bx,bz,-gateHalf,gateHalf,len);
+ }else collisionFromLocalInterval(ax,az,bx,bz,-len/2,len/2,len);
+}
+const backParts=5;
+for(let i=0;i<backParts;i++){
+ const x0=-R+2*R*i/backParts,x1=-R+2*R*(i+1)/backParts;
+ wallBetween(x0,BACK,x1,BACK,4,i===2);
+}
+const sideParts=2;
+for(const s of [-1,1])for(let i=0;i<sideParts;i++){
+ const z0=BACK+(C-BACK)*i/sideParts,z1=BACK+(C-BACK)*(i+1)/sideParts;
+ wallBetween(s*R,z0,s*R,z1,2,false);
+}
+// Nine straight sections are chords of a true semicircle, each joins the next precisely.
+const arcParts=9;
+for(let i=0;i<arcParts;i++){
+ const theta0=Math.PI*i/arcParts,theta1=Math.PI*(i+1)/arcParts;
+ const ax=R*Math.cos(theta0),az=C+R*Math.sin(theta0);
+ const bx=R*Math.cos(theta1),bz=C+R*Math.sin(theta1);
+ wallBetween(ax,az,bx,bz,3,i===4);
+}
+// Buttresses close the small outer-edge gaps created by the polygonal curve.
+for(let i=1;i<arcParts;i++){
+ const a=Math.PI*i/arcParts,x=R*Math.cos(a),z=C+R*Math.sin(a);
+ add('stone2',x,35,z,14,70,14,0);
+ add('stone1',x,71.5,z,16,4.3,16);
+}
+for(let i=1;i<backParts;i++){
+ const x=-R+2*R*i/backParts;
+ add('stone2',x,35,BACK,12,70,18);add('stone1',x,71.5,BACK,14,4.3,19);
+}
+for(const s of [-1,1]){
+ const z=(BACK+C)/2;add('stone2',s*R,35,z,18,70,12);add('stone1',s*R,71.5,z,19,4.3,14);
+}
+// Buttressed junctions mask the corners where straight sections meet the arc.
+const jointPoints=[[-R,BACK],[R,BACK],[-R,C],[R,C]];
+for(const [jx,jz] of jointPoints){
+ add('stone0',jx,34.7,jz,19,69.4,19);
+ add('stone1',jx,72,jz,21,5,21);
+ for(const dx of [-7,7])for(const dz of [-7,7])add('stone4',jx+dx,76,jz+dz,4.1,4.0,4.1);
+}
+road(0,FRONT-20,27,96);
+road(0,BACK+20,27,55);
+for(let i=0;i<760;i++){
+ const z=r(BACK+25,FRONT-25),x=r(-11.5,11.5);
+ add(pick(['cobble','roadDark','pavement']),x,.25,z,r(.6,2),.08,r(.8,2.3),r(-.12,.12));
+}
+// Eastern canal stays within the perimeter, and crosses the gridded streets.
+
+
+const canalMid=(CANAL_START+CANAL_END)/2,canalLength=CANAL_END-CANAL_START;
+add('stone2',CANAL_X,.29,canalMid,19,.35,canalLength);
+add('water',CANAL_X,.5,canalMid,13,.18,canalLength-4);
+add('stone1',CANAL_X-8,.8,canalMid,1.3,1.1,canalLength+4);
+add('stone1',CANAL_X+8,.8,canalMid,1.3,1.1,canalLength+4);
+for(const z of horizontalStreets.filter(z=>z>CANAL_START+10&&z<CANAL_END-10)){
+ add('wood',CANAL_X,1.5,z,25,1.4,10);
+ for(const x of [CANAL_X-12,CANAL_X+12])add('beam2',x,3,z,1,3.2,10);
+}
+// Reusable local-space building details. Everything enters instanced batches.
+function house(x,z,w,d,levels=2,orientation=0,kind='home'){
+ const h=levels*r(5.1,6.1)+r(1,2.5),roofHeight=r(3.1,5.8);const wallType=pick(['plaster0','plaster0','plaster1','plaster2','plaster3','plaster4','plaster5']);const roofType=pick(['roof0','roof0','roof1','roof1','roof2','roof3','roof4','roof5']);let beamType=pick(['beam','beam2','beam3']);
+ const yaw=orientation*Math.PI*.5,co=Math.cos(yaw),si=Math.sin(yaw);
+ const local=(a,b)=>[x+a*co+b*si,z-a*si+b*co];
+ function hb(type,dx,y,dz,ww,hh,dd,rz=0,tri=false){const [gx,gz]=local(dx,dz);add(type,gx,y,gz,ww,hh,dd,yaw,rz,tri)}
+ hb(wallType,0,h/2,0,w,h,d);hb('stone2',0,0.65,0,w+.5,1.2,d+.5);
+ hb(beamType,0,h*.47,-d/2-.13,w+.12,.34,.37);hb(beamType,0,h*.47,d/2+.13,w+.12,.34,.37);
+ for(const side of [-1,1]){
+   hb(beamType,side*w/2,h/2,-d/2-.20,.32,h,.5);
+   hb(beamType,side*w/2,h/2,d/2+.20,.32,h,.5);
+ }
+ hb(beamType,0,h-.2,-d/2-.1,w+.25,.4,.4);hb(beamType,0,h-.2,d/2+.1,w+.25,.4,.4);
+ // Sloping terracotta roof pitches: two thick planes with a central ridge.
+ const over=1.0,slopeWidth=Math.sqrt((w/2+over)**2+(roofHeight+.5)**2),angle=Math.atan2(roofHeight+.5,w/2+over);
+ hb(roofType,-w/4-.22,h+roofHeight/2-.05,0,slopeWidth,.55,d+2.0,angle);
+ hb(roofType,w/4+.22,h+roofHeight/2-.05,0,slopeWidth,.55,d+2.0,-angle);
+ hb('roof2',0,h+roofHeight,0,.8,.8,d+2.5);
+ for(const zs of [-1,1]){hb(wallType,0,h,zs*d/2,w,roofHeight,1,0,true); // triangular gable height
+   hb(beamType,0,h,zs*(d/2+.08),w+.3,.3,.25);
+ }
+ // Dark sash windows and shutters; use few high-contrast pieces at distance.
+ const fullDetail=Math.hypot(x,z-C)<260||rand()<.35;
+ const rows=fullDetail?levels:1,cols=fullDetail&&w>12?3:2;for(let j=0;j<rows;j++){
+ const cy=fullDetail?(j+.54)*h/rows:h*.66;
+ for(let k=0;k<cols;k++){
+ const xx=(-.5+(k+.5)/cols)*w*.83;
+ hb('beam',xx,cy,-d/2-.23,2.05,2.5,.25);
+ hb('window',xx,cy,-d/2-.44,1.72,2.2,.18);
+ hb('glass',xx,cy,-d/2-.55,1.30,1.6,.05);
+ hb('beam',xx,cy,-d/2-.62,.12,1.9,.12);
+ hb('beam',xx,cy,-d/2-.63,1.45,.12,.12);
+ if(k===0||k===cols-1)hb('beam2',xx+(k===0?-1.17:1.17),cy,-d/2-.42,.45,2.4,.18);
+ }
+ }
+ // Door and arched lintel.
+ hb('beam',0,1.75,-d/2-.4,2.7,3.5,.3);hb('door',0,1.72,-d/2-.59,2.32,3.25,.2);
+ hb('metal',.74,1.6,-d/2-.75,.12,.16,.13);hb('stone1',0,.28,-d/2-1.4,3.3,.36,2.8);
+ // Roof tile ridges and chimney on selected houses.
+ if(rand()<.73){let cz=r(-d*.2,d*.2),cx=(rand()<.5?-1:1)*w*.28;hb('stone3',cx,h+roofHeight*.84,cz,1.25,3.5,1.5);hb('stone2',cx,h+roofHeight*1.05+.3,cz,1.6,.4,1.8);}
+ // Timber braces on exposed front panel.
+ if(levels>1&&rand()<.63){for(let k of [-1,1])hb('beam2',k*w*.4,h*.28,-d/2-.2,.3,h*.55,.24,k*.22)}
+ const cw=orientation%2?d:w,cd=orientation%2?w:d;colliders.push({x,z,w:cw+1,d:cd+1});homes++;
+}
+
+function warehouse(cx,cz,w=26,d=17,orientation=0){
+ const yaw=orientation*Math.PI*.5,co=Math.cos(yaw),si=Math.sin(yaw);
+ const local=(a,b)=>[cx+a*co+b*si,cz-a*si+b*co];
+ const part=(type,dx,y,dz,ww,hh,dd,rz=0,tri=false)=>{const[gx,gz]=local(dx,dz);add(type,gx,y,gz,ww,hh,dd,yaw,rz,tri)};
+ const h=r(11,14),roofH=r(4.5,6.2),wallType=pick(['plaster4','plaster5','stone1']),roofType=pick(['roof2','roof4','roof5']);
+ part(wallType,0,h/2,0,w,h,d);part('stone2',0,.8,0,w+.8,1.5,d+.8);
+ part('beam',0,h*.50,-d/2-.16,w+.2,.36,.42);part('beam',0,h*.50,d/2+.16,w+.2,.36,.42);
+ const slope=Math.sqrt((w/2+1.2)**2+(roofH+.5)**2),ang=Math.atan2(roofH+.5,w/2+1.2);
+ part(roofType,-w/4-.25,h+roofH/2,0,slope,.72,d+2.0,ang);part(roofType,w/4+.25,h+roofH/2,0,slope,.72,d+2.0,-ang);part('roof2',0,h+roofH+.1,0,.95,.85,d+2.4);
+ for(const zs of [-1,1])part(wallType,0,h,zs*d/2,w,roofH,1,0,true);
+ for(let j=0;j<4;j++){let xx=-w*.34+j*w*.23;part('window',xx,h*.62,-d/2-.44,2.3,2.5,.2);part('beam',xx,h*.62,-d/2-.25,2.6,2.8,.2);} 
+ part('door',0,2.6,-d/2-.62,5.0,5.1,.25);part('beam',0,2.75,-d/2-.42,5.5,5.6,.28);part('stone1',0,.36,-d/2-1.4,6.8,.45,3.1);
+ colliders.push({x:cx,z:cz,w:(orientation%2?d:w)+1.5,d:(orientation%2?w:d)+1.5});homes++;
+}
+// Smaller residences receive real roof-shape variants instead of overlapping houses.
+function hipHouse(cx,cz,w=13,d=13,levels=2,orientation=0,style='home'){
+ const yaw=orientation*Math.PI*.5,co=Math.cos(yaw),si=Math.sin(yaw);
+ const part=(t,dx,y,dz,ww,hh,dd,rz=0,shape=false)=>{const x=cx+dx*co+dz*si,z=cz-dx*si+dz*co;add(t,x,y,z,ww,hh,dd,yaw,rz,shape);};
+ const h=levels*r(5.3,6.0)+2.3, roofRise=style==='tower'?6.2:4.2;
+ const wall=style==='manor'?'formalWall':pick(['plaster0','plaster1','plaster3','plaster5']);
+ const roof=style==='manor'?'roof2':style==='tower'?'slateRoof':pick(['roof1','roof3','roof4']);
+ part(wall,0,h/2,0,w,h,d);part('stone2',0,.8,0,w+.5,1.6,d+.5);
+ part('beam',0,h-.35,0,w+.45,.65,d+.45);part('stone3',0,h*.50,0,w+.28,.28,d+.28);
+ for(const side of [-1,1])for(const f of [-1,1])part('beam',side*(w/2-.16),h/2,f*(d/2-.16),.32,h,.32);
+ part(roof,0,h+roofRise/2-.10,0,w+2.1,roofRise,d+2.1,0,'hip');
+ part('roof2',0,h-.16,0,w+2.6,.22,d+2.6);
+ const columns=w>15?3:2;
+ for(let floor=0;floor<levels;floor++){
+  const py=3.15+floor*(h-3.4)/levels;
+  for(let i=0;i<columns;i++){
+   const xx=(i-(columns-1)/2)*w/(columns+0.15);
+   part('window',xx,py,-d/2-.17,1.70,2.45,.15);part('glass',xx,py,-d/2-.31,1.35,2.0,.10);
+   part('beam',xx,py,-d/2-.39,.10,2.12,.14);part('beam',xx,py,-d/2-.41,1.52,.12,.15);
+   part('stone4',xx,py+1.35,-d/2-.38,2.04,.20,.24);
+  }
+  for(const side of [-1,1]){part('window',side*(w/2+.17),py,0,.18,2.5,1.5);}
+ }
+ part('door',0,1.9,-d/2-.24,2.9,3.8,.2);part('formalWhite',0,4.05,-d/2-.28,3.3,.35,.32);
+ part('stone1',0,.24,-d/2-1.6,4.8,.5,3.5);
+ if(style==='manor'){
+  for(const side of [-1,1])part('formalWhite',side*2.2,2.7,-d/2-.52,.47,5,.50);
+  part('formalWhite',0,5.2,-d/2-.43,6,.6,.9);
+ }
+ const ww=orientation%2?d:w,dd=orientation%2?w:d;colliders.push({x:cx,z:cz,w:ww+1,d:dd+1});homes++;
+}
+function towerHouse(cx,cz,w=10,d=12,orientation=0){hipHouse(cx,cz,w,d,3+Math.floor(rand()*2),orientation,'tower');}
+function shopHouse(cx,cz,w=13,d=15,orientation=0){
+ house(cx,cz,w,d,2+Math.floor(rand()*2),orientation,'shop');
+ const yaw=orientation*Math.PI*.5,si=Math.sin(yaw),co=Math.cos(yaw);
+ const fx=cx+(-d/2-2.0)*si,fz=cz+(-d/2-2.0)*co;
+ add(pick(['stall0','stall1','roof1']),fx,4.1,fz,w*.69,.36,3.8,yaw);
+ add('wood',fx,1.1,fz,w*.63,2.0,2.3,yaw);
+ for(const side of [-1,1])add('beam2',fx+side*w*.31*co,2.2,fz-side*w*.31*si,.26,4.0,.26,yaw);
+}
+function manor(cx,cz,w=16,d=16,orientation=0){hipHouse(cx,cz,w,d,3,orientation,'manor');}
+function districtBuilding(x,z){
+ const edge=Math.abs(x)>R*.67||z<BACK+120||z>FRONT-150;
+ const roll=rand(),orientation=rand()<.26?1:0;
+ if(edge&&roll<.18)return warehouse(x,z,r(17,22),r(13,16),orientation);
+ if(roll<.15)return shopHouse(x,z,r(11.5,14.5),r(12.8,15.5),orientation);
+ if(roll<.28)return towerHouse(x,z,r(9,11.8),r(10,12.4),orientation);
+ if(roll<.43)return hipHouse(x,z,r(11,15),r(12,16),rand()<.15?3:2,orientation,'home');
+ if(roll<.49)return manor(x,z,r(14,17),r(13,16),orientation);
+ return house(x,z,r(10.6,15.4),r(12.2,17.4),rand()<.22?3:2,orientation);
+}
+function longHall(cx,cz,w,d,h,roofType='roof2'){
+ add('stone1',cx,h/2,cz,w,h,d);add('stone2',cx,.8,cz,w+.9,1.6,d+.9);
+ const roofH=Math.min(8,h*.52),slope=Math.sqrt((w/2+1.4)**2+(roofH+.7)**2),ang=Math.atan2(roofH+.7,w/2+1.4);
+ add(roofType,cx-w/4-.25,h+roofH/2,cz,slope,.78,d+2.3,0,ang);add(roofType,cx+w/4+.25,h+roofH/2,cz,slope,.78,d+2.3,0,-ang);add('roof2',cx,h+roofH+.2,cz,.95,.8,d+2.5);
+ colliders.push({x:cx,z:cz,w:w+1,d:d+1});
+}
+// Formal military architecture. The roof geometry and elevations share a consistent datum.
+function pitchedRoof(cx,cz,w,d,eave,raise,roof='slateRoof',dormers=false){
+ const a=Math.atan2(raise,w/2+1.4),pitch=Math.hypot(raise,w/2+1.4);
+ for(const side of [-1,1]){
+  add(roof,cx+side*(w/4+.30),eave+raise/2,cz,pitch,.70,d+2.6,0,-side*a);
+  add('slateLight',cx+side*(w/2+.68),eave+.2,cz,.32,.34,d+2.8);
+ }
+ add('formalDark',cx,eave+raise+.04,cz,.73,.54,d+3.3);
+ for(const zz of [-1,1]){
+  add('formalWall',cx,eave,cz+zz*d/2,w,raise,1.0,0,0,true);
+  add('beam2',cx,eave+.4,cz+zz*(d/2+.65),w,.45,.25);
+ }
+ if(dormers){for(const side of [-1,1])for(const z of [-d*.29,0,d*.29]){
+  const xx=cx+side*(w*.32),yy=eave+raise*.53;
+  add('formalWall',xx,yy,z+cz,2.5,3.3,3.5);
+  add('slateRoof',xx,yy+2.2,z+cz,3.5,2.6,4.3,0,0,'hip');
+  add('window',xx,yy+.18,z+cz+side*.02,2.4,2.1,3.8);
+ }}
+}
+function grandFacade(cx,cz,w,d,h,roof='slateRoof',floorCount=2,entry=false){
+ add('formalWall',cx,h/2,cz,w,h,d);
+ add('formalDark',cx,.78,cz,w+1.1,1.56,d+1.1);
+ add('formalWhite',cx,2.1,cz,w+.75,.34,d+.75);
+ add('formalWhite',cx,h-.44,cz,w+1.25,.92,d+1.25);
+ for(let f=1;f<floorCount;f++)add('formalWhite',cx,2.1+f*(h-2.7)/floorCount,cz,w+.72,.36,d+.72);
+ for(const side of [-1,1]){
+  add('formalWhite',cx+side*(w/2-.58),h/2,cz,.75,h+.35,d+.2);
+  for(const z of [-d/2+2,d/2-2])add('formalDark',cx+side*(w/2-.27),h/2,cz+z,.20,h,.42);
+ }
+ const windows=Math.max(2,Math.floor((w-10)/5.7));
+ for(let f=0;f<floorCount;f++){
+  const wy=(f+.5)*(h-1.8)/floorCount+1.1;
+  for(let j=0;j<windows;j++){
+   const wx=cx+(j-(windows-1)/2)*(w-9.5)/Math.max(1,windows-1);
+   if(entry&&f===0&&Math.abs(wx-cx)<5.5)continue;
+   for(const sign of [-1,1]){
+    const z=cz+sign*(d/2+.21);
+    add('formalDark',wx,wy,z,2.48,3.45,.19);
+    add('glass',wx,wy,z+sign*.20,1.98,2.83,.14);
+    add('formalWhite',wx,wy,z+sign*.33,.11,3.03,.16);
+    add('formalWhite',wx,wy,z+sign*.34,2.23,.13,.18);
+    add('formalWhite',wx,wy+1.84,z+sign*.19,2.9,.28,.55);
+    add('formalWhite',wx,wy-1.76,z+sign*.23,2.88,.25,.57);
+   }
+  }
+  const sn=Math.max(1,Math.floor((d-8)/8));
+  for(const side of [-1,1])for(let j=0;j<sn;j++){
+   const zz=cz+(j-(sn-1)/2)*(d-8)/Math.max(1,sn-1);
+   add('window',cx+side*(w/2+.2),wy,zz,.23,3.3,2.1);
+   add('formalWhite',cx+side*(w/2+.39),wy+1.85,zz,.35,.26,2.85);
+  }
+ }
+ pitchedRoof(cx,cz,w,d,h,Math.min(8,w*.18),roof,w>55);
+ colliders.push({x:cx,z:cz,w:w+1.0,d:d+1.0,site:'landmark'});
+}
+function clockTex(){
+ const can=document.createElement('canvas');can.width=256;can.height=256;const c=can.getContext('2d');
+ c.fillStyle='#3c514e';c.fillRect(0,0,256,256);
+ c.fillStyle='#e6d8b8';c.beginPath();c.arc(128,128,111,0,Math.PI*2);c.fill();
+ c.strokeStyle='#514f42';c.lineWidth=8;c.beginPath();c.arc(128,128,101,0,Math.PI*2);c.stroke();
+ for(let i=0;i<12;i++){let a=i*Math.PI/6-Math.PI/2;let x1=128+Math.cos(a)*77,y1=128+Math.sin(a)*77,x2=128+Math.cos(a)*92,y2=128+Math.sin(a)*92;c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.lineWidth=i%3===0?6:3;c.stroke();}
+ c.beginPath();c.moveTo(128,128);c.lineTo(128+Math.cos(-.9)*60,128+Math.sin(-.9)*60);c.lineWidth=6;c.stroke();
+ c.beginPath();c.moveTo(128,128);c.lineTo(128+Math.cos(1.35)*44,128+Math.sin(1.35)*44);c.lineWidth=10;c.stroke();
+ c.fillStyle='#514f42';c.beginPath();c.arc(128,128,7,0,Math.PI*2);c.fill();
+ const tx=new T.CanvasTexture(can);tx.colorSpace=T.SRGBColorSpace;return tx;
+}
+const clockMaterial=new T.MeshBasicMaterial({map:clockTex(),side:T.DoubleSide});
+function clockFace(x,y,z,size,ry=0){const m=new T.Mesh(new T.PlaneGeometry(size,size),clockMaterial);m.position.set(x,y,z);m.rotation.y=ry;city.add(m);}
+function flagTexture(){
+ const can=document.createElement('canvas');can.width=256;can.height=352;const g=can.getContext('2d');
+ g.fillStyle='#1e4052';g.fillRect(0,0,256,352);g.fillStyle='#d3b77f';g.fillRect(9,8,238,3);g.fillRect(9,341,238,3);
+ g.strokeStyle='#d3b77f';g.lineWidth=2;g.strokeRect(15,16,226,321);
+ g.fillStyle='#f2ead4';g.beginPath();g.moveTo(128,53);g.lineTo(211,87);g.lineTo(198,209);g.lineTo(128,262);g.lineTo(58,209);g.lineTo(45,87);g.closePath();g.fill();
+ g.fillStyle='#31576b';g.beginPath();g.moveTo(128,68);g.lineTo(197,96);g.lineTo(184,205);g.lineTo(128,245);g.lineTo(72,205);g.lineTo(59,96);g.closePath();g.fill();
+ // Two layered wings, one ivory and one blue-gray: readable even at distant scale.
+ for(const side of [-1,1]){
+  const ox=128+side*7;g.fillStyle=side<0?'#eae4d5':'#83b1c8';
+  for(let k=0;k<8;k++){
+   const a=k/8,tx=ox+side*(22+k*6.3),by=92+k*15;
+   g.beginPath();g.moveTo(ox,84+k*8);g.lineTo(tx,by);g.lineTo(tx-side*14,by+26);g.lineTo(ox,121+k*7);g.closePath();g.fill();
+  }
+ }
+ g.fillStyle='#ead9a6';g.fillRect(122,65,12,185);g.fillRect(91,250,74,5);
+ const t=new T.CanvasTexture(can);t.colorSpace=T.SRGBColorSpace;return t;
+}
+const flagMat=new T.MeshBasicMaterial({map:flagTexture(),side:T.DoubleSide,transparent:false});
+function addBanner(x,y,z,height=24,ry=0){
+ add('formalDark',x,y+height/2,z,.48,height,.48);
+ add('bronze' in mat?'bronze':'metal',x,y+height+.35,z,.78,.78,.78);
+ const flag=new T.Mesh(new T.PlaneGeometry(6.2,9.0),flagMat);
+ flag.position.set(x+Math.cos(ry)*3.0,y+height-5,z-Math.sin(ry)*3.0);flag.rotation.y=ry;city.add(flag);
+ add('formalWhite',x+Math.cos(ry)*3,y+height-.25,z-Math.sin(ry)*3,.12,.13,6.5,ry);
+}
+function plaque(x,y,z,w=6,h=8,ry=0){
+ add('formalDark',x,y,z,w+.8,h+.8,.6,ry);
+ const m=new T.Mesh(new T.PlaneGeometry(w,h),flagMat);m.position.set(x,y,z+.37);m.rotation.y=ry;city.add(m);
+}
+function gateArch(cx,cz,w=18,height=10){
+ const gap=w*.57,side=(w-gap)/2;
+ for(const sign of [-1,1]){
+  add('formalDark',cx+sign*(gap/2+side/2),height/2,cz,side,height,3.6);
+  add('formalWhite',cx+sign*(gap/2+side/2),height+.65,cz,side+.8,1.3,4.0);
+ }
+ add('formalWhite',cx,height+3,cz,w,3.8,4.3);
+ add('slateRoof',cx,height+6,cz,w+1.6,2.6,6,0,0,'hip');
+ add('formalDark',cx,height+2,cz-2.55,gap+2,1.6,.4);
+}
+function trainingGround(cx,cz){
+ add('plazaStone',cx,.32,cz,77,.26,59);
+ // Dedicated training court: regular lanes and target frames, not random street clutter.
+ for(const z of [-24,-12,0,12,24])add('formalWhite',cx,.48,cz+z,67,.10,.23);
+ for(const x of [-28,0,28])add('formalWhite',cx+x,.49,cz,.18,.10,49);
+ for(const side of [-1,1])for(let j=0;j<3;j++){
+  const x=cx+side*29,z=cz-19+j*18;
+  add('beam2',x,3.5,z,.42,6.5,.42);
+  add('wood',x,6.4,z,3.5,.36,.44);
+  add('formalWall',x,4.8,z,2.6,1.4,.36);
+ }
+}
+function barracksComplex(cx,cz){
+ // One coherent compound: long main house, two side dormitories, open central court.
+ add('plazaStone',cx,.20,cz-3,172,.30,143);
+ trainingGround(cx,cz-17);
+ grandFacade(cx,cz+34,102,31,20,'slateRoof',2,true);
+ grandFacade(cx-67,cz-7,23,57,14,'slateRoof',2,false);
+ grandFacade(cx+67,cz-7,23,57,14,'slateRoof',2,false);
+ // Formal masonry portico, central entrance facing the training courtyard.
+ for(const x of [-10,-6,6,10]){add('formalWhite',cx+x,4.8,cz+16.8,.82,8.8,.82);add('formalDark',cx+x,9.2,cz+16.8,1.35,.62,1.1);}
+ add('formalWhite',cx,10.0,cz+16.8,23,1.1,7.3);add('formalDark',cx,5.0,cz+18.2,7.2,8.2,.32);
+ for(let j=0;j<4;j++)add('formalWhite',cx,.30+j*.28,cz+13.0-j*1.1,18,.3,2.4);
+ plaque(cx,15,cz+18.05,6.0,7.6,0);
+ // Front boundary with a ceremonial gate. Corner structures are low and rectangular.
+ for(const side of [-1,1]){
+  add('formalDark',cx+side*58,3.2,cz-64,51,6,3.8);
+  add('formalWhite',cx+side*82,3.0,cz-8,3.8,6,108);
+  add('formalDark',cx+side*82,7,cz-64,10,13,10);
+  add('slateRoof',cx+side*82,15,cz-64,12,4.0,12,0,0,'hip');
+  addBanner(cx+side*28,1,cz-46,23,0);
+ }
+ gateArch(cx,cz-64,21,11);
+ add('road',cx,.6,cz-47,11,.12,31);
+ add('formalWhite',cx,1,cz+10,5,.25,14);
+}
+function warehouseQuarter(cx,cz){
+ for(let row=-1;row<=1;row++)for(let col=-1;col<=1;col++){
+  const ww=(row===0&&col===0)?28:22,dd=(row===0?14:12),ori=Math.abs(col)>Math.abs(row)?0:1;
+  warehouse(cx+col*30,cz+row*22,ww,dd,ori);
+ }
+ for(let i=0;i<18;i++){const x=cx+r(-42,42),z=cz+r(-30,30);add(pick(['wood','beam2']),x,1.6,z,r(2.5,4.6),3.0,r(2.0,4.4),r(0,TAU));}
+ addBanner(cx,1,cz-34,18,0);
+}
+function commandHall(cx,cz){
+ // Main headquarters: the central clock tower emerges from a unified facade.
+ add('plazaStone',cx,.23,cz,157,.32,136);
+ // Symmetrical two-story wings flank the main entrance.
+ grandFacade(cx,cz+20,86,36,23,'copperRoof',2,true);
+ for(const side of [-1,1]){
+  grandFacade(cx+side*51,cz+22,24,42,18,'copperRoof',2,false);
+  add('formalWhite',cx+side*47,4,cz-8,4,8,4);
+ }
+ // Wide ceremonial staircase and entry pavilion: visually continuous with the main block.
+ for(let i=0;i<5;i++)add('formalWhite',cx,.43+i*.32,cz-13-i*1.65,27-i*1.3,.26,1.95);
+ for(const xx of [-13.0,-8.8,8.8,13.0]){
+  add('formalWhite',cx+xx,7.6,cz-1.8,1.0,13.5,1.0);
+  add('formalDark',cx+xx,14.5,cz-1.8,1.7,.56,1.65);
+ }
+ add('formalWhite',cx,15.1,cz-1.8,31.5,1.7,9.3);
+ add('formalDark',cx,7.2,cz-2.6,9,12.6,.35);
+ plaque(cx,18,cz+1.25,7.4,8.8,0);
+ // Unified square masonry clock tower with restrained copper spire.
+ const tz=cz+29;
+ add('formalWall',cx,41,tz,18,82,18);
+ for(const side of [-1,1])for(const yy of [28,41,51,64]){
+  add('formalWhite',cx+side*9.2,yy,tz,.55,2.2,18.2);
+  add('formalWhite',cx,yy,tz+side*9.2,18.2,2.2,.55);
+ }
+ for(const yy of [30,42])for(const side of [-1,1]){
+  add('window',cx,yy,tz+side*9.35,3.2,6.2,.35);
+  add('window',cx+side*9.35,yy,tz,.35,6.2,3.2);
+ }
+ add('formalDark',cx,66,tz,21,2.5,21);
+ add('formalWhite',cx,74,tz,21,2.7,21);
+ for(const face of [-1,1]){
+  clockFace(cx,71.0,tz+face*9.60,10,face<0?Math.PI:0);
+  clockFace(cx+face*9.60,71.0,tz,10,face*Math.PI/2);
+ }
+ // Roof tip at roughly 99 meters, deliberately taller than surrounding houses.
+ add('copperRoof',cx,83.5,tz,23,17.0,23,0,0,'hip');
+ add('metal',cx,94.0,tz,.65,6.0,.65);add('formalWhite',cx,97.2,tz,3.5,.6,.6);
+ // Paved parade ground, gates, crests and measured banners.
+ for(const side of [-1,1]){
+  addBanner(cx+side*53,1,cz-47,25,0);
+  add('formalWhite',cx+side*52,2.5,cz-48,3.5,5.0,3.5);
+ }
+ add('road',cx,.60,cz-40,16,.15,44);
+}
+// Landmark footprints, kept empty BEFORE houses are generated.
+const landmarkLots=[
+ {name:'兵団兵舎',x:-270,z:-222,rx:94,rz:89},
+ {name:'司令棟',x:165,z:247,rx:91,rz:82},
+ {name:'東倉庫街',x:370,z:-318,rx:57,rz:49},
+ {name:'西倉庫街',x:-406,z:-350,rx:57,rz:49}
+];
+
+// Fivefold+ buildable area, with grid lanes, courtyards and small neighborhood plazas.
+function clearLot(x,z,margin=0){
+ if(!insideTown(x,z,28+margin))return false;
+ if(landmarkLots.some(l=>Math.abs(x-l.x)<l.rx+margin+11&&Math.abs(z-l.z)<l.rz+margin+11))return false;
+ if(verticalStreets.some(s=>Math.abs(x-s)<17+margin))return false;
+ if(horizontalStreets.some(s=>Math.abs(z-s)<16+margin))return false;
+ if(Math.abs(x)<25+margin)return false;
+ if(Math.abs(x)<56+margin&&Math.abs(z+45*CITY_SCALE)<55+margin)return false;
+ if(Math.abs(x-49*CITY_SCALE)<34+margin&&Math.abs(z+44*CITY_SCALE)<44+margin)return false;
+ if(secondMarkets.some(s=>Math.abs(x-s.x)<s.size+10+margin&&Math.abs(z-s.z)<s.size+10+margin))return false;
+ if(Math.abs(x-CANAL_X)<24+margin&&z>CANAL_START-10-margin&&z<CANAL_END+10+margin)return false;
+ if(Math.abs(x+151*CITY_SCALE)<22+margin&&Math.abs(z-52*CITY_SCALE)<23+margin)return false;
+ if(Math.abs(x-123*CITY_SCALE)<22+margin&&Math.abs(z+114*CITY_SCALE)<23+margin)return false;
+ return true;
+}
+for(let z=BACK+27;z<FRONT-28;z+=22.7){for(let x=-R+30;x<R-25;x+=22.3){
+ const xx=x+r(-2.0,2.0),zz=z+r(-1.8,1.8);
+ if(!clearLot(xx,zz))continue;
+ if(rand()<.07)continue;
+ districtBuilding(xx,zz);
+}}
+// Small cottages naturally fill gaps along the winding arc.
+for(let k=0;k<450;k++){
+ const x=r(-R+28,R-28),z=r(BACK+27,FRONT-25);
+ if(!clearLot(x,z,3))continue;
+ if(colliders.some(c=>Math.abs(c.x-x)<(c.w+10)*.5&&Math.abs(c.z-z)<(c.d+11)*.5))continue;
+ rand()<.45?districtBuilding(x,z):house(x,z,r(7.5,10.4),r(9.4,12.4),rand()<.3?3:2,rand()<.5?1:0);
+}
+
+// District-scale landmarks: regiment barracks, command hall and warehouse quarter.
+barracksComplex(landmarkLots[0].x,landmarkLots[0].z);
+commandHall(landmarkLots[1].x,landmarkLots[1].z);
+warehouseQuarter(landmarkLots[2].x,landmarkLots[2].z);
+warehouseQuarter(landmarkLots[3].x,landmarkLots[3].z);
+for(const l of landmarkLots){add('cobble',l.x,.25,l.z,l.rx*1.6,.2,l.rz*1.65);}
+// Gate-side defense details and banners.
+for(const [x,z,ry] of [[0,FRONT-26,Math.PI],[0,BACK+18,0],[R-18,C+52,-Math.PI/2],[-R+18,C+52,Math.PI/2]]){
+ addBanner(x,1,z,22,ry);
+}
+for(const [x,z] of [[0,FRONT-36],[0,BACK+34],[R-30,C+82],[-R+30,C+82]]){
+ add('wood',x,2.2,z,6,4,6);add('beam2',x,5.0,z,8,.35,8,r(0,TAU));add('stone2',x,0.7,z,9,1.4,9);
+}
+
+// Central chapel / citadel. Its taller clock tower is a visual compass.
+function church(cx,cz){
+ add('stone1',cx,11,cz,24,22,43);add('stone2',cx,1,cz,27,2,47);
+ const rise=11,roofLen=Math.hypot(13.5,rise),ang=Math.atan2(rise,13.5);
+ for(const s of [-1,1])add('roof2',cx+s*6.75,27.5,cz,roofLen,.72,46,0,-s*ang);
+ add('stone4',cx,20,cz-22,24,rise,1.2,0,0,true);
+ for(let d of [-1,1])for(let j=0;j<4;j++)add('window',cx+d*12.1,9+j*3.5,cz-16,0.25,1.8,2.5);
+ add('stone2',cx,27,cz-19,13,55,13);add('stone4',cx,56,cz-19,15,5,15);
+ for(let i=0;i<4;i++){let off=(i-1.5)*3.1;add('window',cx+off,49,cz-25.8,2,7,.3);add('beam',cx+off,49,cz-26.04,.16,7.5,.2)}
+ const roof=new T.Mesh(new T.ConeGeometry(11,18,4),mat.roof1);roof.position.set(cx,68,cz-19);roof.rotation.y=Math.PI/4;city.add(roof);
+ add('metal',cx,80,cz-19,.7,7,.7);add('metal',cx,82.7,cz-19,4,.6,.6);
+ for(let k=0;k<3;k++)add('stone3',cx,6+k*6,cz-22.9,2,4,.3);
+}
+church(49*CITY_SCALE,-44*CITY_SCALE);
+// Fountain and square market furniture.
+for(let s=0;s<14;s++){const a=s*TAU/14;let x=-12+9*Math.cos(a),z=-45*CITY_SCALE+9*Math.sin(a);add('stone2',x,1,z,4,1.9,2.2,-a);}
+add('stone1',-12,1.1,-45*CITY_SCALE,13,1.5,13);add('water',-12,2,-45*CITY_SCALE,10,.45,10);add('stone4',-12,4.8,-45*CITY_SCALE,2.2,7,2.2);add('stone2',-12,8,-45*CITY_SCALE,5,.8,5);
+for(const [sx,sz] of [[-25,-25],[18,-23],[-25,-72],[20,-72]].map(([x,z])=>[x,z-45*(CITY_SCALE-1)])){
+ for(let c of [-1,1]){add('wood',sx+c*3,2.3,sz,0.5,4.6,.5);add('wood',sx+c*3,2.3,sz+4,.5,4.6,.5)}
+ add(pick(['stall0','stall1','roof1']),sx,5.2,sz+2,8,.35,7);add('wood',sx,1,sz+2,7.1,2,4.5);
+}
+// Two new market quarters contain wells, awnings and trading stalls.
+for(const market of secondMarkets){
+ const {x,z}=market;
+ add('stone1',x,1.1,z,10,1.5,10);add('water',x,1.9,z,7.5,.34,7.5);add('stone4',x,4,z,1.6,5,1.6);
+ for(let a=0;a<8;a++){
+  const t=a*Math.PI*2/8,xs=x+Math.cos(t)*30,zs=z+Math.sin(t)*30;
+  add('wood',xs-3,2.6,zs,.5,5.2,.5);add('wood',xs+3,2.6,zs,.5,5.2,.5);
+  add(pick(['stall0','stall1','roof1']),xs,5.4,zs,8,.45,6);
+  add('wood',xs,1.05,zs,7.2,2.1,4.4);
+ }
+}
+// A smaller barracks watchtower at the riverbank.
+for(const [tx,tz] of [[-151*CITY_SCALE,52*CITY_SCALE],[123*CITY_SCALE,-114*CITY_SCALE]]){
+ add('stone0',tx,18,tz,15,36,15);add('stone4',tx,37,tz,18,3,18);
+ for(let i=0;i<4;i++){const a=i*TAU/4;add('stone1',tx+7.3*Math.cos(a),41,tz+7.3*Math.sin(a),4.2,6,4.2)}
+ const cone=new T.Mesh(new T.ConeGeometry(13,15,4),mat.roof2);cone.position.set(tx,50,tz);cone.rotation.y=Math.PI/4;city.add(cone);
+ for(let h of [14,25])add('window',tx, h,tz+7.7,2,5,.25);
+}
+// Street furniture and sparse foliage inside the new perimeter.
+for(let i=0;i<175;i++){
+ const z=r(BACK+25,FRONT-25),x=pick(verticalStreets.filter(v=>v!==0).map(v=>v+(rand()<.5?-10:10)));
+ if(!insideTown(x,z,24))continue;
+ add('wood',x,3.25,z,.44,6.4,.44);add('metal',x,6.6,z,2.2,.6,2.2);add('stall0',x,6.3,z,1.5,1.1,1.5);
+}
+function tree(x,z,s=1){add('trunk',x,2.4*s,z,.9*s,4.8*s,.9*s);for(let j=0;j<3;j++){
+ const radius=(4.5-j*.75)*s,height=(9-j)*s;add(pick(['foliage0','foliage1','foliage2']),x,(7.5+j*3.8)*s,z,radius,height,radius,r(0,TAU),0,'cone');
+}}
+for(let i=0;i<350;i++){
+ let a=r(0,TAU),rr=r(R+38,R+310),x=Math.cos(a)*rr,z=Math.sin(a)*rr+C;
+ if(rand()<.60)tree(x,z,r(.7,1.5));
+}
+for(let i=0;i<135;i++){
+ let x=r(-R+35,R-35),z=r(BACK+35,FRONT-35);
+ if(!clearLot(x,z,2))continue;
+ if(colliders.some(c=>Math.abs(c.x-x)<c.w/2+5&&Math.abs(c.z-z)<c.d/2+5))continue;
+ tree(x,z,r(.55,.95));
+}
+// Surrounding mountain silhouettes and drifting cloud banks.
+for(let i=0;i<44;i++){
+ const a=i/44*TAU,rr=r(1420,1870),x=Math.cos(a)*rr,z=Math.sin(a)*rr+C;
+ const radius=r(100,260),height=r(90,240);
+ add(pick(['stone2','foliage1','stone3']),x,36,z,radius,height,radius,r(0,TAU),0,'cone');
+}
+const clouds=[];
+for(let i=0;i<21;i++){
+ let a=r(0,TAU),rr=r(860,1560),bx=Math.cos(a)*rr,bz=Math.sin(a)*rr+C;
+ for(let j=0;j<4;j++){
+  const g=new T.Mesh(new T.DodecahedronGeometry(r(18,36),0),mat.cloud);
+  g.scale.set(r(1.5,3),r(.28,.52),r(.8,1.5));g.position.set(bx+j*21,165+r(-8,8),bz+r(-9,9));city.add(g);clouds.push(g);
+ }
+}
+flush();
+document.getElementById('count').textContent=homes+' BUILDINGS · '+instances.toLocaleString()+' INSTANCES';
+window.shiganshinaMeta={name:'Shiganshina-inspired monumental district v4',expansionFactor:CITY_SCALE,worldWidth:2*R,worldDepth:FRONT-BACK,buildingCount:homes,instances,batches,scale:'1unit = approximately 1 meter',colliders,wallSystems:wallSystems.length,wallSegments,landmarkLots};
+// CAMERA & CONTROLS
+let mode='orbit', night=false,eco=false,last=performance.now(),frames=0,fps=60,orbitYaw=.68,orbitPitch=.47,orbitRange=720;
+const target=new T.Vector3(0,20,-30*CITY_SCALE), pos=new T.Vector3(),aim=new T.Vector3(),viewDir=new T.Vector3();
+const state={yaw:Math.PI,pitch:-.09,keys:{},drag:false,dragId:null,lastX:0,lastY:0,joyX:0,joyY:0,vertical:0,smooth:null};
+const yawFor=(from,to)=>Math.atan2(-(to.x-from.x),-(to.z-from.z));
+function setPose(p,t){camera.position.copy(p);const d=new T.Vector3().subVectors(t,p).normalize();state.yaw=Math.atan2(-d.x,-d.z);state.pitch=Math.asin(clamp(d.y,-.99,.99));camera.rotation.set(state.pitch,state.yaw,0,'YXZ')}
+function setMode(m){mode=m;document.querySelectorAll('[data-mode]').forEach(x=>x.classList.toggle('active',x.dataset.mode===mode));document.body.classList.toggle('moving',mode!=='orbit');
+ state.smooth=null;
+ if(m==='orbit'){let v=camera.position.clone().sub(target);orbitRange=clamp(v.length(),80,1850);orbitYaw=Math.atan2(v.x,v.z);orbitPitch=clamp(Math.atan2(v.y,Math.hypot(v.x,v.z)),.12,1.35);}
+ if(m==='walk'){setPose(new T.Vector3(0,3.35,87*CITY_SCALE),new T.Vector3(0,6,-70*CITY_SCALE));}
+ if(m==='fly'){setPose(new T.Vector3(73*CITY_SCALE,56,111*CITY_SCALE),new T.Vector3(0,3,-50*CITY_SCALE));}
+ document.getElementById('keys').textContent=m==='orbit'?'ドラッグ：回転　ホイール：拡大縮小':m==='walk'?'WASD：移動　ドラッグ：視点　Shift：走る':'WASD：飛行　Space / C：上下　Shift：加速';
+ document.getElementById('help').textContent=m==='orbit'?'巨大城壁、兵団施設、教会、倉庫街まで含めて探索。':m==='walk'?'石畳を歩きながら、建物のスケールと街並みを体感。':'街と壁を自由に飛び回れる。屋根の上も見渡そう。';
+}
+function orbitCamera(){let hor=Math.cos(orbitPitch)*orbitRange;camera.position.set(target.x+Math.sin(orbitYaw)*hor,target.y+Math.sin(orbitPitch)*orbitRange,target.z+Math.cos(orbitYaw)*hor);camera.lookAt(target)}
+orbitCamera();
+const jumpDest={gate:{title:'南門・城壁',pos:[96,148,FRONT+122],look:[0,44,FRONT-18]},square:{title:'中央広場',pos:[105*CITY_SCALE,102,40*CITY_SCALE],look:[-2,3,-45*CITY_SCALE]},wall:{title:'マリアの城壁',pos:[R-110,150,C+220],look:[R-18,53,C+165]},roof:{title:'旧市街の赤屋根',pos:[-116*CITY_SCALE,76,54*CITY_SCALE],look:[-34*CITY_SCALE,7,-43*CITY_SCALE]},barracks:{title:'兵団兵舎',pos:[landmarkLots[0].x-5,89,landmarkLots[0].z-168],look:[landmarkLots[0].x,13,landmarkLots[0].z+15]},command:{title:'司令棟',pos:[landmarkLots[1].x+70,125,landmarkLots[1].z-155],look:[landmarkLots[1].x,43,landmarkLots[1].z+7]},warehouse:{title:'倉庫街',pos:[425,83,-231],look:[370,9,-318]}};
+function jump(k){const s=jumpDest[k];if(!s)return;
+ document.getElementById('destination').textContent=s.title;
+ if(mode==='orbit')setMode('fly');
+ state.smooth={from:camera.position.clone(),to:new T.Vector3(...s.pos),start:performance.now(),duration:1300,look:new T.Vector3(...s.look)};
+}
+for(const b of document.querySelectorAll('[data-spot]'))b.addEventListener('click',()=>jump(b.dataset.spot));
+for(const b of document.querySelectorAll('[data-mode]'))b.addEventListener('click',()=>setMode(b.dataset.mode));
+// Day-to-evening toggle with sky, haze and sun hue changes.
+const day={bg:new T.Color(0xa7c7d5),fog:new T.Color(0xa7c7d5),sun:new T.Color(0xffe6b2)},evening={bg:new T.Color(0xc68e78),fog:new T.Color(0xc68e78),sun:new T.Color(0xffa46c)};
+let lightMix=0;
+document.getElementById('time').addEventListener('click',()=>{night=!night;document.getElementById('time').textContent=night?'昼景にする':'夕景にする';});
+document.getElementById('quality').addEventListener('click',()=>{eco=!eco;renderer.setPixelRatio(Math.min(devicePixelRatio||1,eco?.8:(innerWidth<800?1.15:1.6)));renderer.setSize(innerWidth,innerHeight);scene.fog.density=eco?.0010:.00070;document.getElementById('quality').textContent=eco?'通常画質':'軽量化';});
+const isTouch='ontouchstart' in window||navigator.maxTouchPoints>0;
+canvas.addEventListener('pointerdown',e=>{if(e.pointerType==='touch'&&e.clientX<145&&e.clientY>innerHeight-165&&mode!=='orbit')return;state.drag=true;state.dragId=e.pointerId;state.lastX=e.clientX;state.lastY=e.clientY;canvas.setPointerCapture(e.pointerId)});
+canvas.addEventListener('pointermove',e=>{if(!state.drag||state.dragId!==e.pointerId)return;
+ const dx=e.clientX-state.lastX,dy=e.clientY-state.lastY;state.lastX=e.clientX;state.lastY=e.clientY;
+ if(mode==='orbit'){orbitYaw-=dx*.004;orbitPitch=clamp(orbitPitch+dy*.004,.08,1.46);}else{state.yaw-=dx*.0037;state.pitch=clamp(state.pitch-dy*.0032,-1.48,1.48);}
+});
+for(const evt of ['pointerup','pointercancel','lostpointercapture'])canvas.addEventListener(evt,e=>{if(e.pointerId===state.dragId){state.drag=false;state.dragId=null}});
+canvas.addEventListener('wheel',e=>{e.preventDefault();if(mode==='orbit')orbitRange=clamp(orbitRange*Math.exp(e.deltaY*.0009),38,1900);else {const forward=new T.Vector3(-Math.sin(state.yaw)*Math.cos(state.pitch),Math.sin(state.pitch),-Math.cos(state.yaw)*Math.cos(state.pitch));camera.position.addScaledVector(forward,clamp(e.deltaY,-200,200)*-.04);}}, {passive:false});
+window.addEventListener('keydown',e=>{if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();state.keys[e.code]=true;if(e.code==='Digit1')setMode('orbit');if(e.code==='Digit2')setMode('walk');if(e.code==='Digit3')setMode('fly')});window.addEventListener('keyup',e=>state.keys[e.code]=false);window.addEventListener('blur',()=>{state.keys={};state.joyX=0;state.joyY=0;state.vertical=0;});
+const joystick=document.getElementById('joystick'),stick=document.getElementById('stick');let joystickPointer=null;
+function joy(e){const b=joystick.getBoundingClientRect(),x=e.clientX-(b.left+b.width/2),y=e.clientY-(b.top+b.height/2),l=Math.max(1,Math.hypot(x,y)),max=34,mag=Math.min(1,l/max);state.joyX=x/l*mag;state.joyY=y/l*mag;stick.style.transform=`translate(${state.joyX*34}px,${state.joyY*34}px)`;}
+joystick.addEventListener('pointerdown',e=>{e.preventDefault();joystickPointer=e.pointerId;joystick.setPointerCapture(e.pointerId);joy(e)});joystick.addEventListener('pointermove',e=>{if(e.pointerId===joystickPointer){e.preventDefault();joy(e)}});
+for(const ev of ['pointerup','pointercancel','lostpointercapture'])joystick.addEventListener(ev,e=>{if(e.pointerId===joystickPointer){joystickPointer=null;state.joyX=state.joyY=0;stick.style.transform=''}});
+for(const [id,dir] of [['up',1],['down',-1]]){const bt=document.getElementById(id);bt.addEventListener('pointerdown',e=>{e.preventDefault();state.vertical=dir;bt.setPointerCapture(e.pointerId)});for(const ev of ['pointerup','pointercancel','lostpointercapture'])bt.addEventListener(ev,()=>state.vertical=0)}
+// Small stylized 2D city map.
+const minimap=document.getElementById('mini'),mc=minimap.getContext('2d');
+function drawMap(){if(innerWidth<800)return;
+ const w=308,sc=.68/CITY_SCALE;mc.clearRect(0,0,w,w);mc.save();mc.translate(w/2,w/2+15);mc.scale(sc,-sc);
+ mc.strokeStyle='#f0dfb9ad';mc.lineWidth=6*CITY_SCALE;
+ mc.beginPath();mc.moveTo(-R,BACK);mc.lineTo(-R,C);mc.arc(0,C,R,Math.PI,0,true);mc.lineTo(R,BACK);mc.closePath();mc.stroke();
+ mc.strokeStyle='#ddd0b65e';mc.lineWidth=10*CITY_SCALE;mc.beginPath();
+ mc.moveTo(0,BACK+15);mc.lineTo(0,FRONT-15);
+ for(const z of horizontalStreets){const half=z>C?Math.sqrt(Math.max(0,(R-21)**2-(z-C)**2)):R-21;
+  mc.moveTo(-half,z);mc.lineTo(half,z);
+ }
+ for(const x of verticalStreets){if(x===0)continue;
+  const top=C+Math.sqrt(Math.max(0,(R-20)**2-x*x));mc.moveTo(x,BACK+15);mc.lineTo(x,top);
+ }
+ mc.stroke();
+ mc.fillStyle='#d4a78c';mc.beginPath();mc.arc(0,-45*CITY_SCALE,12*CITY_SCALE,0,TAU);mc.fill();
+ mc.fillStyle='#f9ecc9';mc.beginPath();mc.arc(camera.position.x,camera.position.z,5*CITY_SCALE,0,TAU);mc.fill();
+ mc.strokeStyle='#fbe1ab';mc.lineWidth=2*CITY_SCALE;mc.beginPath();mc.moveTo(camera.position.x,camera.position.z);
+ mc.lineTo(camera.position.x-12*CITY_SCALE*Math.sin(state.yaw),camera.position.z-12*CITY_SCALE*Math.cos(state.yaw));mc.stroke();mc.restore();
+}
+function canMove(x,z){if(!insideTown(x,z,10))return false;
+ return !colliders.some(c=>Math.abs(c.x-x)<c.w/2+1.15&&Math.abs(c.z-z)<c.d/2+1.15);
+}
+function move(dt){if(mode==='orbit'){orbitCamera();return;}
+ if(state.smooth){const s=state.smooth,t=clamp((performance.now()-s.start)/s.duration,0,1),e=t*t*(3-2*t);camera.position.copy(s.from).lerp(s.to,e);setPose(camera.position,s.look);if(t>=1)state.smooth=null;return;}
+ let f= (state.keys.KeyW||state.keys.ArrowUp?1:0)-(state.keys.KeyS||state.keys.ArrowDown?1:0)-state.joyY;
+ let side=(state.keys.KeyD||state.keys.ArrowRight?1:0)-(state.keys.KeyA||state.keys.ArrowLeft?1:0)+state.joyX;
+ const l=Math.hypot(f,side);if(l>1){f/=l;side/=l}
+ const speed=(mode==='walk'?14.5:54)*(state.keys.ShiftLeft||state.keys.ShiftRight?2.4:1),dy=(state.keys.Space?1:0)-(state.keys.KeyC||state.keys.ControlLeft?1:0)+state.vertical;
+ let vx=(-Math.sin(state.yaw)*f+Math.cos(state.yaw)*side)*speed*dt;
+ let vz=(-Math.cos(state.yaw)*f-Math.sin(state.yaw)*side)*speed*dt;
+ if(mode==='walk'){
+   let x=camera.position.x+vx,z=camera.position.z+vz;
+   if(canMove(x,camera.position.z))camera.position.x=x;
+   if(canMove(camera.position.x,z))camera.position.z=z;
+   camera.position.y=3.35;
+ }else {camera.position.x+=vx;camera.position.z+=vz;camera.position.y=clamp(camera.position.y+dy*speed*dt,2.3,340);}
+ camera.rotation.set(state.pitch,state.yaw,0,'YXZ');
+}
+function loop(now){const dt=Math.min(.05,(now-last)/1000||.016);last=now;
+ if(lightMix!==(night?1:0)){lightMix=clamp(lightMix+(night?1:-1)*dt*.55,0,1);scene.background.copy(day.bg).lerp(evening.bg,lightMix);scene.fog.color.copy(day.fog).lerp(evening.fog,lightMix);sun.color.copy(day.sun).lerp(evening.sun,lightMix);sun.position.set(-200+lightMix*380,310-lightMix*170,130);renderer.toneMappingExposure=1.29-lightMix*.16;}
+ move(dt);if(mode==='orbit'){// In overview keep the heading marker approximately toward the city.
+   const d=target.clone().sub(camera.position);state.yaw=Math.atan2(-d.x,-d.z);
+ }
+ renderer.render(scene,camera);frames++;if(frames%9===0)drawMap();requestAnimationFrame(loop);
+}
+window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio||1,eco?.8:innerWidth<800?1.15:1.6))});
+window.addEventListener('contextmenu',e=>e.preventDefault());
+requestAnimationFrame(loop);setTimeout(()=>{let l=document.getElementById('loading');l.style.opacity='0';setTimeout(()=>l.remove(),700)},300);
+}catch(e){console.error(e);let el=document.getElementById('err');el.style.display='block';el.textContent='街の生成でエラーが発生しました: '+e.message;document.getElementById('loading').style.display='none';}
+}
+</script>
+</body>
+</html>

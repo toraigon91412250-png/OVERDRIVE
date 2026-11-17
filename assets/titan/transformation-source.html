@@ -1,0 +1,484 @@
+<!-- Game adaptation: lightning/timeline in src/titan/transformation-fx.js; playable control in src/titan/transformation.js. Original facial/model study retained as source. -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover"><meta name="theme-color" content="#0b0d0c">
+<title>巨人化 | TITAN TRANSFORMATION v6 - Three.js</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#0b0d0c;color:#f2eee4;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif}canvas{display:block;touch-action:none}#app{position:fixed;inset:0}#stage{position:absolute;inset:0}#vignette{pointer-events:none;position:absolute;inset:0;background:radial-gradient(ellipse at 50% 46%,transparent 25%,rgba(0,0,0,.1) 57%,rgba(1,4,6,.72) 100%);z-index:4}#grain{pointer-events:none;position:absolute;inset:0;opacity:.19;z-index:5;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.64' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.3'/%3E%3C/svg%3E");mix-blend-mode:screen}#flash{position:absolute;inset:0;background:#fff9dd;opacity:0;pointer-events:none;z-index:6;mix-blend-mode:screen}#radial{position:absolute;inset:0;opacity:0;pointer-events:none;z-index:6;background:radial-gradient(circle at 50% 58%,#fffef3 0%,#ffdd78 16%,#de8c31 36%,transparent 70%);mix-blend-mode:screen}#bars:before,#bars:after{content:'';position:absolute;left:0;right:0;height:0;background:#030505;z-index:6;pointer-events:none;transition:height .55s ease}#bars:before{top:0}#bars:after{bottom:0}.cinema #bars:before,.cinema #bars:after{height:4.7vh}#hud{position:fixed;z-index:10;inset:0;pointer-events:none}header{position:absolute;top:max(28px,env(safe-area-inset-top));left:clamp(20px,4vw,66px);right:clamp(20px,4vw,66px);display:flex;align-items:flex-start;justify-content:space-between;gap:14px}.eyebrow{font-size:10px;color:#c9b59a;letter-spacing:.32em;font-weight:800;margin-bottom:9px}.title{font-family:Georgia,'Times New Roman',serif;font-size:clamp(22px,3vw,40px);line-height:1;letter-spacing:.045em;font-weight:650;text-shadow:0 2px 12px #000}.title span{color:#d5a36c}.sub{font-size:10px;letter-spacing:.14em;margin-top:10px;color:#b5b3a8;opacity:.8}.mark{border:1px solid rgba(223,195,158,.32);background:rgba(8,12,12,.46);backdrop-filter:blur(12px);padding:9px 12px;font:700 10px/1.55 monospace;letter-spacing:.14em;color:#d8cbb5;text-align:right}.right{display:flex;gap:8px;align-items:start}.mark strong{color:#e6ac64}#status{position:absolute;top:50%;left:clamp(20px,4vw,66px);transform:translateY(-45%);max-width:280px;transition:opacity .35s}#chapter{font:700 10px monospace;letter-spacing:.27em;color:#e7b36e}#moment{font-family:Georgia,serif;font-size:clamp(29px,4vw,56px);font-weight:700;line-height:1.2;margin-top:13px;text-shadow:0 4px 20px #000}#descript{max-width:260px;font-size:12px;line-height:1.8;color:#d2c8b5;margin-top:11px;text-shadow:0 2px 5px #000}#status.hidden{opacity:0}#bottom{position:absolute;bottom:max(23px,env(safe-area-inset-bottom));left:clamp(20px,4vw,66px);right:clamp(20px,4vw,66px);display:flex;align-items:end;gap:24px;justify-content:space-between}.panel{background:rgba(9,12,12,.74);backdrop-filter:blur(14px);border:1px solid rgba(218,195,162,.22);box-shadow:0 20px 75px rgba(0,0,0,.16);pointer-events:auto}.controls{padding:15px 18px;display:flex;align-items:center;gap:11px;flex-wrap:wrap}.btn{border:1px solid rgba(219,189,143,.31);border-radius:2px;color:#eae1d0;font-weight:800;letter-spacing:.12em;background:rgba(44,44,38,.48);min-height:42px;padding:0 15px;cursor:pointer;font-size:11px;transition:background .2s,color .2s,transform .2s}.btn:hover{background:#66523a}.btn:active{transform:scale(.97)}.btn.primary{background:#cda36f;border-color:#eac58e;color:#15120e;padding:0 22px;font-size:12px}.btn.primary:hover{background:#f1c18a}.btn.active{border-color:#e9b778;color:#ffd5a4;background:rgba(123,77,42,.46)}.iconBtn{min-width:43px;padding:0 12px}.readout{min-width:180px;text-align:right;letter-spacing:.12em;font:700 10px/1.8 monospace;color:#bdb7a7}.readout strong{display:block;font-size:13px;letter-spacing:.13em;color:#e7dac8}.separator{height:22px;width:1px;background:rgba(213,191,160,.22);margin:0 2px}#hint{font-size:10px;color:#e2d4bf;opacity:.67;line-height:1.7;letter-spacing:.07em;text-align:right;text-shadow:0 2px 4px #000}.timeline{position:absolute;left:clamp(20px,4vw,66px);right:clamp(20px,4vw,66px);bottom:calc(max(23px,env(safe-area-inset-bottom)) + 88px);height:14px;display:flex;align-items:center;gap:14px;opacity:.95;pointer-events:auto}.time{font:11px monospace;color:#d1c3ae;width:38px}.track{position:relative;flex:1;height:3px;background:rgba(204,188,165,.32);cursor:pointer}.fill{width:0;height:100%;background:linear-gradient(90deg,#ae7b4c,#f2cc8b);box-shadow:0 0 9px #ce8d47}.dot{position:absolute;top:50%;height:10px;width:10px;background:#f2d39d;transform:translate(-50%,-50%);border-radius:50%;left:0;box-shadow:0 0 8px #cda16b}.tick{position:absolute;top:-4px;height:11px;width:1px;background:#e7cc9b;opacity:.6}#sceneLabel{position:absolute;right:clamp(20px,4vw,66px);top:40%;text-align:right;opacity:.8;font:10px/1.8 monospace;color:#dfcbb0;letter-spacing:.13em}#sceneLabel b{display:block;font:700 13px Georgia,serif;color:#f0d0a8;letter-spacing:.08em}#loading{position:absolute;inset:0;background:#080d0f;display:grid;place-items:center;z-index:30;transition:opacity .5s}#loading>div{text-align:center;letter-spacing:.2em;color:#dfb278;font-size:12px}#loading .loadSub{color:#918f87;margin-top:12px;font-size:10px;letter-spacing:.07em}#note{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);color:#e7d8c3;opacity:.4;font:9px sans-serif;white-space:nowrap}#startOverlay{position:absolute;inset:0;z-index:9;background:radial-gradient(ellipse at 50% 55%,transparent 16%,rgba(6,9,9,.35) 72%);pointer-events:none}#startOverlay.fade{opacity:0;transition:opacity .4s}#error{position:absolute;inset:0;background:#0f1618;color:#ddd;z-index:99;padding:15vh 10vw;display:none;font:15px/1.8 sans-serif}
+@media(max-width:750px){header{top:max(16px,env(safe-area-inset-top));left:17px;right:17px}.eyebrow{font-size:8px}.title{font-size:23px}.sub{font-size:9px}.mark{font-size:8px;padding:7px 8px}#status{left:17px;top:29%;max-width:185px}#moment{font-size:29px}#descript{font-size:10px}#chapter{font-size:9px}#sceneLabel{top:auto;bottom:200px;right:17px;font-size:9px}#bottom{left:12px;right:12px;bottom:max(17px,env(safe-area-inset-bottom));display:block}.panel.controls{gap:7px;justify-content:center;padding:10px 7px}.btn{font-size:10px;min-height:41px;padding:0 10px}.btn.primary{font-size:11px;padding:0 14px}.readout,#hint,.separator{display:none}.timeline{left:17px;right:17px;bottom:calc(max(17px,env(safe-area-inset-bottom)) + 73px)}#note{display:none}#status{pointer-events:none}}
+@media(prefers-reduced-motion:reduce){#bars:before,#bars:after{transition:none}}
+</style>
+</head>
+<body>
+<div id="app"><div id="stage"></div><div id="vignette"></div><div id="grain"></div><div id="radial"></div><div id="flash"></div><div id="bars"></div><div id="startOverlay"></div><div id="hud">
+<header><div><div class="eyebrow">THE POWER OF THE TITANS &nbsp; // &nbsp; THREE.JS STUDY</div><div class="title">TITAN <span>TRANSFORMATION</span></div><div class="sub">進撃の巨人 ・ 巨人化シネマティック実験場</div></div><div class="right"><div class="mark"><strong>15 M CLASS</strong><br>ATTACK TITAN<br>FACE REMODEL v9</div></div></header>
+<div id="status"><div id="chapter">01 / BEFORE THE STORM</div><div id="moment">その時を、<br>待っている。</div><div id="descript">画面下の「巨人化」を押して、変身シークエンスを再生。</div></div>
+<div id="sceneLabel"><b id="phaseLabel">HUMAN FORM</b><span id="phaseDetail">SEQUENCE STANDBY</span><button class="btn" id="faceview" style="display:block;margin:12px 0 0 auto;min-height:35px;padding:0 11px;pointer-events:auto;font-size:10px;letter-spacing:.04em">顔アップで確認</button></div>
+<div class="timeline"><span class="time" id="timeElapsed">00:00</span><div class="track" id="track"><div class="fill" id="fill"></div><div class="dot" id="dot"></div><i class="tick" style="left:15%"></i><i class="tick" style="left:25%"></i><i class="tick" style="left:45%"></i><i class="tick" style="left:67%"></i></div><span class="time" id="timeTotal">00:11</span></div>
+<div id="bottom"><div class="panel controls"><button class="btn primary" id="go">⚡ 巨人化</button><button class="btn" id="replay">↻ もう一度</button><span class="separator"></span><button class="btn active" id="cinema">映像カメラ</button><button class="btn" id="orbit">自由視点</button><button class="btn iconBtn" id="sound" aria-label="音声切り替え">♪ ON</button><button class="btn iconBtn" id="quality" aria-label="画質切り替え">画質 HIGH</button><div class="readout">TRANSFORMATION STATUS<strong id="readout">READY / STANDBY</strong></div></div><div id="hint">ドラッグ：カメラ回転　スクロール / ピンチ：ズーム<br>自動カメラはシネマ再生中に有効</div></div>
+<div id="note">非公式ファンメイドの3D表現研究。映像・音楽・3Dモデルの公式素材は使用していません。</div></div>
+<div id="loading"><div>INITIALIZING THE TITAN SYSTEM<div class="loadSub">3D SCENE / LIGHTNING / STEAM / ANIMATION</div></div></div>
+<div id="error">Three.jsの読み込みに失敗しました。インターネット接続を確認し、もう一度ファイルを開いてください。</div></div>
+<script type="module">
+import * as THREE from 'three';
+const $=id=>document.getElementById(id), rnd=(a=0,b=1)=>a+Math.random()*(b-a), clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x)), smooth=(a,b,t)=>{let x=clamp((t-a)/(b-a));return x*x*(3-2*x)}, bell=(a,b,c,d,t)=>smooth(a,b,t)*(1-smooth(c,d,t));
+const isMobile=/iPhone|iPad|Android/i.test(navigator.userAgent), stage=$('stage');
+let high=!isMobile,soundEnabled=true,camMode='cinema',focusFace=false,playing=false,clockT=0,last=performance.now(),audioCtx=null,lastThunder=false,lastRoar=false,shake=0,dragging=false,yaw=.39,pitch=.21,orbitDist=31,flashValue=0;
+const DURATION=11.4, V=new THREE.Vector3(), scene=new THREE.Scene();scene.background=new THREE.Color('#343b3b');scene.fog=new THREE.FogExp2(0x505047,.0115);
+const camera=new THREE.PerspectiveCamera(48,innerWidth/innerHeight,.08,400);camera.position.set(8,4,16);
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:false,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,high?1.75:1.18));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.3;renderer.shadowMap.enabled=high;renderer.shadowMap.type=THREE.PCFSoftShadowMap;stage.appendChild(renderer.domElement);
+const hemi=new THREE.HemisphereLight(0xb9bdba,0x3d2f26,1.4);scene.add(hemi);
+const sun=new THREE.DirectionalLight(0xffdbad,2.85);sun.position.set(-20,36,-20);sun.castShadow=high;sun.shadow.mapSize.set(1024,1024);sun.shadow.camera.left=-28;sun.shadow.camera.right=28;sun.shadow.camera.top=29;sun.shadow.camera.bottom=-29;sun.shadow.camera.near=.2;sun.shadow.camera.far=110;sun.shadow.bias=-.0005;scene.add(sun);
+const fillLight=new THREE.DirectionalLight(0x7ba2a3,1.05);fillLight.position.set(20,10,25);scene.add(fillLight);
+const burstLight=new THREE.PointLight(0xffdc85,0,72,1.3);burstLight.position.set(0,9,0);scene.add(burstLight);
+const eyeLight=new THREE.PointLight(0x72ffa7,0,7,2);eyeLight.position.set(0,14.1,1.4);scene.add(eyeLight);
+function noiseTexture(kind='stone'){
+ const c=document.createElement('canvas');c.width=c.height=512;const ctx=c.getContext('2d');let img=ctx.createImageData(512,512);for(let y=0;y<512;y++)for(let x=0;x<512;x++){let p=(y*512+x)*4;let n=rnd(-20,20)+(Math.sin(x*.08)*Math.sin(y*.045)*10);let base=kind==='stone'?[111,109,98]:kind==='ground'?[72,70,63]:[174,107,79];img.data[p]=clamp(base[0]+n,0,255);img.data[p+1]=clamp(base[1]+n,0,255);img.data[p+2]=clamp(base[2]+n,0,255);img.data[p+3]=255}ctx.putImageData(img,0,0);
+ if(kind!=='skin'){ctx.lineWidth=1;for(let j=0;j<28;j++){let yy=j*19+rnd(-4,4);ctx.strokeStyle=`rgba(15,21,18,${rnd(.12,.29)})`;ctx.beginPath();ctx.moveTo(0,yy);ctx.lineTo(512,yy);ctx.stroke();for(let i=0;i<11;i++){const xx=i*52+(j%2)*26+rnd(-6,6);ctx.beginPath();ctx.moveTo(xx,yy);ctx.lineTo(xx+rnd(-3,3),yy+19);ctx.stroke()}}}
+ else{for(let i=0;i<400;i++){let x=rnd(0,512),y=rnd(0,512);ctx.strokeStyle=`rgba(69,29,18,${rnd(.04,.17)})`;ctx.lineWidth=rnd(.4,1.2);ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+rnd(-6,6),y+rnd(5,32));ctx.stroke()}}
+ const tex=new THREE.CanvasTexture(c);tex.colorSpace=THREE.SRGBColorSpace;tex.wrapS=tex.wrapT=THREE.RepeatWrapping;tex.anisotropy=4;return tex;
+}
+const stoneTex=noiseTexture('stone'), floorTex=noiseTexture('ground'),skinTex=noiseTexture('skin');floorTex.repeat.set(22,22);stoneTex.repeat.set(2,2);
+const mats={stone:new THREE.MeshStandardMaterial({color:0xb0aba0,map:stoneTex,roughness:.96}),roof:new THREE.MeshStandardMaterial({color:0x443c37,roughness:.94}),trim:new THREE.MeshStandardMaterial({color:0x63594e,roughness:1}),black:new THREE.MeshStandardMaterial({color:0x161817,roughness:.9}),skin:new THREE.MeshStandardMaterial({color:0xd29b76,map:skinTex,roughness:.92,metalness:0}),muscle:new THREE.MeshStandardMaterial({color:0x984d3e,roughness:.89}),muscle2:new THREE.MeshStandardMaterial({color:0xb66d51,roughness:.92}),warm:new THREE.MeshStandardMaterial({color:0xe7ac81,roughness:.88}),shadow:new THREE.MeshStandardMaterial({color:0x532b29,roughness:1}),hair:new THREE.MeshStandardMaterial({color:0x191714,roughness:.87,side:THREE.DoubleSide}),hair2:new THREE.MeshStandardMaterial({color:0x29221a,roughness:.83,side:THREE.DoubleSide}),ivory:new THREE.MeshStandardMaterial({color:0xf2dbc0,roughness:.61}),eyeDark:new THREE.MeshStandardMaterial({color:0x1b2825,roughness:.8}),eyes:new THREE.MeshStandardMaterial({color:0xb8ffce,emissive:0x65ff9b,emissiveIntensity:3.7,roughness:.22}),fabric:new THREE.MeshStandardMaterial({color:0x6c6050,roughness:1}),cloak:new THREE.MeshStandardMaterial({color:0x344d3c,roughness:1,side:THREE.DoubleSide}),spark:new THREE.MeshBasicMaterial({color:0xffdf9c,transparent:true,opacity:.9,depthWrite:false,blending:THREE.AdditiveBlending})};
+const sphereGeo=new THREE.SphereGeometry(1,20,13),boxGeo=new THREE.BoxGeometry(1,1,1);
+function mesh(parent,geo,mat,pos=[0,0,0],sc=[1,1,1],rot=[0,0,0]){let o=new THREE.Mesh(geo,mat);o.position.set(...pos);o.scale.set(...sc);o.rotation.set(...rot);o.castShadow=high;o.receiveShadow=high;parent.add(o);return o}
+function blob(p,m,pos,sc,rot=[0,0,0]){return mesh(p,sphereGeo,m,pos,sc,rot)}
+function box(p,m,pos,sc,rot){return mesh(p,boxGeo,m,pos,sc,rot||[0,0,0])}
+function tube(p,points,r,mat,n=10){let cv=new THREE.CatmullRomCurve3(points.map(v=>new THREE.Vector3(...v)));let o=mesh(p,new THREE.TubeGeometry(cv,Math.max(8,points.length*5),r,n,false),mat);return o}
+function tapered(p,a,b,r1,r2,mat,seg=14){let A=new THREE.Vector3(...a),B=new THREE.Vector3(...b);let diff=B.clone().sub(A);let o=mesh(p,new THREE.CylinderGeometry(r2,r1,diff.length(),seg,1),mat);o.position.copy(A).add(B).multiplyScalar(.5);o.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),diff.normalize());return o}
+function silhouette(p,mat,rings){let N=28,vertices=[],indices=[];for(let r of rings){for(let j=0;j<N;j++){let a=j/N*Math.PI*2;vertices.push(Math.cos(a)*r[1]+(r[3]||0),r[0],Math.sin(a)*r[2]+(r[4]||0))}}for(let i=0;i<rings.length-1;i++)for(let j=0;j<N;j++){let a=i*N+j,b=i*N+(j+1)%N,c=(i+1)*N+j,d=(i+1)*N+(j+1)%N;indices.push(a,b,c,b,d,c)}let g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));g.setIndex(indices);g.computeVertexNormals();return mesh(p,g,mat)}
+// Cloud-darkened early evening sky; all texture and shaders are generated inside this file.
+const skyGeo=new THREE.SphereGeometry(210,48,24),skyMat=new THREE.ShaderMaterial({side:THREE.BackSide,depthWrite:false,uniforms:{uTime:{value:0}},vertexShader:`varying vec3 vD;void main(){vD=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,fragmentShader:`varying vec3 vD;uniform float uTime;float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}float no(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),f.x),f.y);}void main(){vec3 d=normalize(vD);float h=clamp(d.y*.55+.5,0.,1.);vec3 bottom=vec3(.70,.54,.38),top=vec3(.12,.17,.2);vec3 col=mix(bottom,top,smoothstep(.11,.93,h));vec2 q=vec2(atan(d.z,d.x)*3.7+d.y*2.,d.y*7.+uTime*.002);float cloud=no(q*1.2)*.65+no(q*2.7)*.28+no(q*5.5)*.1;float thick=smoothstep(.40,.77,cloud);col=mix(col,vec3(.22,.24,.24),thick*.79);float glow=pow(max(0.,dot(d,normalize(vec3(-.52,.55,-.7)))),24.);col+=vec3(1.,.49,.2)*glow*.45;gl_FragColor=vec4(col,1.);}`});let sky=new THREE.Mesh(skyGeo,skyMat);scene.add(sky);
+let ground=mesh(scene,new THREE.PlaneGeometry(450,450),new THREE.MeshStandardMaterial({color:0x8c8675,map:floorTex,roughness:1}),[0,-.04,0],[1,1,1],[-Math.PI/2,0,0]);ground.receiveShadow=true;ground.castShadow=false;
+// Distant fortification and compact old-town skyline make the height believable.
+const city=new THREE.Group();scene.add(city);
+function building(x,z,w=3,h=7,d=3,seed=0){let group=new THREE.Group();group.position.set(x,0,z);city.add(group);let facade=new THREE.MeshStandardMaterial({map:stoneTex,color:new THREE.Color().setHSL(.08,.08,rnd(.58,.76)),roughness:1});box(group,facade,[0,h/2,0],[w,h,d]);let ridge=mesh(group,new THREE.ConeGeometry(Math.max(w,d)*.79,Math.max(1.3,w*.67),4),mats.roof,[0,h+Math.max(1.3,w*.67)*.5,0],[1,1,1],[0,Math.PI/4,0]);let levels=Math.max(2,Math.floor(h/2.4));for(let iy=0;iy<levels;iy++)for(let sx of [-1,1]){let ww=box(group,mats.black,[sx*w*.24,1.3+iy*2.25,d/2+.017],[.46,.85,.038]);if(Math.random()>.48)box(group,mats.trim,[sx*w*.24,1.7+iy*2.25,d/2+.032],[.55,.08,.055]);}
+ box(group,mats.trim,[0,.38,d/2+.08],[w,.66,.16]);for(let i=0;i<Math.max(2,w*2);i++){let y=rnd(.6,h-.4);box(group,mats.trim,[rnd(-w/2,w/2),y,-d/2-.02],[rnd(.10,.24),rnd(.18,.6),.06])}
+ return group;}
+for(let i=0,cityCount=isMobile?27:43;i<cityCount;i++){let a=(i/cityCount)*Math.PI*2+Math.random()*.18;let radius=rnd(18,42),x=Math.sin(a)*radius,z=Math.cos(a)*radius;let w=rnd(2.2,5.6),h=rnd(5,14);building(x,z,w,h,rnd(2.5,5.3),i)}
+for(let i=0;i<14;i++){let x=(i-6.5)*7.0;let g=mesh(city,boxGeo,mats.stone,[x,17,-68],[7.1,34,5]);g.castShadow=false;box(city,mats.trim,[x,34.3,-68],[7,2.2,6]);for(let k=0;k<4;k++)box(city,mats.black,[x+(k-1.5)*1.4,29,-65.38],[.6,1.2,.11]);}
+for(let i=0;i<19;i++){let a=rnd(0,Math.PI*2),r=rnd(8,26);let d=rnd(.2,1.5);let ob=box(city,mats.trim,[Math.sin(a)*r,.16,Math.cos(a)*r],[d,rnd(.15,.4),d*1.8],[rnd(-.6,.6),rnd(-3,3),rnd(-.6,.6)]);ob.receiveShadow=true}
+// Small human at the transformation point.
+const human=new THREE.Group();scene.add(human);const hairHuman=new THREE.MeshStandardMaterial({color:0x211b17,roughness:1}),skinHuman=new THREE.MeshStandardMaterial({color:0xb79378,roughness:.95});
+blob(human,mats.fabric,[0,1.12,0],[.32,.49,.19]);blob(human,skinHuman,[0,1.75,0],[.17,.2,.16]);blob(human,hairHuman,[0,1.86,-.03],[.20,.12,.20]);box(human,mats.cloak,[0,1.08,-.14],[.67,.87,.1],[.17,0,0]);for(let s of [-1,1]){tapered(human,[s*.31,1.38,0],[s*.43,.70,.15],.13,.1,mats.fabric);tapered(human,[s*.13,.80,0],[s*.16,.11,.05],.16,.11,mats.fabric);box(human,mats.black,[s*.18,.13,.11],[.18,.2,.31])}box(human,mats.trim,[0,.82,.19],[.62,.08,.05]);human.position.set(0,0,.25);
+// ---- THE ATTACK TITAN: independent layers of muscles, joints, fingers, facial planes and flowing hair ----
+const titan=new THREE.Group();scene.add(titan);const titanBody=new THREE.Group();titan.add(titanBody);
+// Core torso has nonuniform elliptical contour instead of a primitive cylinder.
+silhouette(titanBody,mats.skin,[[6.55,.8,.50],[7.05,1.12,.7],[8,1.00,.63],[8.9,1.14,.72],[9.85,1.56,.86],[10.5,1.94,.91],[11.25,2.05,.83],[11.7,1.35,.66],[12.18,.65,.51]]);
+blob(titanBody,mats.muscle,[0,10.22,-.69],[1.9,1.08,.32]);blob(titanBody,mats.skin,[0,7.1,0],[1.12,.78,.73]);
+// Pectorals with muscle separators and undercut shadows.
+for(let s of [-1,1]){
+ blob(titanBody,mats.muscle,[s*.9,10.65,.64],[1.02,.67,.37],[0,0,s*.10]);blob(titanBody,mats.warm,[s*.91,10.85,.79],[.85,.43,.30],[0,0,s*.09]);
+ tube(titanBody,[[s*.12,10.47,1.035],[s*.85,10.42,1.038],[s*1.65,10.58,.77]],.055,mats.shadow,7);
+ blob(titanBody,mats.muscle,[s*1.60,11.12,.33],[.6,.5,.69],[0,0,s*.17]);
+ // Serratus layers wrap from the pecs down the rib cage.
+ for(let i=0;i<4;i++){let y=9.76-i*.38;blob(titanBody,i%2?mats.muscle2:mats.muscle,[s*(1.30-i*.085),y,.63-i*.02],[.43,.18,.22],[0,0,s*(-.31)]);}
+ // diagonal external obliques
+ for(let i=0;i<3;i++)blob(titanBody,mats.muscle,[s*(.90-i*.075),8.22-i*.37,.47],[.45,.23,.19],[0,0,s*.35]);
+ // clavicles
+ tapered(titanBody,[s*.18,11.69,.55],[s*1.68,11.45,.35],.095,.14,mats.warm,10);
+}
+// Eight distinct ab segments plus vertical center trench.
+for(let i=0;i<4;i++){let y=9.65-i*.57;for(let s of [-1,1]){blob(titanBody,mats.muscle,[s*.39,y,.65],[.41,.28,.18],[0,0,s*.055]);blob(titanBody,mats.muscle2,[s*.38,y+.06,.75],[.28,.18,.13]);}}
+tube(titanBody,[[0,10.29,.85],[0,9.62,.85],[0,8.75,.82],[0,8.01,.68],[0,7.32,.56]],.053,mats.shadow);
+for(let s of [-1,1]){tube(titanBody,[[s*1.75,11.05,-.27],[s*1.31,10.4,-.36],[s*.97,9.32,-.32]],.17,mats.muscle2);blob(titanBody,mats.muscle,[s*.63,11.86,-.20],[.62,.40,.53],[0,0,s*.18]);}
+// Hip line and leg rigs.
+const legs=[];for(let s of [-1,1]){let leg=new THREE.Group();leg.position.set(s*.91,7.38,0);titanBody.add(leg);legs.push(leg);
+ const thighA=[0,0,0],thighB=[s*.22,-3.33,.28];tapered(leg,thighA,thighB,.80,.48,mats.skin,17);blob(leg,mats.muscle,[s*.26,-1.23,.40],[.53,1.55,.43],[0,0,s*.13]);blob(leg,mats.warm,[s*.09,-1.16,.58],[.25,1.24,.27],[0,0,-s*.13]);blob(leg,mats.muscle,[s*.68,-1.40,-.02],[.3,1.25,.48],[0,0,s*.13]);
+ let knee=new THREE.Group();knee.position.set(s*.22,-3.25,.28);leg.add(knee);blob(knee,mats.skin,[0,0,.2],[.51,.53,.5]);blob(knee,mats.warm,[0,-.02,.55],[.39,.30,.14]);
+ tapered(knee,[0,-.21,-.04],[s*.06,-3.15,.1],.55,.33,mats.skin);blob(knee,mats.muscle,[s*.12,-1.24,-.25],[.50,1.30,.41],[0,0,s*.08]);blob(knee,mats.muscle2,[-s*.14,-1.26,.31],[.33,1.14,.26]);
+ let foot=new THREE.Group();foot.position.set(s*.065,-3.22,.17);knee.add(foot);blob(foot,mats.skin,[0,0,.37],[.48,.34,.97]);for(let j=0;j<5;j++){let xx=(j-2)*.21;blob(foot,mats.skin,[xx,-.16,1.14+(2-Math.abs(j-2))*.045],[.14,.14,.33]);blob(foot,mats.warm,[xx,-.14,1.40+(2-Math.abs(j-2))*.05],[.09,.075,.14])}leg.userData.knee=knee;}
+// Shoulder / elbow articulation: fists and individual curved fingers.
+const arms=[];for(let s of [-1,1]){let shoulder=new THREE.Group();shoulder.position.set(s*1.92,11.28,.0);titanBody.add(shoulder);arms.push(shoulder);
+ blob(shoulder,mats.skin,[s*.26,-.21,.05],[.76,.78,.76]);blob(shoulder,mats.muscle2,[s*.32,-.38,.35],[.71,.78,.52]);
+ tapered(shoulder,[s*.31,-.24,0],[s*.48,-2.64,.24],.67,.42,mats.skin,18);
+ blob(shoulder,mats.muscle,[s*.16,-1.22,.38],[.47,1.02,.47],[0,0,-s*.1]);blob(shoulder,mats.warm,[s*.23,-1.21,.72],[.24,.88,.17],[0,0,-s*.1]);
+ blob(shoulder,mats.muscle2,[s*.66,-1.48,-.15],[.35,.82,.36],[0,0,s*.07]);
+ const elbow=new THREE.Group();elbow.position.set(s*.50,-2.57,.24);shoulder.add(elbow);blob(elbow,mats.skin,[0,0,0],[.45,.42,.43]);tapered(elbow,[0,-.1,0],[s*.20,-2.40,.29],.44,.25,mats.skin,14);
+ blob(elbow,mats.muscle,[s*.12,-.92,-.17],[.38,1.03,.33],[0,0,s*.07]);blob(elbow,mats.warm,[-s*.05,-1.05,.30],[.23,.92,.22],[0,0,s*.1]);
+ let palm=new THREE.Group();palm.position.set(s*.21,-2.43,.29);elbow.add(palm);blob(palm,mats.skin,[0,-.2,.0],[.35,.51,.28]);blob(palm,mats.muscle2,[0,-.18,.23],[.30,.29,.11]);
+ for(let i=0;i<4;i++){let x=(i-1.5)*.20;const len=[.49,.61,.58,.45][i];tapered(palm,[x,-.45,0],[x+s*.04,-.45-len,.10],.105,.073,mats.skin,9);blob(palm,mats.skin,[x+s*.04,-.45-len,.10],[.075,.085,.09]);}
+ tapered(palm,[-s*.29,-.10,.17],[-s*.47,-.60,.39],.15,.08,mats.skin);shoulder.userData.elbow=elbow;shoulder.userData.palm=palm;}
+// Long neck and tendon channels.
+blob(titanBody,mats.skin,[0,12.0,.04],[.68,.94,.64]);for(let s of [-1,1]){tapered(titanBody,[s*.27,12.85,.12],[s*1.06,11.36,.46],.20,.34,mats.muscle2,12);blob(titanBody,mats.muscle,[s*.44,12.1,.45],[.19,.76,.24],[0,0,-s*.23]);}
+// FACE v6: anatomically coordinated sculpted skull, mandible and natural hair masses.
+// All geometry is procedural; no screenshots or image-billboards are used for the model.
+const head=new THREE.Group();head.position.set(0,13.63,.11);titanBody.add(head);
+const faceMat=new THREE.MeshStandardMaterial({color:0xb7775b,vertexColors:true,roughness:.96,side:THREE.DoubleSide});
+const jawSkin=new THREE.MeshStandardMaterial({color:0xb4775c,roughness:.96,side:THREE.DoubleSide});
+const lipMat=new THREE.MeshStandardMaterial({color:0x743b32,roughness:.98,side:THREE.DoubleSide});
+const socketMat=new THREE.MeshStandardMaterial({color:0x211a18,roughness:1,side:THREE.DoubleSide});
+const scleraMat=new THREE.MeshStandardMaterial({color:0x77887a,roughness:.62,side:THREE.DoubleSide});
+const irisMat=new THREE.MeshStandardMaterial({color:0x61b881,emissive:0x287c49,emissiveIntensity:.48,roughness:.46,side:THREE.DoubleSide});
+const pupilMat=new THREE.MeshBasicMaterial({color:0x061711,side:THREE.DoubleSide});
+const eyeGlintMat=new THREE.MeshBasicMaterial({color:0xb4d5ba,transparent:true,opacity:.72,side:THREE.DoubleSide});
+const cavityMat=new THREE.MeshStandardMaterial({color:0x231619,roughness:1,side:THREE.DoubleSide});
+const gumMat=new THREE.MeshStandardMaterial({color:0x754a43,roughness:.95,side:THREE.DoubleSide});
+const toothMat=new THREE.MeshStandardMaterial({color:0xc9b9a0,roughness:.69,metalness:0,side:THREE.DoubleSide});
+const hairBlack=new THREE.MeshStandardMaterial({color:0x141110,roughness:.86,side:THREE.DoubleSide});
+const hairShade=new THREE.MeshStandardMaterial({color:0x261d1a,roughness:.83,side:THREE.DoubleSide});
+const hairHighlight=new THREE.MeshStandardMaterial({color:0x34271e,roughness:.82,side:THREE.DoubleSide});
+const gauss=(x,c,w)=>Math.exp(-Math.pow((x-c)/w,2));
+const headRings=[[-1.25,.20,.27,-.065],[-1.08,.41,.39,-.056],[-.87,.58,.50,-.052],[-.64,.69,.57,-.047],[-.34,.78,.64,-.055],[.03,.89,.70,-.072],[.38,.91,.73,-.095],[.72,.91,.73,-.102],[1.04,.81,.72,-.120],[1.29,.57,.55,-.115],[1.47,.28,.29,-.12],[1.535,.015,.017,-.12]];
+function dims(y){let k=0;while(k<headRings.length-2 && headRings[k+1][0]<y)k++;let a=headRings[k],b=headRings[k+1],f=clamp((y-a[0])/(b[0]-a[0]));return [a[1]+(b[1]-a[1])*f,a[2]+(b[2]-a[2])*f,a[3]+(b[3]-a[3])*f]}
+function browY(a){return .534+.125*(a-.40)}
+function eyeY(a){return .385+.14*(a-.39)}
+// Subsurface relief is on the actual head mesh, never pasted-on cheek/nose primitives.
+function sculpt(x,y){let ax=Math.abs(x);
+ const bridge=.35*gauss(x,0,.145)*gauss(y,-.014,.59);
+ const noseTip=.20*gauss(x,0,.148)*gauss(y,-.31,.12);
+ const alar=.075*gauss(ax,.147,.079)*gauss(y,-.335,.099);
+ const socket=-.205*gauss(ax,.435,.255)*gauss(y,eyeY(ax),.118);
+ const ridge=.205*gauss(ax,.40,.31)*gauss(y,browY(ax),.106);
+ const glabella=.125*gauss(x,0,.16)*gauss(y,.60,.18);
+ const cheekbone=.176*gauss(ax,.64,.20)*gauss(y,.015,.22);
+ const cheekHollow=-.122*gauss(ax,.47,.23)*gauss(y,-.31,.24);
+ const outerJaw=.092*gauss(ax,.62,.19)*gauss(y,-.63,.23);
+ const smileFold=-.028*gauss(ax,.455,.070)*gauss(y,-.53,.24);
+ const temple=-.052*gauss(ax,.82,.15)*gauss(y,.35,.33);
+ const browFurrow=-.040*gauss(ax,.16,.038)*gauss(y,.55,.17);
+ return bridge+noseTip+alar+socket+ridge+glabella+cheekbone+cheekHollow+outerJaw+smileFold+temple+browFurrow;
+}
+function faceZ(x,y,off=0){let [rx,rz,cz]=dims(y),u=clamp(Math.abs(x)/Math.max(.01,rx),0,.9995),front=Math.sqrt(1-u*u);return cz+rz*front+sculpt(x,y)*smooth(.02,.86,front)+off}
+function faceP(x,y,off=.009){return [x,y,faceZ(x,y,off)]}
+function surf(parent,verts,indices,mat){const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(verts,3));g.setIndex(indices);g.computeVertexNormals();const m=mesh(parent,g,mat);m.castShadow=false;return m}
+// Full skull: eyes, nose and cheek relief share vertex normals. Mouth has a true cutout.
+{
+ const N=112,M=132,vertices=[],colors=[],indices=[];
+ for(let k=0;k<=M;k++){
+  const y=-1.25+2.785*k/M,[rx,rz,cz]=dims(y);
+  for(let j=0;j<N;j++){
+   const a=2*Math.PI*j/N,front=Math.cos(a),x=rx*Math.sin(a);
+   let z=cz+rz*front+sculpt(x,y)*smooth(.04,.87,front);
+   // minute, coherent skin variations along cheek fibers
+   z+=.004*Math.sin(x*39+y*18)*smooth(.12,.91,front)*gauss(y,-.1,.80);
+   vertices.push(x,y,z);
+   const ax=Math.abs(x),faceF=smooth(.11,.81,front);
+   const socket=gauss(ax,.43,.27)*gauss(y,eyeY(ax),.18)*faceF;
+   const hollow=gauss(ax,.47,.20)*gauss(y,-.32,.23)*faceF;
+   const temple=gauss(ax,.83,.16)*gauss(y,.31,.33)*faceF;
+   const creases=gauss(ax,.56,.10)*gauss(y,-.45,.22)*faceF;
+   const fold=gauss(ax,.14,.07)*gauss(y,.55,.16)*faceF;
+   const browLights=gauss(ax,.34,.27)*gauss(y,browY(ax)+.08,.12)*faceF;
+   const rough=.012*Math.sin(17*x+28*y)*Math.sin(24*x-19*y)*faceF;
+   const darkness=clamp(.46*socket+.15*hollow+.11*temple+.08*creases+.16*fold-.072*browLights+rough,0,.54);
+   colors.push(1-darkness,1-darkness*.99,1-darkness*.94);
+  }
+ }
+ for(let k=0;k<M;k++)for(let j=0;j<N;j++){
+  const a=k*N+j,b=k*N+(j+1)%N,c=(k+1)*N+j,d=(k+1)*N+(j+1)%N;
+  const y=-1.25+2.785*(k+.5)/M,angle=(j+.5)*Math.PI*2/N,front=Math.cos(angle),x=dims(y)[0]*Math.sin(angle);
+  // an opening *in* the face, rather than dark paint lying over an intact surface
+  if(front>.45 && y<-.595 && y>-.955 && Math.abs(x)<.53)continue;
+  // lower front is supplied by the articulated jaw, leaving cheeks at the sides
+  if(front>.48 && y<=-.955 && Math.abs(x)<.58)continue;
+  indices.push(a,b,c,b,d,c);
+ }
+ let g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));g.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));g.setIndex(indices);g.computeVertexNormals();let o=mesh(head,g,faceMat);o.castShadow=false;
+}
+// FACE v7 - EYES ONLY.  The iris lives on the actual curved visible eye surface.
+// Formerly the green iris was a separate sphere behind a very dark socket mesh;
+// from the front its narrow exposed strip looked almost completely black.
+function createEyeTexture(){
+ const cv=document.createElement('canvas');cv.width=768;cv.height=256;
+ const c=cv.getContext('2d'),W=cv.width,H=cv.height;
+ // Warm desaturated whites, softly shaded instead of pure white anime ovals.
+ const base=c.createLinearGradient(0,0,0,H);
+ base.addColorStop(0,'#4f5b55');base.addColorStop(.23,'#869388');
+ base.addColorStop(.52,'#9eaaa1');base.addColorStop(.78,'#869389');base.addColorStop(1,'#4f5b56');
+ c.fillStyle=base;c.fillRect(0,0,W,H);
+ const ix=W*.452,iy=H*.515,rx=72,ry=104;
+ c.save();c.translate(ix,iy);c.scale(rx,ry);
+ let grad=c.createRadialGradient(-.17,-.15,.025,0,0,1);
+ grad.addColorStop(0,'#7fd794');grad.addColorStop(.25,'#56b97b');
+ grad.addColorStop(.54,'#2a7d59');grad.addColorStop(.84,'#184c3c');
+ grad.addColorStop(1,'#081815');
+ c.fillStyle=grad;c.beginPath();c.arc(0,0,1,0,Math.PI*2);c.fill();
+ // Iris striations are painted into one texture, not tiny overlapping meshes.
+ for(let j=0;j<58;j++){
+  const a=j/58*Math.PI*2,rr=.39+.065*Math.sin(j*2.37);
+  c.strokeStyle=j%3===0?'rgba(155,235,157,.18)':'rgba(4,32,24,.23)';
+  c.lineWidth=j%4===0?.018:.011;
+  c.beginPath();c.moveTo(Math.cos(a)*rr,Math.sin(a)*rr);
+  c.lineTo(Math.cos(a+Math.sin(j)*.045)*.82,Math.sin(a+Math.sin(j)*.045)*.82);c.stroke();
+ }
+ c.strokeStyle='#0c2c24';c.lineWidth=.05;c.beginPath();c.arc(0,0,.90,0,Math.PI*2);c.stroke();
+ c.fillStyle='#08120e';c.beginPath();c.ellipse(.008,.018,.17,.28,0,0,Math.PI*2);c.fill();
+ // A single restrained catchlight, kept subtle so the eyes do not feel cartoonish.
+ c.fillStyle='rgba(233,255,226,.40)';c.beginPath();c.ellipse(-.20,-.28,.040,.030,-.3,0,Math.PI*2);c.fill();
+ c.restore();
+ // Upper and lower eyelid shadowing is baked onto the continuous surface.
+ const shade=c.createLinearGradient(0,0,0,H);
+ shade.addColorStop(0,'rgba(10,16,15,.82)');shade.addColorStop(.22,'rgba(12,18,17,.22)');
+ shade.addColorStop(.58,'rgba(18,27,24,.03)');shade.addColorStop(1,'rgba(25,26,22,.40)');
+ c.fillStyle=shade;c.fillRect(0,0,W,H);
+ const edge=c.createLinearGradient(0,0,W,0);edge.addColorStop(0,'rgba(13,22,19,.62)');
+ edge.addColorStop(.13,'rgba(13,22,19,.04)');edge.addColorStop(.87,'rgba(13,22,19,.08)');edge.addColorStop(1,'rgba(13,22,19,.69)');
+ c.fillStyle=edge;c.fillRect(0,0,W,H);
+ const t=new THREE.CanvasTexture(cv);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;return t;
+}
+const eyeTexture=createEyeTexture();
+const eyeSurfaceMat=new THREE.MeshBasicMaterial({map:eyeTexture,side:THREE.DoubleSide,toneMapped:true});
+const lidRimMat=new THREE.MeshStandardMaterial({color:0x38221d,roughness:1,side:THREE.DoubleSide});
+// Both eyes share the same fitted almond profile. The outer corners rise gently.
+const eyeA=.19,eyeB=.735;
+function eyelidProfile(a){
+ const t=clamp((a-eyeA)/(eyeB-eyeA)), f=Math.pow(Math.max(0,Math.sin(Math.PI*t)),.90);
+ return {y:eyeY(a)+.002+.004*(t-.5),top:f*(.060+.006*(1-t)),bottom:f*(.034+.003*t),f};
+}
+for(const s of [-1,1]){
+ // Dark recessed margin, then an uninterrupted eye surface only slightly ahead.
+ // This avoids the previous sphere/pupil getting hidden behind the face.
+ for(let layer=0;layer<2;layer++){
+  const NX=72,NY=18,verts=[],uv=[],ix=[];
+  for(let i=0;i<=NX;i++){
+   const t=i/NX,a=eyeA+(eyeB-eyeA)*t,x=s*a,p=eyelidProfile(a);
+   const extra=layer===0?.013:0;
+   for(let j=0;j<=NY;j++){
+    const q=j/NY, y=p.y+((p.top+extra)*(1-q)-(p.bottom+extra)*q);
+    // Eye bulges forward very slightly; its rim is *not* a planar sticker.
+    const bulge=layer===1?.010*(1-Math.pow(2*t-1,2))*(1-Math.pow(2*q-1,2)):0;
+    const z=faceZ(x,y,layer===0?.076:.103+bulge);
+    verts.push(x,y,z);uv.push(t,1-q);
+   }
+  }
+  for(let i=0;i<NX;i++)for(let j=0;j<NY;j++){
+   const n=i*(NY+1)+j,m=n+NY+1;ix.push(n,m,n+1,n+1,m,m+1);
+  }
+  const geo=new THREE.BufferGeometry();
+  geo.setAttribute('position',new THREE.Float32BufferAttribute(verts,3));
+  geo.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));
+  geo.setIndex(ix);geo.computeVertexNormals();
+  const obj=new THREE.Mesh(geo,layer===0?lidRimMat:eyeSurfaceMat);
+  obj.castShadow=false;obj.receiveShadow=false;head.add(obj);
+ }
+ // Skin-toned eyelid rims are attached to the face, rather than floating bars.
+ // A narrow dark crease under the upper brow adds the fierce expression.
+ for(const upper of [true,false]){
+  const points=[],rim=[],crease=[];
+  for(let i=0;i<=28;i++){
+   const a=eyeA+(eyeB-eyeA)*i/28,x=s*a,p=eyelidProfile(a);
+   const y=p.y+(upper?p.top:-p.bottom);
+   points.push(faceP(x,y,.117));
+   rim.push(faceP(x,y+(upper?.018:-.011)*p.f,.079));
+   if(upper)crease.push(faceP(x,y+.035*p.f,.040));
+  }
+  tube(head,points,upper?.016:.007,jawSkin,6).castShadow=false;
+  if(upper)tube(head,crease,.009,lipMat,5).castShadow=false;
+ }
+ // Ears emerge from the side/back of the skull, partly concealed by the hair.
+ let ear=blob(head,jawSkin,[s*.914,.015,-.16],[.19,.36,.13]);ear.rotation.z=-s*.16;ear.castShadow=false;
+ blob(head,lipMat,[s*1.04,.00,-.052],[.035,.18,.017]).castShadow=false;
+ const nx=s*.121,ny=-.364;
+ blob(head,lipMat,[nx,ny,faceZ(nx,ny,.011)],[.028,.014,.008]).castShadow=false;
+}
+// The mouth is cut from the face and extends into a dark cavity under the upper lip.
+const mouthCavity=new THREE.Group();mouthCavity.position.y=-.748;head.add(mouthCavity);
+blob(mouthCavity,cavityMat,[0,-.005,.405],[.528,.118,.142]).castShadow=false;
+blob(mouthCavity,gumMat,[0,.126,.447],[.472,.034,.088]).castShadow=false;
+// Skin-coloured upper lip follows a gentle dental arch, not a black moustache line.
+const lipContour=[];for(let i=0;i<=18;i++){
+ const x=-.535+i*1.07/18;
+ const y=-.601-.018*(1-Math.pow(Math.abs(x)/.54,2));
+ lipContour.push([x,y,faceZ(x,-.598,.032)]);
+}
+tube(head,lipContour,.018,jawSkin,7).castShadow=false;
+// Lower jaw has its own rounded skin envelope and seamless tapered chin.
+const lowerJaw=new THREE.Group();lowerJaw.position.set(0,-.705,-.004);head.add(lowerJaw);
+{
+ const N=78,rings=[[-.56,.155,.245,-.07],[-.47,.285,.32,-.060],[-.34,.391,.39,-.054],[-.19,.480,.47,-.049],[-.035,.556,.52,-.047],[.105,.605,.53,-.057],[.167,.568,.46,-.06]],v=[],indices=[];
+ for(let k=0;k<rings.length;k++){
+  const [y,rx,rz,cz]=rings[k];
+  for(let j=0;j<N;j++){
+   const a=2*Math.PI*j/N,front=Math.cos(a),x=rx*Math.sin(a);
+   const lip=.045*gauss(Math.abs(x),.32,.27)*gauss(y,.085,.065)*smooth(.08,.92,front);
+   const mental=.061*gauss(x,0,.24)*gauss(y,-.34,.2)*smooth(.04,.80,front);
+   v.push(x,y,cz+rz*front+lip+mental);
+  }
+ }
+ for(let k=0;k<rings.length-1;k++)for(let j=0;j<N;j++){
+  let a=k*N+j,b=k*N+(j+1)%N,c=(k+1)*N+j,d=(k+1)*N+(j+1)%N;
+  indices.push(a,b,c,b,d,c);
+ }
+ surf(lowerJaw,v,indices,jawSkin);
+ // Inner flesh-colored lower gum is visibly attached to the mandible.
+ blob(lowerJaw,gumMat,[0,-.088,.452],[.466,.032,.081]).castShadow=false;
+}
+// Each crown is rounded in 3D with a slight arch and natural size variations.
+// No cuboid fences or flat photographic teeth.
+function makeTooth(parent,cx,rootY,dir,index,upper){
+ const edge=Math.abs(index-5.5)/5.5;
+ const canine=index===2||index===9;
+ const width=(.082-.021*edge)*(canine?.92:1);
+ const len=(upper?.118:.071)+(canine?.012:0)-edge*.013+Math.sin(index*2.17)*.0025;
+ const arch=Math.pow(Math.abs(cx)/.53,1.82);
+ const z=(upper?.556:.540)-.108*arch;
+ const slices=[0,.11,.38,.73,1],R=12,v=[],idx=[];
+ for(let k=0;k<slices.length;k++){
+  const u=slices[k];
+  const w=width*(u<.15?.89:u<.73?1-.11*u:.84-.30*(u-.73)/.27);
+  const d=.040*(1-u*.26);
+  const yy=rootY+dir*len*u;
+  for(let j=0;j<R;j++){
+   const a=2*Math.PI*j/R;
+   v.push(cx+Math.cos(a)*w*.5,yy + (1-u)*.006*Math.sin(a),z+Math.sin(a)*d+.010*u);
+  }
+ }
+ for(let k=0;k<slices.length-1;k++)for(let j=0;j<R;j++){
+  const a=k*R+j,b=k*R+(j+1)%R,c=(k+1)*R+j,d=(k+1)*R+(j+1)%R;
+  idx.push(a,b,c,b,d,c);
+ }
+ // softly capped crown tip
+ const tip=v.length/3;v.push(cx,rootY+dir*len,z+.012);
+ const base=v.length/3;v.push(cx,rootY,z-.004);
+ for(let j=0;j<R;j++){idx.push((slices.length-1)*R+j,(slices.length-1)*R+(j+1)%R,tip);idx.push((j+1)%R,j,base)}
+ return surf(parent,v,idx,toothMat);
+}
+for(let i=0;i<12;i++){
+ // central incisors are broad, posterior teeth naturally diminish
+ const x=(i-5.5)*.081;
+ makeTooth(head,x,-.617,-1,i,true);
+ makeTooth(lowerJaw,x,-.104,+1,i,false);
+}
+// Teeth bite almost edge-to-edge at rest; black cavity becomes visible when jaw drops.
+// Sculpted hair: continuous fitted scalp, smooth broad locks, a center part, slender tips.
+const hairRoot=new THREE.Group();head.add(hairRoot);const hairLocks=[];
+{
+ const N=100,M=22,v=[],idx=[];
+ for(let k=0;k<=M;k++){
+  const t=k/M,rx=.965*Math.sqrt(Math.max(.018,1-t*t)),rz=.775*Math.sqrt(Math.max(.018,1-t*t));
+  for(let j=0;j<N;j++){
+   const a=j*Math.PI*2/N,front=Math.max(0,Math.cos(a)),x=rx*Math.sin(a);
+   const peak= .080*gauss(x,0,.10)-.025*gauss(Math.abs(x),.57,.15);
+   const y=.925+peak*front+.075*front+t*.58;
+   v.push(x,y,-.132+rz*Math.cos(a));
+  }
+ }
+ for(let k=0;k<M;k++)for(let j=0;j<N;j++){
+  let a=k*N+j,b=k*N+(j+1)%N,c=(k+1)*N+j,d=(k+1)*N+(j+1)%N;
+  idx.push(a,b,c,b,d,c);
+ }
+ surf(hairRoot,v,idx,hairBlack);
+}
+function flowingLock(points,width,depth,mat=hairBlack,swing=.009){
+ const curve=new THREE.CatmullRomCurve3(points.map(q=>new THREE.Vector3(...q)),false,'centripetal',.48);
+ const R=12,segments=28,v=[],idx=[],zaxis=new THREE.Vector3(0,0,1);
+ for(let k=0;k<=segments;k++){
+  const t=k/segments,pos=curve.getPoint(t),tan=curve.getTangent(t).normalize();
+  let across=new THREE.Vector3().crossVectors(zaxis,tan).normalize();if(across.lengthSq()<.07)across.set(1,0,0);
+  let thick=new THREE.Vector3().crossVectors(tan,across).normalize();
+  const taper=Math.pow(1-t,.90),w=width*(.90+.13*Math.sin(Math.PI*t))*Math.max(.014,taper);
+  const d=depth*(.88+.13*Math.sin(Math.PI*t))*Math.max(.025,taper);
+  for(let j=0;j<R;j++){
+   const a=2*Math.PI*j/R,pt=pos.clone().addScaledVector(across,Math.cos(a)*w).addScaledVector(thick,Math.sin(a)*d);
+   v.push(pt.x,pt.y,pt.z);
+  }
+ }
+ for(let k=0;k<segments;k++)for(let j=0;j<R;j++){
+  let a=k*R+j,b=k*R+(j+1)%R,c=(k+1)*R+j,d=(k+1)*R+(j+1)%R;
+  idx.push(a,c,b,b,c,d);
+ }
+ const pivot=new THREE.Group();hairRoot.add(pivot);surf(pivot,v,idx,mat);
+ hairLocks.push({o:pivot,i:hairLocks.length,amp:swing});return pivot;
+}
+// Hair behind the shoulders: layered silhouettes, broad enough to read at long distance.
+for(let i=0;i<9;i++){
+ const x=(i-4)*.225;
+ flowingLock([[x*.70,1.39,-.49],[x*.98,.75,-.78],[x*1.13,-.15,-.80],[x*1.18,-.98,-.76],[x*1.24,-1.80-(i%3)*.15,-.63]],.170,.139,i%4===0?hairShade:hairBlack,.006);
+}
+// The silhouette flows down the temples and cheek sides, not across the eyes.
+for(const s of [-1,1]){
+ flowingLock([[s*.66,1.45,-.23],[s*.95,1.03,-.14],[s*1.03,.35,-.14],[s*1.12,-.57,-.19],[s*1.22,-1.63,-.15]],.220,.160,hairBlack,.010);
+ flowingLock([[s*.84,1.34,-.41],[s*1.16,.69,-.32],[s*1.22,-.09,-.30],[s*1.23,-.97,-.25],[s*1.34,-1.83,-.16]],.191,.132,hairShade,.010);
+ flowingLock([[s*.89,1.35,-.65],[s*1.21,.57,-.53],[s*1.33,-.48,-.49],[s*1.30,-1.38,-.40]],.166,.132,hairBlack,.010);
+ // Thin strands drape *near* the cheeks and under the eyes, as in the reference render.
+ flowingLock([[s*.54,1.47,.29],[s*.63,1.05,.60],[s*.68,.56,.61],[s*.72,.02,.60],[s*.77,-.46,.51]],.066,.050,hairShade,.006);
+ flowingLock([[s*.74,1.43,.12],[s*.84,1.02,.47],[s*.89,.49,.46],[s*.94,-.20,.33],[s*1.00,-.92,.22]],.080,.064,hairBlack,.006);
+}
+// Center part sweeps outwards, clear of the irises. Fine front wisps are narrow, not horns.
+flowingLock([[ -.055,1.48,.20],[-.28,1.33,.49],[-.43,1.06,.72],[-.47,.77,.73],[-.51,.55,.70]],.165,.100,hairBlack,.005);
+flowingLock([[  .045,1.48,.23],[ .26,1.31,.51],[ .39,1.02,.70],[ .44,.77,.73],[ .48,.59,.68]],.170,.106,hairShade,.005);
+flowingLock([[-.18,1.42,.42],[-.30,1.07,.64],[-.35,.58,.69],[-.36,-.04,.68]],.042,.030,hairBlack,.005);
+flowingLock([[ .16,1.40,.43],[ .28,1.08,.64],[ .31,.59,.69],[ .33,-.07,.65]],.042,.030,hairBlack,.005);
+// Breath plumes from torso later in animation.
+const breaths=[];const breathOrigins=[[0,12,-.7],[-1.75,10.5,-.3],[1.75,10.5,-.3],[0,8.2,.8]];
+// ---- particles, heat and lightning ----
+function particleTexture(type='steam'){
+ const c=document.createElement('canvas');c.width=c.height=128;const x=c.getContext('2d');if(type==='steam'){for(let i=0;i<20;i++){let px=rnd(38,90),py=rnd(38,88),rr=rnd(18,47),gr=x.createRadialGradient(px,py,0,px,py,rr);gr.addColorStop(0,'rgba(247,242,227,.17)');gr.addColorStop(.5,'rgba(218,217,205,.09)');gr.addColorStop(1,'rgba(225,219,207,0)');x.fillStyle=gr;x.fillRect(0,0,128,128)}}else{let gr=x.createRadialGradient(64,64,0,64,64,64);gr.addColorStop(0,'rgba(255,255,236,1)');gr.addColorStop(.12,'rgba(255,230,167,.85)');gr.addColorStop(.45,'rgba(249,156,64,.28)');gr.addColorStop(1,'rgba(255,154,60,0)');x.fillStyle=gr;x.fillRect(0,0,128,128)}return new THREE.CanvasTexture(c)}
+const steamTex=particleTexture('steam'),glowTex=particleTexture('glow');
+const smoke=[];let smokeCount=high?135:75;for(let i=0;i<smokeCount;i++){let mat=new THREE.SpriteMaterial({map:steamTex,color:Math.random()>.5?0xbebcae:0xece2cf,transparent:true,opacity:0,depthWrite:false,blending:THREE.NormalBlending});let o=new THREE.Sprite(mat);o.position.set(0,-100,0);let size=rnd(3.6,10);o.scale.set(size*1.2,size,1);scene.add(o);smoke.push({o,base:rnd(0,1),x:rnd(-8,8),z:rnd(-6,6),size,rate:rnd(.5,1.5),spin:rnd(-2,2),height:rnd(0,15),phase:rnd(0,6.3)});}
+const glowSprites=[];for(let i=0;i<16;i++){let mat=new THREE.SpriteMaterial({map:glowTex,color:i%3?0xffb759:0xffffe5,blending:THREE.AdditiveBlending,transparent:true,opacity:0,depthWrite:false});let o=new THREE.Sprite(mat);o.scale.set(3,3,1);scene.add(o);glowSprites.push(o)}
+const pillar=mesh(scene,new THREE.CylinderGeometry(.9,2.5,34,32,1,true),new THREE.MeshBasicMaterial({color:0xffb43c,transparent:true,opacity:0,side:THREE.DoubleSide,blending:THREE.AdditiveBlending,depthWrite:false}),[0,17,0]);pillar.castShadow=false;
+// A radiating translucent dome is visible just after the impact.
+const dome=mesh(scene,new THREE.SphereGeometry(1,48,24,0,Math.PI*2,0,Math.PI*.5),new THREE.MeshBasicMaterial({color:0xffbb65,transparent:true,opacity:0,side:THREE.DoubleSide,blending:THREE.AdditiveBlending,depthWrite:false}),[0,0,0]);dome.castShadow=false;
+const rings=[];for(let i=0;i<4;i++){let ob=mesh(scene,new THREE.TorusGeometry(1,.035+i*.02,5,96),new THREE.MeshBasicMaterial({color:i%2?0xffd4a0:0xffecbf,transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending}),[0,.15+i*.06,0],[1,1,1],[-Math.PI/2,0,0]);ob.castShadow=false;rings.push(ob)}
+const bolts=[];
+for(let i=0;i<25;i++){const N=i<11?28:17,points=new Float32Array(N*3);let geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.BufferAttribute(points,3));let mat=new THREE.LineBasicMaterial({color:i%5===0?0xffffff:i%3===0?0xfff5cd:0xffb54e,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false});let o=new THREE.Line(geo,mat);o.frustumCulled=false;scene.add(o);bolts.push({o,N,seed:i*2.13,kind:i<11?0:1});}
+let lastBoltTime=-1;function updateBolts(t){let phase=t<2.9?1:Math.max(0,1-(t-2.9)/3);for(const b of bolts){let op=phase*bell(1.32,1.56,4.2,5.7,t)*(b.kind===0?1:.72);b.o.material.opacity=op;if(op<.01)continue;
+ if(Math.floor(t*24)!==lastBoltTime){const p=b.o.geometry.attributes.position;let a=b.seed*4.3+Math.floor(t*23)*.8;if(b.kind===0){let targetX=Math.sin(b.seed*2)*rnd(.2,3.9),targetZ=Math.cos(b.seed*2)*rnd(.2,3.6);for(let j=0;j<b.N;j++){let f=j/(b.N-1),w=Math.sin(f*Math.PI);p.setXYZ(j,targetX*f+(rnd(-2.8,2.8)*w),58*(1-f)+.6,targetZ*f+rnd(-2.4,2.4)*w)}}else{let y=4+(b.seed%6)*1.55,r=1.2+b.seed%4;for(let j=0;j<b.N;j++){let f=j/(b.N-1),angle=b.seed+f*Math.PI*2.5;let rr=r+Math.sin(f*9+b.seed)*.6;p.setXYZ(j,Math.cos(angle)*rr+rnd(-.4,.4),y+(f-.5)*3,Math.sin(angle)*rr+rnd(-.4,.4))}}p.needsUpdate=true;b.o.geometry.computeBoundingSphere();}}
+ if(Math.floor(t*24)!==lastBoltTime)lastBoltTime=Math.floor(t*24);}
+// Golden filaments wind around the appearing body.
+const windings=[];for(let i=0;i<4;i++){let line=mesh(scene,new THREE.TubeGeometry(new THREE.CatmullRomCurve3(Array.from({length:33},(_,j)=>{let f=j/32,a=i*1.57+f*15.7;return new THREE.Vector3(Math.cos(a)*(2.25+Math.sin(f*Math.PI)*.45),1+f*13.7,Math.sin(a)*(1.65+Math.sin(f*Math.PI)*.5))})),160,.025,4,false),new THREE.MeshBasicMaterial({color:i%2?0xffab51:0xffe19a,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false}));line.castShadow=false;windings.push(line)}
+const shardN=isMobile?240:460,shards=[];const shardGeo=new THREE.TetrahedronGeometry(.27,0);
+const shardMat=new THREE.MeshStandardMaterial({color:0x756f5c,flatShading:true,roughness:1});const shardMesh=new THREE.InstancedMesh(shardGeo,shardMat,shardN);shardMesh.castShadow=false;scene.add(shardMesh);const dummy=new THREE.Object3D();for(let i=0;i<shardN;i++)shards.push({angle:rnd(0,6.28),rad:rnd(1,24),height:rnd(.1,3),size:rnd(.13,.94),speed:rnd(.7,1.45),spin:rnd(0,6.28)});
+const sparkN=isMobile?280:520,sparkPositions=new Float32Array(sparkN*3),sparkColors=new Float32Array(sparkN*3),sparks=[];for(let i=0;i<sparkN;i++){sparks.push({a:rnd(0,6.28),r:rnd(.4,16),h:rnd(0,22),speed:rnd(.2,2.4),seed:rnd(0,6)});sparkColors[i*3]=1;sparkColors[i*3+1]=rnd(.58,.99);sparkColors[i*3+2]=rnd(.13,.6)}let sparkG=new THREE.BufferGeometry();sparkG.setAttribute('position',new THREE.BufferAttribute(sparkPositions,3));sparkG.setAttribute('color',new THREE.BufferAttribute(sparkColors,3));const sparkM=new THREE.PointsMaterial({size:.20,vertexColors:true,transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending,sizeAttenuation:true});const sparkSystem=new THREE.Points(sparkG,sparkM);sparkSystem.frustumCulled=false;scene.add(sparkSystem);
+// Rib-like energy scaffolding appears briefly before the complete silhouette.
+const scaffold=new THREE.Group();scene.add(scaffold);for(let s of [-1,1])for(let i=0;i<10;i++){let y=8.3+i*.47,offset=1.12+Math.sin(i/10*Math.PI)*.70;tube(scaffold,[[s*.27,y,.3],[s*offset*.64,y+.17,.68],[s*offset,y+.26,.05],[s*offset*.69,y+.4,-.45]],.045, i%2?mats.ivory:mats.warm,6)}
+// Original synthesized sound, created at the instant of interaction (no copyrighted samples).
+function audio(){try{if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume();return audioCtx}catch(e){return null}}
+function noisePlay(duration,freqStart,freqEnd,volume,when=0){if(!soundEnabled)return;let ctx=audio();if(!ctx)return;let len=Math.floor(ctx.sampleRate*duration),buf=ctx.createBuffer(1,len,ctx.sampleRate),arr=buf.getChannelData(0);let v=0;for(let i=0;i<len;i++){v=v*.82+(Math.random()*2-1)*.18;arr[i]=v}let s=ctx.createBufferSource();s.buffer=buf;let filter=ctx.createBiquadFilter();filter.type='lowpass';let g=ctx.createGain(),at=ctx.currentTime+when;filter.frequency.setValueAtTime(freqStart,at);filter.frequency.exponentialRampToValueAtTime(Math.max(60,freqEnd),at+duration);g.gain.setValueAtTime(.001,at);g.gain.linearRampToValueAtTime(volume,at+.045);g.gain.exponentialRampToValueAtTime(.001,at+duration);s.connect(filter).connect(g).connect(ctx.destination);s.start(at);s.stop(at+duration+.04)}
+function oscPlay(f0,f1,dur,vol,type='sawtooth',delay=0){if(!soundEnabled)return;let ctx=audio();if(!ctx)return;let o=ctx.createOscillator(),g=ctx.createGain(),t=ctx.currentTime+delay;o.type=type;o.frequency.setValueAtTime(Math.max(20,f0),t);o.frequency.exponentialRampToValueAtTime(Math.max(18,f1),t+dur);g.gain.setValueAtTime(.001,t);g.gain.exponentialRampToValueAtTime(vol,t+.03);g.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(g).connect(ctx.destination);o.start(t);o.stop(t+dur+.03)}
+function playBlast(){noisePlay(2.9,1800,65,.70);noisePlay(3.8,210,50,.85,.07);oscPlay(89,32,2.6,.33,'sine');oscPlay(330,45,1.2,.15,'sawtooth')}
+function playRoar(){noisePlay(2.1,740,210,.39);oscPlay(112,67,1.8,.16,'sawtooth');oscPlay(67,36,1.9,.29,'triangle');}
+const captionSets=[['01 / BEFORE THE STORM','その時を、\n待っている。','変身を開始すると、閃光と落雷が降り注ぐ。'],['02 / THE DECISION','意志が、\n引き金になる。','空が鳴り、周囲の空気が震え始める。'],['03 / LIGHTNING STRIKE','天地を裂く、\n閃光。','金色の稲妻が地上へ落ち、衝撃波が広がる。'],['04 / EMERGENCE','巨人の力、\n顕現。','巨大なシルエットが蒸気の中から立ち上がる。'],['05 / ROAR','進撃の巨人。','咆哮とともに、15mの巨躯が姿を現す。'],['06 / AFTERMATH','蒸気の向こうに。','残響と熱気。ドラッグで自由に観察できる。']];let captionIndex=-1;
+function setCaption(i){if(captionIndex===i)return;captionIndex=i;let c=captionSets[i];$('chapter').textContent=c[0];$('moment').innerHTML=c[1].replace('\n','<br>');$('descript').textContent=c[2];}
+function phaseText(t){if(!playing)return ['HUMAN FORM','SEQUENCE STANDBY'];if(t<1.5)return ['THE DECISION','01 // AWAKENING'];if(t<2.75)return ['LIGHTNING STRIKE','02 // LIGHTNING CONVERGENCE'];if(t<4.55)return ['TITAN EMERGENCE','03 // FORMATION'];if(t<7.3)return ['THE FIRST ROAR','04 // FULL TRANSFORMATION'];return ['ATTACK TITAN','05 // 15 METERS'];}
+function begin(){window.__cinemaStopped=false;clockT=0;playing=true;lastThunder=false;lastRoar=false;lastBoltTime=-1;camMode='cinema';focusFace=false;$('cinema').classList.add('active');$('orbit').classList.remove('active');$('go').textContent='⚡ 巨人化中';$('startOverlay').classList.add('fade');$('app').classList.add('cinema');if(soundEnabled)audio();}
+function reset(){playing=false;clockT=0;lastThunder=false;lastRoar=false;camMode='cinema';focusFace=false;$('cinema').classList.add('active');$('orbit').classList.remove('active');$('go').textContent='⚡ 巨人化';$('startOverlay').classList.remove('fade');$('app').classList.remove('cinema');setCaption(0)}
+function seek(v){playing=true;clockT=clamp(v,0,DURATION);lastThunder=clockT>1.6;lastRoar=clockT>5.1;$('startOverlay').classList.add('fade');$('app').classList.add('cinema');}
+$('go').onclick=()=>begin();$('replay').onclick=()=>begin();$('cinema').onclick=()=>{focusFace=false;camMode='cinema';focusFace=false;$('cinema').classList.add('active');$('orbit').classList.remove('active')};$('orbit').onclick=()=>{focusFace=false;camMode='orbit';$('orbit').classList.add('active');$('cinema').classList.remove('active');const p=camera.position;let target=new THREE.Vector3(0,playing&&clockT>2.7?8:1.5,0),diff=p.clone().sub(target);orbitDist=clamp(diff.length(),7,85);yaw=Math.atan2(diff.x,diff.z);pitch=Math.asin(clamp(diff.y/orbitDist,-.9,.9))};$('sound').onclick=()=>{soundEnabled=!soundEnabled;$('sound').textContent=soundEnabled?'♪ ON':'♪ OFF';if(soundEnabled)audio()};$('quality').onclick=()=>{high=!high;renderer.setPixelRatio(Math.min(devicePixelRatio,high?1.75:1.18));renderer.shadowMap.enabled=high;sun.castShadow=high;$('quality').textContent=high?'画質 HIGH':'画質 LOW'};
+$('faceview').onclick=()=>{if(!playing||clockT<4.5)seek(8.25);focusFace=true;camMode='orbit';orbitDist=4.12;yaw=0;pitch=.01;$('orbit').classList.add('active');$('cinema').classList.remove('active')};const track=$('track');function scrub(x){let r=track.getBoundingClientRect();seek((x-r.left)/r.width*DURATION)}track.addEventListener('pointerdown',e=>{scrub(e.clientX);track.setPointerCapture(e.pointerId)});track.addEventListener('pointermove',e=>{if(e.buttons) scrub(e.clientX)});
+let oldX=0,oldY=0;renderer.domElement.addEventListener('pointerdown',e=>{dragging=true;oldX=e.clientX;oldY=e.clientY;renderer.domElement.setPointerCapture(e.pointerId)});renderer.domElement.addEventListener('pointermove',e=>{if(!dragging)return;let dx=e.clientX-oldX,dy=e.clientY-oldY;oldX=e.clientX;oldY=e.clientY;if(camMode==='cinema'){$('orbit').click()}yaw-=dx*.006;pitch=clamp(pitch+dy*.005,-.10,1.34)});renderer.domElement.addEventListener('pointerup',()=>dragging=false);renderer.domElement.addEventListener('pointercancel',()=>dragging=false);renderer.domElement.addEventListener('wheel',e=>{e.preventDefault();if(camMode==='cinema')$('orbit').click();orbitDist=clamp(orbitDist*(e.deltaY>0?1.08:.92),5,105)},{passive:false});
+let lastPinch=0;renderer.domElement.addEventListener('touchmove',e=>{if(e.touches.length===2){let a=e.touches[0],b=e.touches[1],d=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);if(lastPinch>0){if(camMode==='cinema')$('orbit').click();orbitDist=clamp(orbitDist*lastPinch/d,5,105)}lastPinch=d}},{passive:true});renderer.domElement.addEventListener('touchend',()=>lastPinch=0);
+function interp(arr,t){if(t<=arr[0][0])return arr[0].slice(1);for(let i=0;i<arr.length-1;i++){let a=arr[i],b=arr[i+1];if(t<=b[0]){let f=smooth(a[0],b[0],t);return a.slice(1).map((v,k)=>v+(b[k+1]-v)*f)}}return arr[arr.length-1].slice(1)}
+function updateCamera(t,dt){let cp,look,fov;if(camMode==='cinema'){
+ let k=interp([[0,7,4.2,14,0,1.20,0,45],[.80,4.4,2.5,9.5,0,1.3,0,41],[1.50,3.0,2.0,6.8,0,1.3,0,40],[2.07,12,8.8,26,0,6,0,46],[3.1,20,8.3,35,0,7.2,0,51],[4.40,19,6.0,29,0,8.0,0,49],[5.6,13,5.3,24,0,10.8,0,43],[7.35,10,5.4,22,0,11.1,0,42],[9.4,18,7.7,30,0,8.3,0,43],[11.4,22,9.1,33,0,8.0,0,46]],t);cp=new THREE.Vector3(k[0],k[1],k[2]);look=new THREE.Vector3(k[3],k[4],k[5]);fov=k[6];if(!playing){let ts=performance.now()*.00011;cp.set(7+Math.sin(ts)*1.3,4.2,14);look.set(0,1.2,0);fov=45;}}else{let targetY=focusFace?13.73:(playing&&t>2.7?7.7:1.5);cp=new THREE.Vector3(Math.sin(yaw)*Math.cos(pitch)*orbitDist,Math.sin(pitch)*orbitDist+targetY,Math.cos(yaw)*Math.cos(pitch)*orbitDist);look=new THREE.Vector3(0,targetY,0);fov=47}
+ let shaking=shake*(Math.random()-.5);cp.add(new THREE.Vector3(shaking,shaking*.6,shaking));look.x+=shaking*.5;camera.position.lerp(cp,Math.min(1,dt*12));camera.lookAt(look);camera.fov+=(fov-camera.fov)*Math.min(1,dt*7);camera.updateProjectionMatrix();}
+function update(t,dt){let T=playing?t:0;
+ let hit=bell(1.55,1.86,2.22,3.65,T),emerge=smooth(2.32,4.20,T),roar=bell(4.65,5.45,6.8,7.75,T);
+ if(playing&&T>1.64&&!lastThunder){lastThunder=true;playBlast()}if(playing&&T>5.15&&!lastRoar){lastRoar=true;playRoar()}
+ // Growth is staged beneath an intentionally overexposed impact flash.
+ titan.visible=playing&&T>2.25;let grow=smooth(2.32,4.48,T);titan.scale.set(.38+.62*grow,Math.max(.02,grow),.38+.62*grow);titan.position.set(0,-.015,0);titanBody.rotation.z=Math.sin(T*2.0)*.012*(1-grow);titanBody.rotation.x= - .07+Math.sin(T*.8)*.016;
+ for(let i=0;i<arms.length;i++){let s=i===0?-1:1;arms[i].rotation.z=-s*(.12+roar*.48);arms[i].rotation.x=-.06-roar*.30;arms[i].userData.elbow.rotation.x=-.19-roar*.45;arms[i].userData.palm.rotation.z=s*roar*.23;}
+ for(let i=0;i<legs.length;i++){legs[i].rotation.x=Math.sin(T*.46+i)*.018;legs[i].userData.knee.rotation.x=(i===0?.04:-.07)+Math.sin(T*.6+i)*.012;}
+ head.rotation.x=-.08-roar*.41+Math.sin(T*.85)*.018;head.rotation.z=Math.sin(T*.52)*.026;lowerJaw.rotation.x=-roar*.18;lowerJaw.position.y=-.705-roar*.40;mouthCavity.scale.y=1+roar*2.8;mouthCavity.position.y=-.748-roar*.15;
+ for(const {o,i,amp} of hairLocks){o.rotation.z=Math.sin(T*2.7+i*1.71)*amp*(.6+roar*2.5);o.rotation.x=Math.cos(T*2.1+i)*amp*.4}
+ human.visible=!playing||T<2.20;human.scale.setScalar(1-smooth(1.56,2.22,T)*.73);human.rotation.z=bell(.84,1.35,1.7,2.3,T)*-.15;
+ let steamAmt=bell(2.15,2.74,8.5,12,T),cloudThick=bell(2.12,2.6,4.0,6.0,T);
+ for(const s of smoke){let travel=(T* s.rate+s.base*14)%(14+s.height*.7),radius=s.x*(.65+travel*.065);s.o.position.set(radius+Math.sin(T*.68+s.phase)*1.9,Math.max(.1,travel*.86),s.z*(.5+travel*.047));let scale=s.size*(.75+travel*.055);s.o.scale.set(scale*1.16,scale,1);s.o.material.opacity=clamp(steamAmt*(.085+cloudThick*.16)*(1-travel/26),0,.28);s.o.material.rotation=T*.04+s.spin;}
+ for(let i=0;i<glowSprites.length;i++){let o=glowSprites[i],f=i/16*6.28;o.position.set(Math.cos(f*3+T*2)*rnd(.9,2),rnd(2,13),Math.sin(f*3+T*2)*rnd(.9,2));let ss=1.9+(1+Math.sin(i*2+T*8))*3.0;o.scale.set(ss,ss,1);o.material.opacity=hit*(i<9?.65:.3)}
+ burstLight.intensity=hit*55+bell(2.7,3.1,4.3,5.4,T)*13;eyeLight.intensity=playing?smooth(3.65,4.5,T)*.62:0;pillar.material.opacity=hit*.07+bell(2.4,2.9,3.8,4.6,T)*.11;pillar.scale.set(1+T*.13,1,1+T*.13);
+ dome.material.opacity=bell(1.71,1.89,2.21,2.73,T)*.19;let domeScale=1+smooth(1.75,3.4,T)*35;dome.scale.set(domeScale,domeScale*.48,domeScale);
+ for(let i=0;i<rings.length;i++){let ring=rings[i];let tm=T-1.76-i*.13;ring.scale.setScalar(1+clamp(tm/1.6)*43);ring.material.opacity=tm>0?Math.max(0,(1-tm/1.75))*.68:0;}
+ for(let i=0;i<windings.length;i++)windings[i].material.opacity=bell(2.1,2.5,4.05,5.1,T)*.6;
+ scaffold.visible=playing&&T>=2.48&&T<3.75;scaffold.scale.y=smooth(2.48,3.34,T);scaffold.position.y=.01;
+ updateBolts(T);
+ for(let i=0;i<shardN;i++){let s=shards[i],f=Math.max(0,T-1.78)*s.speed;let a=s.angle+Math.sin(f*.4)*.15,dist=s.rad*clamp(f*.52),h=Math.max(.07,Math.sin(f*2.1)*s.height+Math.max(0,3.2-f)*1.3);dummy.position.set(Math.cos(a)*dist,h,Math.sin(a)*dist);dummy.rotation.set(f*s.spin,f*.8,0);dummy.scale.setScalar(playing&&T>1.7?s.size*(1-smooth(3,7.5,T)*.7):.0001);dummy.updateMatrix();shardMesh.setMatrixAt(i,dummy.matrix)}shardMesh.instanceMatrix.needsUpdate=true;
+ for(let i=0;i<sparkN;i++){let p=sparks[i],f=(T* p.speed+p.seed)%6.2,r=p.r*(.4+T*.025);sparkPositions[i*3]=Math.cos(p.a+T*.35)*r;sparkPositions[i*3+1]=(p.h+f*1.4)%24;sparkPositions[i*3+2]=Math.sin(p.a+T*.35)*r;}sparkG.attributes.position.needsUpdate=true;sparkM.opacity=bell(1.6,1.9,7.4,10.2,T)*.8;
+ // Practical flash and camera shake rather than camera-only postproduction.
+ const hitFlash=bell(1.65,1.70,1.77,2.30,T);flashValue=hitFlash*.98+bell(2.14,2.18,2.22,2.52,T)*.36;let brightness=hit*.8+bell(2.4,2.6,3.4,4.1,T)*.27;
+ $('flash').style.opacity=String(clamp(flashValue));$('radial').style.opacity=String(clamp(brightness*.67));shake=bell(1.7,1.8,2.8,3.5,T)*.9+bell(4.7,4.95,5.7,6.6,T)*.14;
+ renderer.toneMappingExposure=1.22+hit*.45;
+ if(!playing)setCaption(0);else if(T<1.33)setCaption(1);else if(T<2.64)setCaption(2);else if(T<4.65)setCaption(3);else if(T<7.35)setCaption(4);else setCaption(5);
+ let p=phaseText(T);$('phaseLabel').textContent=p[0];$('phaseDetail').textContent=p[1];$('readout').textContent=!playing?'READY / STANDBY':T<DURATION?'SEQUENCE ACTIVE':'TRANSFORMED / 15M';if(playing&&T>9.0)$('go').textContent='⚡ 再び巨人化';
+ let pp=clamp(T/DURATION);$('fill').style.width=(pp*100).toFixed(2)+'%';$('dot').style.left=(pp*100).toFixed(2)+'%';$('timeElapsed').textContent='00:'+String(Math.floor(T)).padStart(2,'0');$('status').classList.toggle('hidden',playing&&T>1.76&&T<4.0);$('status').style.opacity=(playing&&T>2.5&&T<4.3)?'0':Math.min(1,smooth(4.15,4.7,T)+1-smooth(1.52,1.92,T)).toFixed(2);
+ skyMat.uniforms.uTime.value=T;updateCamera(T,dt);}
+function frame(now){if(!window.__cinemaStopped)requestAnimationFrame(frame);let dt=Math.min(.055,Math.max(.001,(now-last)*.001));last=now;if(playing)clockT=Math.min(DURATION,clockT+dt);update(clockT,dt);renderer.render(scene,camera)}
+window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
+window.addEventListener('keydown',e=>{if(e.code==='Space'){e.preventDefault();begin()}if(e.code==='KeyC')$('cinema').click();if(e.code==='KeyF')$('orbit').click()});
+window.__titanDebug={head,lowerJaw,hairRoot,titan,seek,renderer,scene,camera};setCaption(0);if(!window.__cinemaStopped)requestAnimationFrame(frame);$('loading').style.opacity='0';setTimeout(()=>$('loading').remove(),550);
+
+window.addEventListener('message',e=>{if(e.source!==parent)return;if(e.data==='raid-cinema-start')begin();if(e.data==='raid-cinema-stop'){window.__cinemaStopped=true;playing=false;if(audioCtx)audioCtx.suspend();}});
+</script>
+</body></html>
