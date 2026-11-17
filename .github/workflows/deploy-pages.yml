@@ -1,0 +1,70 @@
+name: Deploy OVERDRIVE to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'assets/**'
+      - 'scripts/**'
+      - 'build.mjs'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'tests/leviathan-swim-regression.cjs'
+      - 'tests/leviathan-integration.cjs'
+      - '.github/workflows/deploy-pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Run Leviathan swimming regression tests
+        run: npm run test:leviathan
+      - name: Build hosted OVERDRIVE
+        run: npm run build
+      - name: Check generated site
+        run: |
+          test -s dist/index.html
+          test -s dist/game.bundle.js
+          test -s dist/OVERDRIVE_TITAN.html
+          grep -q '<html' dist/index.html
+          grep -q 'game.bundle.js' dist/index.html
+          ls -lh dist/index.html dist/game.bundle.js dist/OVERDRIVE_TITAN.html
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - name: Upload hosted files
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ./dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
