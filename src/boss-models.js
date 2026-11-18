@@ -192,7 +192,11 @@ function createSingleBossModel(id,cacheId=id){
   }
   pivot.position.y=(config.flying?.5:-1)+(config.flying?Math.sin(age*1.4)*.13:0)+coilY;
   pivot.position.z=coilZ;
-  pivot.rotation.set(coilPitch,coilYaw,coilRoll);
+  // Preserve the authored 180-degree forward correction for both dragon
+  // models. Previously update() reset their pivot yaw to zero each frame,
+  // so their heads faced away from the player despite the initial rotation.
+  const facingCorrection=id==='tempest'||id==='devourer'?Math.PI:0;
+  pivot.rotation.set(coilPitch,facingCorrection+coilYaw,coilRoll);
   pivot.scale.setScalar(coilScale);
   syncCore();root.userData.animation=active?.getClip().name||'rest';
  }

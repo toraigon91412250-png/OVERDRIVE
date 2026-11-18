@@ -12,6 +12,7 @@ on:
       - 'package-lock.json'
       - 'tests/leviathan-swim-regression.cjs'
       - 'tests/leviathan-integration.cjs'
+      - 'tests/boss-dragon-facing.cjs'
       - '.github/workflows/deploy-pages.yml'
   workflow_dispatch:
 
@@ -39,6 +40,8 @@ jobs:
         run: npm ci
       - name: Run Leviathan swimming regression tests
         run: npm run test:leviathan
+      - name: Check dragon facing during attack animations
+        run: node tests/boss-dragon-facing.cjs
       - name: Build hosted OVERDRIVE
         run: npm run build
       - name: Check generated site
