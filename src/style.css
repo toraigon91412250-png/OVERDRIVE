@@ -184,3 +184,4 @@ body.mobile #wave{font-size:10px;max-width:52vw;letter-spacing:.6px;white-space:
 #boss small{display:block;line-height:1.5;overflow-wrap:anywhere}
 
 body.underwater #vignette{background:linear-gradient(180deg,#16738b22,#061e35aa);box-shadow:inset 0 0 160px #057ca577}
+body.underwater.crimson-sea #vignette{background:linear-gradient(180deg,#7a0c2033,#290209bb);box-shadow:inset 0 0 175px #b80f2e88}

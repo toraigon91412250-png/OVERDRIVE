@@ -4,7 +4,7 @@ import * as THREE from 'three';
 // arena layout and rendered by the world's shared wall/collision instances.
 export function createBossArenaScenery(scene){
  const root=new THREE.Group();root.name='boss-arena-backdrop';root.visible=false;scene.add(root);
- let sea=null;
+ let sea=null,lowDetail=false,lastMoteTime=-Infinity;
  const waveDummy=new THREE.Object3D();
  const resources=new Set(),cube=new THREE.BoxGeometry(1,1,1),pillar=new THREE.CylinderGeometry(1,1,1,7),spike=new THREE.ConeGeometry(1,1,5),ring=new THREE.TorusGeometry(1,.035,4,48),plane=new THREE.PlaneGeometry(1,1),oceanGeometry=new THREE.PlaneGeometry(2200,2200,128,128);
  for(const geometry of [cube,pillar,spike,ring,plane,oceanGeometry])resources.add(geometry);
@@ -14,10 +14,10 @@ export function createBossArenaScenery(scene){
  const seaBandMaterial=new THREE.MeshStandardMaterial({color:0x75c2cf,roughness:.36,transparent:true,opacity:.34,depthWrite:false});
  const foamMaterial=new THREE.MeshBasicMaterial({color:0xe2f5ed,transparent:true,opacity:.56,depthWrite:false});
  for(const material of [stone,dark,metal,light,water,seaBandMaterial,foamMaterial])resources.add(material);
- let boss=null;const animated=[];
+ let boss=null,crimsonMix=0;const animated=[];
  function add(geometry,material,x,y,z,sx,sy,sz,rz=0){const mesh=new THREE.Mesh(geometry,material);mesh.position.set(x,y,z);mesh.scale.set(sx,sy,sz);mesh.rotation.z=rz;root.add(mesh);return mesh;}
  function configure(layout){
-  root.clear();animated.length=0;sea=null;boss=layout.bossArena||null;root.visible=false;if(!boss)return;
+  root.clear();animated.length=0;sea=null;lastMoteTime=-Infinity;boss=layout.bossArena||null;root.visible=false;if(!boss)return;
   const {kind,bounds,colors}=layout;stone.color.setHex(layout.wallColor);dark.color.setHex(colors[1]).multiplyScalar(.5);light.color.setHex(colors[4]);water.color.setHex(kind==='harbor'?0x1b536b:0x34131a);
   const bx=bounds.x+12,bz=bounds.z+12;
   if(['hangar','runway','fortress','laboratory'].includes(kind)){
@@ -87,13 +87,54 @@ export function createBossArenaScenery(scene){
    const waves=new THREE.InstancedMesh(cube,seaBandMaterial,192);waves.name='leviathan-sea-swell';waves.frustumCulled=false;root.add(waves);
    const foam=new THREE.InstancedMesh(cube,foamMaterial,shoreline.length);foam.name='leviathan-shore-foam';foam.frustumCulled=false;root.add(foam);
    const distantFoam=new THREE.InstancedMesh(cube,foamMaterial,128);distantFoam.name='leviathan-whitecaps';distantFoam.frustumCulled=false;root.add(distantFoam);
-   sea={waterline,shoreline,waves,foam,distantFoam,ocean,wrecks:3};
+   const seabedMat=new THREE.MeshStandardMaterial({color:0x0c1b24,roughness:.92,metalness:.1});resources.add(seabedMat);
+   const seabed=add(oceanGeometry,seabedMat,0,-19,0,1,1,1);seabed.name='leviathan-seafloor';seabed.rotation.x=-Math.PI/2;
+   const trenchRockMat=new THREE.MeshStandardMaterial({color:0x142834,roughness:.88,metalness:.18});resources.add(trenchRockMat);
+   const ventGlowMat=new THREE.MeshBasicMaterial({color:0x4ce6e6,transparent:true,opacity:.8,blending:THREE.AdditiveBlending,depthWrite:false});resources.add(ventGlowMat);
+   const spireCount=42,spires=new THREE.InstancedMesh(spike,trenchRockMat,spireCount);spires.name='leviathan-abyssal-spires';spires.frustumCulled=false;root.add(spires);
+   const vents=new THREE.InstancedMesh(ring,ventGlowMat,18);vents.name='leviathan-thermal-vents';vents.frustumCulled=false;root.add(vents);
+   for(let i=0;i<spireCount;i++){
+    const a=i*2.39996,dist=22+(i*13)%95,h=8+(i*7)%16,w=2.4+(i%4)*1.4;
+    waveDummy.position.set(Math.cos(a)*dist,-20+h*.45,Math.sin(a)*dist);
+    waveDummy.rotation.set(Math.sin(i)*.15,a,Math.cos(i)*.15);
+    waveDummy.scale.set(w,h,w);waveDummy.updateMatrix();spires.setMatrixAt(i,waveDummy.matrix);
+    if(i<18){
+     waveDummy.position.set(Math.cos(a)*dist,-19.3,Math.sin(a)*dist);
+     waveDummy.rotation.set(Math.PI/2,0,0);
+     waveDummy.scale.set(w*.9,w*.9,1);waveDummy.updateMatrix();vents.setMatrixAt(i,waveDummy.matrix);
+    }
+   }
+   spires.instanceMatrix.needsUpdate=vents.instanceMatrix.needsUpdate=true;
+   const moteMat=new THREE.MeshBasicMaterial({color:0x7fe8ff,transparent:true,opacity:.45,blending:THREE.AdditiveBlending,depthWrite:false});resources.add(moteMat);
+   const moteCount=160,motes=new THREE.InstancedMesh(cube,moteMat,moteCount);motes.name='leviathan-abyssal-motes';motes.frustumCulled=false;motes.count=lowDetail?80:moteCount;root.add(motes);
+   sea={waterline,shoreline,waves,foam,distantFoam,ocean,seabedMat,trenchRockMat,ventGlowMat,moteMat,motes,moteCount,wrecks:3};
   }
  }
  function update(layout,time,build=1){root.visible=!!boss&&layout.bossArena===boss&&build>.01;root.position.y=(1-build)*-35;
   for(const item of animated){if(item.spin)item.mesh.rotation.z=time*item.spin;else item.mesh.material.opacity=1;}
   if(sea){
    if(water.userData.shader)water.userData.shader.uniforms.uSeaTime.value=time;
+   const cMix=crimsonMix;
+   water.color.setHex(0x287286).lerp(new THREE.Color(0x6e0b1e),cMix);
+   water.emissive.setHex(0x08212b).lerp(new THREE.Color(0x2a030b),cMix);
+   sea.seabedMat.color.setHex(0x0c1b24).lerp(new THREE.Color(0x1f060c),cMix);
+   sea.trenchRockMat.color.setHex(0x142834).lerp(new THREE.Color(0x2d0b14),cMix);
+   sea.ventGlowMat.color.setHex(0x4ce6e6).lerp(new THREE.Color(0xff2a4d),cMix);
+   sea.moteMat.color.setHex(0x7fe8ff).lerp(new THREE.Color(0xff4263),cMix);
+   seaBandMaterial.color.setHex(0x75c2cf).lerp(new THREE.Color(0xc42542),cMix);
+   foamMaterial.color.setHex(0xe2f5ed).lerp(new THREE.Color(0xffb5c0),cMix*.65);
+   // Instances share geometry; refresh at 30Hz normally and 15Hz on mobile.
+   // Skipped frames keep the last transforms; visual motion remains continuous.
+   const moteInterval=lowDetail?1/15:1/30;
+   if(root.visible&&(time<lastMoteTime||time-lastMoteTime>=moteInterval)){
+    for(let i=0;i<sea.motes.count;i++){
+     const a=i*2.39996+time*.04,r=6+(i*7.3)%62,y=-16+((i*3.7+time*(.6+(i%3)*.3))%15.5);
+     waveDummy.position.set(Math.cos(a)*r,y,Math.sin(a)*r);
+     waveDummy.rotation.set(time+i,time*.7,0);
+     const s=.09+(i%3)*.06;waveDummy.scale.set(s,s,s);waveDummy.updateMatrix();sea.motes.setMatrixAt(i,waveDummy.matrix);
+    }
+    sea.motes.instanceMatrix.needsUpdate=true;lastMoteTime=time;
+   }
    const {waterline,waves,foam,distantFoam,shoreline}=sea;
    for(let i=0;i<waves.count;i++){
     const row=Math.floor(i/12),column=i%12,phase=time*.24+row*.79+column*.57;
@@ -114,5 +155,5 @@ export function createBossArenaScenery(scene){
   }
  }
  function dispose(){root.removeFromParent();for(const resource of resources)resource.dispose();}
- return{configure,update,dispose,inspect:()=>({boss,visible:root.visible,parts:root.children.length,sea:sea?{waterline:sea.waterline,swells:sea.waves.count,foamSegments:sea.foam.count,whitecaps:sea.distantFoam.count,wrecks:sea.wrecks,animatedSurface:true}:null})};
+ return{configure,update,setCrimson:v=>{crimsonMix=Math.max(0,Math.min(1,v));},setLowDetail:low=>{lowDetail=!!low;if(sea)sea.motes.count=lowDetail?80:sea.moteCount;lastMoteTime=-Infinity;},dispose,inspect:()=>({boss,visible:root.visible,parts:root.children.length,sea:sea?{waterline:sea.waterline,swells:sea.waves.count,foamSegments:sea.foam.count,whitecaps:sea.distantFoam.count,motes:sea.motes.count,wrecks:sea.wrecks,animatedSurface:true}:null})};
 }

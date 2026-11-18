@@ -155,7 +155,7 @@ export function createStageGimmicks({scene,arena,getLayout,notify=()=>{},sound=(
    for(const entry of buildGroups){const owner=propOwners.find(item=>item.group===entry.group);if(owner)entry.y=owner.y;}
    fracturePropsActive=false;
   }
-  const layout=getLayout?.(),omega=!!layout?.omega;wave=value>6?0:Math.max(1,Math.min(6,value));if(omega&&layout.gimmick)wave=layout.gimmick;if(omega)placeOmegaProps(layout);floatHint=false;anchorIndex=0;anchorNextAt=time;lastBossExposure=0;
+  const layout=getLayout?.(),omega=!!layout?.omega,bossGimmick=!!layout?.bossArena&&!!layout?.gimmick;wave=value>6?0:Math.max(1,Math.min(6,value));if((omega||bossGimmick)&&layout.gimmick)wave=layout.gimmick;if(omega||bossGimmick)placeOmegaProps(layout);floatHint=false;anchorIndex=0;anchorNextAt=time;lastBossExposure=0;
   for(const booster of boosters)booster.cooldown=0;
   for(const item of buildGroups)if(item.stage===wave){item.y=floorY(item.group.position.x,item.group.position.z);item.group.position.y=item.y;if(item.target){item.target.baseY=item.y+item.target.floorOffset;item.target.mesh.position.y=item.target.baseY;}}
   for(const booster of boosters)if(wave===2){booster.y=floorY(booster.x,booster.z);booster.group.position.y=booster.y;}

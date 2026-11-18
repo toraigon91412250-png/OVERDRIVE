@@ -123,7 +123,7 @@ function createSingleBossModel(id,cacheId=id){
   }else {
    // Attack clips finish their recovery instead of looping. Reset on each new
    // attack phase even when this asset has no idle/windup clip (TEMPEST).
-   if(attackStarted)play(next,{once:true,force:true});
+   if(attackStarted)play(next,{once:true,force:true,fade:.04,speed:id==='ram'||id==='phoenix'?1.2:1.12});
    else if(next!==mode&&(oneShotRemaining<=0||telegraph||dead||attacking)){
     if(!play(next,{once:['death','hit','stagger','attack','special'].includes(next)})&&telegraph){
      if(active)active.fadeOut(.12);active=null;mode='telegraph';oneShotRemaining=0;
@@ -137,7 +137,63 @@ function createSingleBossModel(id,cacheId=id){
   for(const mesh of effects)mesh.visible=attacking||telegraph;
   // The animated mesh retains its authored heights. Flying roots simply hover
   // above their terrain-relative position rather than sinking into the floor.
-  pivot.position.y=(config.flying?.5:-1)+(config.flying?Math.sin(age*1.4)*.13:0);
+  const progress=THREE.MathUtils.clamp(Number(state.phaseProgress)||0,0,1);
+  const recovering=state.phase==='recovery';
+  let coilY=0,coilZ=0,coilPitch=0,coilYaw=0,coilRoll=0,coilScale=1;
+  if(id!=='leviathan'&&!slam){
+   if(telegraph){
+    const ease=progress*progress;
+    const jitter=Math.sin(age*42)*ease;
+    if(id==='ram'){
+     coilY=-.28*ease;
+     coilZ=-config.front*.55*ease+.04*jitter;
+     coilPitch=-config.front*.14*ease;
+     coilScale=1+.045*jitter;
+    }else if(config.flying){
+     coilY=.65*ease;
+     coilZ=-config.front*.48*ease;
+     coilPitch=config.front*.24*ease;
+     coilRoll=.09*Math.sin(age*14)*ease;
+     coilYaw=(id==='phoenix'?.22:-.16)*ease;
+     coilScale=1+.04*jitter;
+    }else{
+     coilY=(id==='siege'?-.16:.18)*ease;
+     coilZ=-config.front*.42*ease;
+     coilPitch=config.front*.18*ease;
+     coilYaw=(id==='warden'||id==='mirror'?.28:0)*ease;
+     coilScale=1+.035*jitter;
+    }
+   }else if(attacking){
+    const snap=Math.pow(Math.max(0,1-progress*1.6),1.6);
+    if(id==='ram'){
+     coilY=-.18*snap;
+     coilZ=config.front*.85*snap;
+     coilPitch=-config.front*.22*snap;
+     coilScale=1+.08*snap;
+    }else if(config.flying){
+     coilY=-.55*snap;
+     coilZ=config.front*.78*snap;
+     coilPitch=-config.front*.28*snap;
+     coilRoll=(id==='phoenix'?-.24:.18)*snap;
+     coilScale=1+.07*snap;
+    }else{
+     coilY=(id==='siege'?-.28:.06)*snap;
+     coilZ=(id==='siege'?-config.front*.55:config.front*.58)*snap;
+     coilPitch=(id==='siege'?config.front*.22:-config.front*.2)*snap;
+     coilYaw=(id==='warden'||id==='mirror'?-.32:0)*snap;
+     coilScale=1+.06*snap;
+    }
+   }else if(recovering){
+    const settle=Math.max(0,1-progress*1.8);
+    coilY=-.12*settle;
+    coilZ=-config.front*.18*settle;
+    coilPitch=config.front*.07*settle;
+   }
+  }
+  pivot.position.y=(config.flying?.5:-1)+(config.flying?Math.sin(age*1.4)*.13:0)+coilY;
+  pivot.position.z=coilZ;
+  pivot.rotation.set(coilPitch,coilYaw,coilRoll);
+  pivot.scale.setScalar(coilScale);
   syncCore();root.userData.animation=active?.getClip().name||'rest';
  }
  function dispose(){if(disposed)return;disposed=true;mixer.stopAllAction();mixer.uncacheRoot(model);root.removeFromParent();core.geometry.dispose();core.material.dispose();}

@@ -50,12 +50,13 @@ export function createWorldRebuild({scene,arena,solids,sky,skyObject,floor,hemi,
  let current=1,to=1,age=0,active=false,easy=false,stamp=0,layout=layouts[0];
  let duration=DEFAULT_REBUILD_SECONDS,bossArena=null;
  const bossScenery=createBossArenaScenery(scene);
+ const surfaceFog={color:0,near:32,far:110};
  const fracture=createWorldFracture({scene,arena,walls,caps,wallColliders,getLayout:()=>layout,isRebuilding:()=>active});
  const phases=['空間消去','リング起動','足場を構築','防壁を組成','背景を展開','構築完了'];
  function phase(){const elapsed=age*BUILD_TIMELINE/duration;if(layout.omega&&active)return elapsed<1.2?'現実を折り畳む':elapsed<4.4?'地形を再配線':elapsed<8.1?'武装を再抽選':'戦場へ再接続';if(to>=7&&active)return elapsed<1.1?'現実消失':elapsed<3?'リング反転':elapsed<7?'新世界を接続':elapsed<9?'巨大構造を展開':'戦場へ帰還';return !active?'構築完了':elapsed<1.1?phases[0]:elapsed<2.4?phases[1]:elapsed<5.5?phases[2]:elapsed<7.5?phases[3]:elapsed<9.7?phases[4]:phases[5];}
  function currentTheme(){return layout.colors||WORLD_THEMES[to-1];}
  function configure(){
-  getStageGimmicks()?.setWave(layout.bossArena?7:layout.omega?layout.gimmick:to);
+  getStageGimmicks()?.setWave(layout.bossArena?(layout.gimmick||7):layout.omega?layout.gimmick:to);
   bossScenery.configure(layout);
   for(const s of legacySolids)s.enabled=to===1;
   wallColliders.forEach((c,i)=>{const w=layout.walls[i];c.enabled=to>1&&!!w;if(w)Object.assign(c,{x:w.x,z:w.z,w:w.w/2,d:w.d/2,top:w.base+w.h});});
@@ -103,6 +104,8 @@ export function createWorldRebuild({scene,arena,solids,sky,skyObject,floor,hemi,
   sky.uniforms.horizon.value.setHex(theme[2]).multiplyScalar(environment);sky.uniforms.zenith.value.setHex(theme[3]).multiplyScalar(environment);
   if(bossStage){sky.uniforms.horizon.value.lerp(new T.Color(0x9ab9c3),.42);sky.uniforms.zenith.value.lerp(new T.Color(0x405b6a),.48);}
   scene.fog.color.copy(sky.uniforms.zenith.value).lerp(sky.uniforms.horizon.value,.34);scene.fog.near=bossStage?105:to>=7?60:easy?40:32;scene.fog.far=bossStage?440:to>=7?240:110;
+  // Record the actual surface atmosphere before the swimmer-camera override.
+  surfaceFog.color=scene.fog.color.getHex();surfaceFog.near=scene.fog.near;surfaceFog.far=scene.fog.far;
   hemi.color.setHex(theme[2]);hemi.groundColor.setHex(theme[1]);if(bossStage){hemi.color.lerp(new T.Color(0xd0e8f0),.34);hemi.groundColor.lerp(new T.Color(0x879b98),.3);}
   hemi.intensity=(easy?3.5:2.8)+level*.13+(bossStage?1.05:0);sun.color.setHex(theme[4]);if(bossStage)sun.color.lerp(new T.Color(0xfff1d8),.3);sun.intensity=(easy?3:2.4)+level*.12+(bossStage?1.15:0);
   const sunAngles=[[-10,25,8],[-18,22,5],[7,28,-12],[-20,20,-6],[15,24,11],[0,30,-18],[-12,40,12],[20,50,-20]][level]||[Math.cos(level*.72)*32,32+(level%4)*5,Math.sin(level*.72)*32];sun.position.set(...sunAngles);
@@ -152,6 +155,6 @@ export function createWorldRebuild({scene,arena,solids,sky,skyObject,floor,hemi,
   const index=Math.min(pool.length-1,Math.floor(((angle/(Math.PI*2))%1)*pool.length));const c=pool[index];return{x:c.x,z:c.z,y:c.h};
  }
  function canStep(x,z,y){const h=heightAt(x,z);return h!==null&&h<=y+.66&&!layout.blocked(x,z,.6);}
- return {setBossArena:id=>{bossArena=id;},clearBossArena:()=>{bossArena=null;},setWave,begin,update,damageCover:fracture.damageCover,breakCoverNear:fracture.breakCoverNear,updateFracture:fracture.update,coverSnapshot:fracture.snapshot,skip:()=>{if(active)age=duration;},cinematic,progress:()=>({age,duration,target:to,phase:phase(),theme:layout.name||currentTheme()[0]}),heightAt,spawnPoint,snapPoint:(x,z)=>{const c=layout.nearest(x,z);return{x:c.x,z:c.z,y:c.h}},canStep,path:(x,z,tx,tz)=>layout.path(x,z,tx,tz),entry:()=>({...layout.entry}),bounds:()=>layout.bounds,launchPower:()=>layout.launch,radar:()=>layout,rule:()=>layout.rule,
+ return {setBossArena:id=>{bossArena=id;bossScenery.setCrimson?.(0);},setCrimsonSea:v=>{bossScenery.setCrimson?.(v);},setBossSceneryQuality:low=>bossScenery.setLowDetail(low),surfaceFog:()=>surfaceFog,clearBossArena:()=>{bossArena=null;},setWave,begin,update,damageCover:fracture.damageCover,breakCoverNear:fracture.breakCoverNear,updateFracture:fracture.update,coverSnapshot:fracture.snapshot,skip:()=>{if(active)age=duration;},cinematic,progress:()=>({age,duration,target:to,phase:phase(),theme:layout.name||currentTheme()[0]}),heightAt,spawnPoint,snapPoint:(x,z)=>{const c=layout.nearest(x,z);return{x:c.x,z:c.z,y:c.h}},canStep,path:(x,z,tx,tz)=>layout.path(x,z,tx,tz),entry:()=>({...layout.entry}),bounds:()=>layout.bounds,launchPower:()=>layout.launch,radar:()=>layout,rule:()=>layout.rule,
  snapshot:()=>({bossArena:layout.bossArena||null,bossSpawn:layout.bossSpawn?{...layout.bossSpawn}:null,bossScenery:bossScenery.inspect(),cover:fracture.snapshot(),wave:current,target:to,active,age,duration,phase:phase(),theme:layout.name||currentTheme()[0],omega:!!layout.omega,arenaForm:layout.arenaForm??null,intent:layout.intent?{kind:layout.intent.kind,mission:layout.intent.mission,name:layout.intent.name,round:layout.intent.round,variant:layout.intent.variant,targets:layout.intent.targets.map(p=>({...p})),spawnZones:layout.intent.spawnZones.map(p=>({...p}))}:null,cellSizeX:layout.cellSizeX??CELL,cellSizeZ:layout.cellSizeZ??CELL,topology:layout.topology??null,gimmick:layout.gimmick??null,layoutSeed:layout.seed??null,floor:floor.color.getHex(),horizon:sky.uniforms.horizon.value.getHex(),ringColor:rings[0].material.color.getHex(),ringScale:rings[0].scale.x,padColor:padMaterials[0]?.color.getHex(),padsVisible:pads.some(p=>p.visible),stageGimmicks:getStageGimmicks()?.snapshot()||null,cells:layout.cells.length,walls:layout.walls.length,voidCells:layout.gridCells-layout.cells.length,bounds:{...layout.bounds},backdrop:{...layout.backdrop},entry:{...layout.entry},blank:active&&age*BUILD_TIMELINE/duration<1.1,legacyVisible:legacyObjects.some(o=>o.visible),terrainVisible:tiles.visible,decks:layout.cells.filter(c=>c.h>0).map(c=>({x:c.x,z:c.z,top:c.h,w:2,d:2}))})};
 }
